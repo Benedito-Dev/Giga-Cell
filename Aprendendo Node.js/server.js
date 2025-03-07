@@ -13,7 +13,33 @@ import { DatabaseMemory } from './database-memory.js'
 
 const server = fastify()
 
-server.get('/', () => {
+const database = new DatabaseMemory()
+
+server.get('/itens', () => {
+    const videos = database.list()
+
+    return videos
+})
+
+server.post('/itens', (request, response) => {
+    const { Produto, Preco, Unidade } = request.body
+
+    database.create({
+        Produto,
+        Preco,
+        Unidade
+    })
+
+    console.log(database)
+
+    return response.status(201).send()
+})
+
+server.put('/itens:id', () => {
+    return 'Hello Word'
+})
+
+server.delete('/itens:id', () => {
     return 'Hello Word'
 })
 

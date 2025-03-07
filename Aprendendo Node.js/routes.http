@@ -1,0 +1,18 @@
+POST http://localhost:3000/itens
+Content-Type: application/json
+
+{
+    "Produto": "Produto 01",
+    "Preco": "1600.99",
+    "Unidade": 15
+}
+
+###
+GET http://localhost:3000/itens
+Content-Type: application/json
+
+{
+    "Produto": "Produto 01",
+    "Preco": "1600.99",
+    "Unidade": 15
+}
