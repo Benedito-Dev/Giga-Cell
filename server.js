@@ -1,9 +1,8 @@
-
 import { fastify } from 'fastify'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fastifyStatic from '@fastify/static'
-import { DatabasePostgres } from './services/database-postgres.js'
+import { DatabasePostgres } from './src/services/database-postgres.js'
 
 const server = fastify()
 
@@ -15,18 +14,18 @@ const database = new DatabasePostgres()
 
 // Servindo arquivos estáticos da pasta "public"
 server.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'),
-    prefix: '/public/', // Arquivos podem ser acessados via /public/
+    root: path.join(__dirname, 'src', 'public'), // Caminho atualizado
+    prefix: '/public/',
 })
 
 // Rota para servir a página home.html
 server.get('/', async (request, reply) => {
-    return reply.sendFile('home.html', path.join(__dirname, 'views'))
+    return reply.sendFile('home.html', path.join(__dirname, 'src', 'views'))
 })
 
 // Rota para servir a página admin.html
 server.get('/views/admin', async (request, reply) => {
-    return reply.sendFile('admin.html', path.join(__dirname, 'views'))
+    return reply.sendFile('admin.html', path.join(__dirname, 'src', 'views'))
 })
 
 // =========================
