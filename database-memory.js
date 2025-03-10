@@ -33,8 +33,4 @@ export class DatabaseMemory {
     delete(id) {
         this.#items.delete(id)
     }
-
-    delete(id) {
-        this.#items.delete(id)
-    }
 }

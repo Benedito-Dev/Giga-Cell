@@ -9,24 +9,24 @@
 // server.listen(3000)
 
 import { fastify } from 'fastify'
-import { DatabaseMemory } from './database-memory.js'
+import { DatabasePostgres } from './database-postgres.js'
 
 const server = fastify()
 
-const database = new DatabaseMemory()
+const database = new DatabasePostgres()
 
-server.get('/itens', (request) => { // Get Concluido
+server.get('/itens', async (request) => { // Get Concluido
     const search = request.query.search
 
-    const videos = database.list(search)
+    const videos = await database.list(search)
 
     return videos
 })
 
-server.post('/itens', (request, response) => { // Post Concluido
+server.post('/itens', async (request, response) => { // Post Concluido
     const { Produto, Preco, Unidade } = request.body
 
-    database.create({
+    await database.create({
         Produto,
         Preco,
         Unidade
@@ -37,11 +37,11 @@ server.post('/itens', (request, response) => { // Post Concluido
     return response.status(201).send()
 })
 
-server.put('/itens/:id', (request, response) => { // Put Concluido
+server.put('/itens/:id', async (request, response) => { // Put Concluido
     const itemId = request.params.id
     const { Produto, Preco, Unidade } = request.body
 
-    database.updade(itemId, {
+    await database.updade(itemId, {
         Produto,
         Preco,
         Unidade
@@ -50,14 +50,14 @@ server.put('/itens/:id', (request, response) => { // Put Concluido
     return response.status(204)
 })
 
-server.delete('/itens/:id', (request) => {
+server.delete('/itens/:id', async (request) => {
     const itemId = request.params.id
 
-    database.delete(itemId)
+    await database.delete(itemId)
 
     return response.status(204)
 })
 
 server.listen({
-    port: 3000,
+    port: process.env.PORT ?? 3000,
 })
