@@ -1,4 +1,4 @@
-POST http://localhost:3000/itens
+POST https://giga-cell.onrender.com/itens
 Content-Type: application/json
 
 {
@@ -8,10 +8,10 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/itens?search=
+GET https://giga-cell.onrender.com/itens?search=
 
 ###
-PUT http://localhost:3000/itens/031377d5-399c-4eea-a519-e4d212ee234b
+PUT https://giga-cell.onrender.com/itens/031377d5-399c-4eea-a519-e4d212ee234b
 Content-Type: application/json
 
 {
@@ -21,4 +21,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/itens/e5b2434b-9704-48c0-a10d-949d437d8f5a
+DELETE https://giga-cell.onrender.com/itens/e5b2434b-9704-48c0-a10d-949d437d8f5a
