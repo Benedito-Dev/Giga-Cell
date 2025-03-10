@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { sql } from './db.js'
+import { sql } from '../config/db.js'
 
 export class DatabasePostgres {
     #items = new Map()
@@ -23,7 +23,7 @@ export class DatabasePostgres {
         await sql`insert into produtos (id, produto, preco, unidade) VALUES (${itemID}, ${Produto}, ${Preco}, ${Unidade})`
     }
 
-    async updade(id, item) {
+    async update(id, item) {
         const {Produto, Preco, Unidade} = item
 
         await sql`update produtos set produto = ${Produto}, preco = ${Preco}, unidade = ${Unidade} WHERE id = ${id}`
