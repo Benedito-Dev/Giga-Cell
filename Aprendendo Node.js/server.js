@@ -15,13 +15,15 @@ const server = fastify()
 
 const database = new DatabaseMemory()
 
-server.get('/itens', () => {
-    const videos = database.list()
+server.get('/itens', (request) => { // Get Concluido
+    const search = request.query.search
+
+    const videos = database.list(search)
 
     return videos
 })
 
-server.post('/itens', (request, response) => {
+server.post('/itens', (request, response) => { // Post Concluido
     const { Produto, Preco, Unidade } = request.body
 
     database.create({
@@ -35,12 +37,25 @@ server.post('/itens', (request, response) => {
     return response.status(201).send()
 })
 
-server.put('/itens:id', () => {
-    return 'Hello Word'
+server.put('/itens/:id', (request, response) => { // Put Concluido
+    const itemId = request.params.id
+    const { Produto, Preco, Unidade } = request.body
+
+    database.updade(itemId, {
+        Produto,
+        Preco,
+        Unidade
+    })
+
+    return response.status(204)
 })
 
-server.delete('/itens:id', () => {
-    return 'Hello Word'
+server.delete('/itens/:id', (request) => {
+    const itemId = request.params.id
+
+    database.delete(itemId)
+
+    return response.status(204)
 })
 
 server.listen({
