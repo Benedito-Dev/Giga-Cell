@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import fastifyStatic from '@fastify/static'
 import { DatabasePostgres } from './src/services/database-postgres.js'
+import fastifyCors from '@fastify/cors';
 
 const server = fastify()
 
@@ -17,6 +18,11 @@ server.register(fastifyStatic, {
     root: path.join(__dirname, 'src', 'public'), // Caminho atualizado
     prefix: '/public/',
 })
+
+server.register(fastifyCors, {
+    origin: true, // Permite todas as origens (ou especifique a origem do seu frontend, como 'http://localhost:3001')
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+});
 
 // Rota para servir a página home.html
 server.get('/', async (request, reply) => {
@@ -35,9 +41,9 @@ server.get('/views/admin', async (request, reply) => {
 server.get('/itens', async (request) => { // Get Concluido
     const search = request.query.search
 
-    const videos = await database.list(search)
-
-    return videos
+    const itens = await database.list(search)
+    console.log('Itens retornados:', itens);
+    return itens
 })
 
 server.post('/itens', async (request, response) => { // Post Concluido
