@@ -1,9 +1,11 @@
+import Carrousel from "./Carrousel";
+
 function BlockContainer() {
     return (
-        <div className="w-screen h-screen bg-orange-500">
-            <h1>Container</h1>
+        <div className="bg-gray-300 w-full flex-grow overflow-hidden">
+            <Carrousel />
         </div>
-    )
+    );
 }
 
 export default BlockContainer;
