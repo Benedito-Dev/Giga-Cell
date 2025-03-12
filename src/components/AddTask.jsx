@@ -10,7 +10,15 @@ function AddTask({ onAddTaskSubmit }) {
             name="title" id="" placeholder="Titulo da tarefa" value={title} onChange={(event) =>setTitle(event.target.value)}/>
             <input className="bg-slate-50 outline-slate-400 text-sky-400 p-3 rounded-md shadow" type="text" 
             name="description" id="" placeholder="Descrição da tarefa" value={description} onChange={(event) =>setDescription(event.target.value)}/>
-            <button onClick={() => onAddTaskSubmit(title, description)} className="bg-slate-400">Adicionar</button>
+            <button onClick={() => {
+                // Verificar se as informações estão preenchidas
+                if (!title.trim() || !description.trim()) {
+                    return alert("Preencha todos os campos");
+                }
+                onAddTaskSubmit(title, description)
+                setTitle("")
+                setDescription("")
+                }} className="bg-slate-400">Adicionar</button>
         </div>
     )
 }
