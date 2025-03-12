@@ -1,0 +1,694 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: Manrope;
+}
+
+/*Corpo do site*/
+
+body {
+    background-color: #ffffff;
+    background-image: linear-gradient(180deg, rgb(94, 94, 94), rgb(0, 0, 0));
+    overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/*Sistema de navegação*/
+
+header {
+    margin-top: -0.6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 150%;
+    color:#fff;
+    margin-left: 2%;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    background-color: black;
+    height: 10vh;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    margin-right: 2%;
+}
+
+nav ul li a {
+    margin: 0 20px;
+    font-size: 110%;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: 160ms;
+}
+
+nav ul li a:hover {
+    background-color: #333;
+    color: #fff;
+    transition: 160ms;
+}
+
+nav ul i {
+    margin: 0 10px;
+    color: #fff;
+    font-size: 180%;
+    transition: 160ms;
+    border-radius: 10px;
+}
+
+
+
+nav ul li i:hover {
+    cursor: pointer;
+    color: #007BFF;
+}
+
+/*Sistema Dropdown*/
+
+.dropdown-content {
+    margin-top: 0.8%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    border-radius: 12px;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.Carrinho .dropdown-content {
+    min-width: 220px;
+    margin-left: -25vh;
+}
+
+
+.Carrinho .dropdown-content h1 {
+    font-size: 120%;
+}
+
+.dropdown-content li {
+    border-bottom: 1px solid #333;
+    margin: 10px 10px 10px 10px;
+}
+
+.dropdown-content li a {
+    padding: 30px 20px;
+    color: #fff;
+}
+
+.dropdown-content li a:hover {
+    background-color: transparent;
+    color: #007BFF;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/*--Sistema de navegação--*/
+
+/*Banner inicial*/
+
+.img-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -1%;
+    width: 102vw;
+    height: 100vh;
+    background-image: linear-gradient(to right, #d90309, #042fb9);
+    border-bottom: 2px solid silver;
+}
+
+.img-banner img {
+    max-width: 150vh;
+    border-radius: 40px;
+}
+
+/*--Banner inicial--*/
+
+/*--Top 1 em vendas--*/
+
+.main h1 i {
+    color: #ffff;
+    font-size: 68px;
+    margin-left: 2%;
+}
+
+.main .Produto {
+    display: flex;
+}
+
+.main .Produto .content .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main .Produto .content .title h1 {
+    color: #fff;
+    font-size: 250%;
+    margin-left: 1%;
+    margin-top: 30%;
+    width: 60vh;
+}
+
+.main .Produto .content .title h2 {
+    color: #fff;
+    font-size: 28px;
+    margin-top: 31%;
+    margin-right: 31%;
+}
+
+.main .Produto .content .subtitle {
+    display: flex;
+    align-items: center;
+}
+
+.main .Produto .content .subtitle h2 {
+    font-size: 40px;
+    color: #007BFF;
+    margin-top: -3%;
+    margin-left: 2%;
+}
+
+.main .Produto .content .subtitle h3 {
+    margin-left: 2%;
+    margin-top: -3%;
+    font-size: 30px;
+    color: #fff;
+}
+
+.subtitle h3 u {
+    color: rgb(45, 177, 45);
+    font-size: 35px;
+}
+
+.content button {
+    margin-left: 5%;
+    height: 80px;
+    width: 250px;
+    font-family: Poppins;
+    font-size: 25px;
+    color: rgb(255, 255, 255);
+    border-radius: 40px;
+    border: none;
+    background-color: transparent;
+    border: 3px solid #fff;
+    transition: 160ms;
+}
+
+.content button:hover {
+    cursor: pointer;
+    background-color: #353535;
+}
+
+.main .Produto .celular img {
+    max-width: 40vh;
+    margin-left: 10%;
+    transform: rotate(-10deg);
+}
+
+.main .Produto .iphones img {
+    min-width: 80vh;
+}
+
+/*--Top 1 em vendas--*/
+
+/*Carrosel*/
+
+.barr {
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+    margin-right: 3%;
+    width: 180vh;
+    height: 8vh;
+    background-image: linear-gradient(90deg, red, blue);
+    color: #fff;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.barr h1 {
+    margin-left: 3%;
+}
+
+.carousel-container {
+    margin-left: 5%;
+    background-color: #fff;
+    position: relative;
+    width: 180vh;
+    max-width: 180vh;
+    height: 50vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin-bottom: 8%;
+}
+
+.carousel {
+    overflow: hidden;
+    width: 100%;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-card {
+    min-width: 12%;
+    max-height: 43vh;
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 40px;
+    box-shadow: 8px 8px 8px rgba(0,0,0,0.1);
+    border: 3px solid black;
+    text-align: center;
+    padding: 20px;
+}
+
+.carousel-card #add-cart {
+    background-color: transparent;
+    border: none;
+    border: 1px solid black;
+    border-radius: 40px;
+    font-size: 100%;
+    padding: 5px 5px 5px 5px;
+}
+
+.carousel #add-cart:hover {
+    cursor: pointer;
+    background-color: #c5c5c5;
+}
+
+.carousel-card img {
+    margin-top: -15%;
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.carousel-card .text {
+    margin-top: -20%;
+}
+
+.carousel-btn {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.left-btn {
+    left: 5px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.right-btn {
+    right: 5px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: 160ms;
+}
+
+.right-btn:hover {
+    background-color: #353535;
+}
+
+.left-btn:hover {
+    background-color: #353535;
+}
+
+/*-- Carrosel */
+
+/*Sessão de Reparo*/
+
+.Reparo {
+    background-image: linear-gradient(90deg, #1084c7, #00d9ff);
+    padding: 1% 0% 0%;
+    margin-left: -0.5%;
+    text-align: center;
+    width: 202vh;
+    display: flex;
+    align-items: center;
+}
+
+.Reparo .text-Repair {
+    display: grid;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 10%;
+}
+
+.Reparo h1 {
+    color: #fff;
+    width: 83vh;
+    font-size: 40px;
+    margin-left: -5%;
+    margin-top: 0%;
+}
+
+.Reparo h2 {
+    color: #fff;
+    font-size: 40px;
+    margin-left: -6%;
+    margin-top: -1%;
+    opacity: 0.85;
+}
+
+.img-Reparo img {
+    max-height: 80vh;
+    margin-left: -70%;
+    margin-top: -3%;
+}
+
+.inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputs .form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    width: 50vh;
+    margin-left: -160%;
+    margin-top: 25%;
+    border: 3px solid  snow;
+    border-radius: 20px;
+}
+
+.inputs .form select {
+    margin: 8%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 150%;
+    width: 80%;
+    border-radius: 15px;
+
+}
+
+.inputs .form button {
+    height: 12%;
+    width: 60%;
+    font-size: 120%;
+    margin-top: 10%;
+    border-radius: 40px;
+    border: none;
+    transition: 160ms;
+}
+
+.inputs .form button:hover {
+    cursor: pointer;
+    background-color: #4CAF50;
+}
+
+.valor {
+    margin-top: -8%;
+    margin-left: -18%;
+}
+
+.valor h2 {
+    color: rgb(23, 55, 235);
+    width: 50vh;
+    font-size: 300%;
+}
+
+.valor p {
+    color: #0b9b4c;
+    font-size: 600%;
+    margin-top: 5%;
+    margin-left: 50%;
+    width: 40vh;
+}
+
+/* --Reparo-- */
+
+/*Onde Estamos*/
+
+.Onde-estamos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 105vh;
+    width: 202vh;
+    margin-top: -1.62%;
+    margin-left: -0.8%;
+    margin-bottom: -5%;
+    background-image: linear-gradient(45deg, #FFA726, #FB8C00);
+}
+
+.test {
+    height: 10%;
+    background-color: black;
+}
+
+.Onde-estamos .text-content {
+    width: 30%;
+    margin-left: -60%;
+    margin-top: -18%;
+    margin-left: -65%;
+}
+
+.Onde-estamos h2 {
+    color: #fff;
+    font-size: 400%;
+    margin-left: 0%;
+}
+
+.Onde-estamos p {
+    font-size: 150%;
+    width: 80%;
+    color: #000000;
+    opacity: 0.5;
+    margin-left: 7%;
+    margin-top: -8%;
+}
+
+.Onde-estamos .map iframe {
+    margin-top: 0%;
+    height: 60vh;
+    width: 120vh;
+    border-radius: 20px;
+    border: 20px solid black;
+    box-shadow: 1px 1px 15px black;
+    transition: transform 2s ease;
+}
+
+/*-- Onde Estamos --*/
+
+/* Rodapé */
+
+footer {
+    background-color: #1D5A8E;
+    color: white;
+    padding: 40px 0;
+    margin-left: -1.2%;
+    width: 202vh;
+    height: 85vh;
+    margin-bottom: -2%;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 180vh;
+    margin: 0 auto;
+}
+
+.footer-column {
+    flex: 1;
+    margin: 10px;
+    min-width: 200px;
+}
+
+.footer-column h3 {
+    margin-bottom: 20px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li, .footer-column ul a {
+    text-decoration: none;
+    color: #fff;
+    margin-bottom: 10px;
+    font-size: 85%;
+    transition: 160ms;
+}
+
+.footer-column ul li:hover, .footer-column ul a:hover {
+    cursor: pointer;
+    color: #00d9ff;
+}
+
+.footer-column .social-media {
+    width: 60%;
+}
+
+.footer-column .social-media li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.footer-column .social-media i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: orange;
+    font-size: 350%;
+    min-width: 40px;
+    min-height: 40px;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+
+/* -- Rodapé -- */
+
+/* Chat flutuante */
+
+.chat-button {
+    margin-top: 20px;
+}
+
+.chat-button button {
+    margin-top: 6%;
+    height: 5vh;
+    width: 20vh;
+    font-size: 25px;
+    background-color: white;
+    color: #1D5A8E;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 160ms;
+}
+
+.chat-button button:hover {
+    background-color: #00d9ff;
+    transform: scale(1.08);
+}
+
+#chat-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #000000;
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+#chat-button i {
+    font-size: 220%;
+}
+
+#chat-button:hover {
+    background-color: #154273;
+}
+
+/* Estilos para o formulário de chat */
+
+#chat-form {
+    position: fixed;
+    bottom: 10%;
+    right: 2%;
+    width: 18%;
+    height: 40%;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: none;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-form header {
+    background-color: #1D5A8E;
+    color: white;
+    padding: 10px;
+    width: 94.5%;
+    margin-left: -0.3%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#chat-form .chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-form .chat-message {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin: 5px 0;
+    max-width: 80%;
+}
+
+#chat-form .chat-message.server {
+    align-self: flex-start;
+    background-color: #1D5A8E;
+    color: white;
+}
+
+
+/* -- Chat flutuante -- */
