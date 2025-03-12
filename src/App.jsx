@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,26 +7,13 @@ import AddTask from './components/AddTask';
 import {v4} from 'uuid'
 
 function App() {
-  let [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: 'Estudar Programação',
-      description: 'Estudar Programação para virar um dev Full-stack',
-      isCompleted: false
-    },
-    {
-      id: 2,
-      title: 'Fazer Exercícios',
-      description: 'Fazer Exercícios para melhorar a habilidade',
-      isCompleted: false
-    },
-    {
-      id: 3,
-      title: 'Aprender Inglês',
-      description: 'Aprender Inglês para se comunicar com o mundo',
-      isCompleted: false
-    }
-  ])
+  let [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
+  )
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+  }, [tasks])
 
   function onTaskClick(taskId) {
     const newTasks = tasks.map(task => {
