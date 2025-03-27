@@ -1,0 +1,35 @@
+### Listar todos os celulares ou filtrar por pesquisa
+GET http://localhost:3000/celulares?search=
+Content-Type: application/json
+
+### Criar um novo celular
+POST http://localhost:3000/celulares
+Content-Type: application/json
+
+  {
+    "marca": "iPhone",
+    "modelo": "SE (2020)",
+    "armazenamento_gb": 64,
+    "ram_gb": 3,
+    "sistema_operacional": "iOS",
+    "preco": 3999.99,
+    "lancamento": "2020-04-24",
+    "imagemUrl": "https://leoscherer.com.br/wp-content/uploads/2022/01/iPhone-SE-2a-BRANCO.png"
+  }
+  
+### Atualizar um celular existente
+PUT http://localhost:3000/celulares/031377d5-399c-4eea-a519-e4d212ee234b
+Content-Type: application/json
+
+{
+    "marca": "Samsung",
+    "modelo": "Galaxy S21 Ultra",
+    "armazenamento_gb": 256,
+    "ram_gb": 12,
+    "sistema_operacional": "Android",
+    "preco": 3999.99,
+    "lancamento": "2021-01-29"
+}
+
+### Deletar um celular
+DELETE http://localhost:3000/celulares/df606ebe-9d2d-434d-8907-f06e0ec517ba
