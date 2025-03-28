@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './views/Home';
 import Login from './views/Login';
+import Products from './views/Products';
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="Login" element={<Login />} />
+        <Route path="/produtos" element={<Products />} />
         {/* <Route path="/produtos" element={<Produtos />} />
         <Route path="/celulares" element={<Celulares />} />
         <Route path="/tablets" element={<Tablets />} />

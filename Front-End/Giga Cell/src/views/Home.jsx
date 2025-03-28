@@ -15,11 +15,11 @@
 // }
 import NavBarr from '../components/NavBarr'
 import Banner from '../containers/Banner'
-import Products from '../containers/Products'
 import Footer from '../containers/Footer'
 import Acessorios from '../containers/Acessorios'
 import SubBarr from '../components/SubBarr'
 import Help from '../components/Help'
+import CellPhones from '../containers/CellPhones'
 
 function Home() {
     return (
@@ -28,7 +28,7 @@ function Home() {
         <SubBarr />
         <Help />
         <Banner />
-        <Products />
+        <CellPhones />
         <Acessorios />
         <Footer />
         </>

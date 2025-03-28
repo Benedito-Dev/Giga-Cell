@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 
-function Products() {
+function CellPhones() {
   // Estado para armazenar os produtos
   const [products, setProducts] = useState([]);
 
@@ -86,4 +86,4 @@ function Products() {
   );
 }
 
-export default Products;
+export default CellPhones;
