@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 function NavBarr() {
     return (
         <div className="bg-gray-800 p-4 text-slate-100 flex justify-between items-center">
-            <h1 className="text-4xl italic text-orange-500">Giga Cell</h1>
+            <h1 className="text-4xl font-bold font-raleway text-orange-500">GIGA CELL</h1>
             <input
             type="search"
             placeholder="Digite Aqui Sua Pesquisa..."

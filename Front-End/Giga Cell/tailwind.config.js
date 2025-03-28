@@ -9,6 +9,9 @@ export default {
       scale: {
         '200': '2', // Adiciona uma escala personalizada de 2x
       },
+      fontFamily: {
+        raleway: ['Raleway', 'sans-serif'],
+      },
     },
   },
   plugins: [],

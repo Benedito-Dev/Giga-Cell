@@ -1,6 +1,19 @@
+import NavBarr from "../components/NavBarr"
+import FilterSystem from "../components/Products/Filter"
+import SubBarr from "../components/SubBarr"
+
 function Products() {
     return (
-        <h1 className="text-black text-8xl font-bold">Produtos</h1>
+        <div className="Produtos">
+            <NavBarr />
+            <SubBarr />
+            <div className="Container mt-10 flex items-center justify-around w-full">
+                <FilterSystem />
+                <div className="Products">
+                    
+                </div>
+            </div>
+        </div>
     )
 }
 
