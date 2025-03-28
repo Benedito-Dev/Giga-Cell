@@ -12,7 +12,7 @@ function SubBarr() {
           </li>
           <li>
             <Link to="/produtos" className="transition-all hover:text-sky-400">
-              Ver Tudo
+              Produtos
             </Link>
           </li>
           <li>

@@ -35,7 +35,7 @@ function Products() {
 
   return (
     <div className="bg-gray-200 h-[90vh] w-full flex justify-center items-center flex-col">
-      <div className="w-[98vw] rounded-full h-1 bg-black mb-10 opacity-50"></div>
+      <div className="w-[95vw] rounded-full h-1 bg-black mb-10 opacity-20"></div>
       <div className="title flex justify-between items-center w-full px-12">
         <h1 className="text-7xl font-bold text-black text-opacity-80 mb-12">Celulares Mais Vendidos</h1>
         <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">Mais Celulares</button>
@@ -76,6 +76,7 @@ function Products() {
                 <h2 className="text-lg font-semibold text-black">{product.modelo}</h2>
                 <p className="text-gray-600">Lorem ipsum dolor sit amet...</p>
                 <p className="text-green-600 font-bold">R$ {product.preco}</p>
+                <button className='bg-green-600 mt-5 py-2 px-4 rounded-full' >Adicionar ao Carrinho</button>
               </div>
             </SwiperSlide>
           ))}
