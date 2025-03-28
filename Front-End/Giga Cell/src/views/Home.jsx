@@ -14,10 +14,10 @@
 //   )
 // }
 import NavBarr from '../components/NavBarr'
-import Banner from '../pages/Banner'
-import Products from '../pages/Products'
-import Footer from '../pages/Footer'
-import Acessorios from '../pages/Acessorios'
+import Banner from '../containers/Banner'
+import Products from '../containers/Products'
+import Footer from '../containers/Footer'
+import Acessorios from '../containers/Acessorios'
 import SubBarr from '../components/SubBarr'
 import Help from '../components/Help'
 
