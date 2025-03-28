@@ -10,7 +10,7 @@ import Banner3 from '../images/Banners/9.png';
 
 function Banner() {
     return (
-        <div className="banner bg-gray-200 h-[90vh] w-full flex justify-center items-center flex-col">
+        <div className="banner bg-gray-200 h-[80vh] w-full flex justify-center items-center flex-col">
             <Swiper
                 modules={[Navigation, Autoplay]} // Adiciona os módulos de navegação e autoplay
                 navigation // Habilita as setas de navegação
