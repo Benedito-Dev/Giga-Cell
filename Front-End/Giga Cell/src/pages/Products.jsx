@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -34,9 +34,10 @@ function Products() {
   }
 
   return (
-    <div className="bg-gray-700 h-[90vh] w-full flex justify-center items-center flex-col">
+    <div className="bg-gray-200 h-[90vh] w-full flex justify-center items-center flex-col">
+      <div className="w-[98vw] rounded-full h-1 bg-black mb-10 opacity-50"></div>
       <div className="title flex justify-between items-center w-full px-12">
-        <h1 className="text-7xl font-bold italic text-white mb-12">Celulares Mais Vendidos</h1>
+        <h1 className="text-7xl font-bold text-black text-opacity-80 mb-12">Celulares Mais Vendidos</h1>
         <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">Mais Celulares</button>
       </div>
       <div className="w-full px-12">
@@ -65,7 +66,7 @@ function Products() {
         >
           {products.map((product) => (
             <SwiperSlide key={product.id}>
-              <div className="bg-white p-4 rounded-lg shadow-lg text-center h-96 flex justify-center items-center flex-col">
+              <div className="bg-white border-2 border-black p-4 rounded-lg shadow-lg text-center h-96 flex justify-center items-center flex-col">
                 {/* Tag da imagem adicionada aqui */}
                 <img 
                   src={product.imagemurl} 

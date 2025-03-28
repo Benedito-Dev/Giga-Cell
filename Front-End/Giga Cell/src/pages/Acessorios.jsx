@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -13,7 +13,7 @@ function Acessorios() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/celulares');
+        const response = await fetch('http://localhost:3000/acessorios');
         if (!response.ok) {
           throw new Error('Erro ao buscar os produtos');
         }
@@ -34,9 +34,10 @@ function Acessorios() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-green-600 to-blue-500 h-[90vh] w-full flex justify-center items-center flex-col">
+    <div className="bg-gray-200 h-[70vh] w-full flex justify-start items-center flex-col">
+      <div className="w-[98vw] rounded-full h-1 bg-black mb-10 opacity-50"></div> {/* Linha Divisora de Containers */}
       <div className="title flex justify-between items-center w-full px-12">
-        <h1 className="text-7xl font-bold italic text-white mb-12">Acessorios</h1>
+        <h1 className="text-7xl font-bold text-black mb-12">Acessorios</h1>
         <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">Todos os Acessorios</button>
       </div>
       <div className="w-full px-12">
