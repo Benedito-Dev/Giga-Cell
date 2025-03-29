@@ -4,10 +4,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
+import { useCart } from '../hooks/UseCart'; // Importando o hook de carrinho
 
 function CellPhones() {
   // Estado para armazenar os produtos
   const [products, setProducts] = useState([]);
+
+  const { addToCart } = useCart();
 
   // Função para buscar os produtos da API
   useEffect(() => {
@@ -76,7 +79,7 @@ function CellPhones() {
                 <h2 className="text-lg font-semibold text-black">{product.modelo}</h2>
                 <p className="text-gray-600">Lorem ipsum dolor sit amet...</p>
                 <p className="text-green-600 font-bold">R$ {product.preco}</p>
-                <button className='bg-green-600 mt-5 py-2 px-4 rounded-full' >Adicionar ao Carrinho</button>
+                <button onClick={() => addToCart(product)} className='bg-green-600 mt-5 py-2 px-4 rounded-full border-2 border-black transition-all hover:scale-110 hover:bg-purple-500' >Adicionar ao Carrinho</button>
               </div>
             </SwiperSlide>
           ))}
