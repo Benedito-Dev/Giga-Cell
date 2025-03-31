@@ -10,7 +10,8 @@ sql`
         armazenamento_gb INTEGER NOT NULL,
         ram_gb INTEGER NOT NULL,
         preco NUMERIC(10, 2) NOT NULL,
-        lancamento DATE NOT NULL
+        lancamento DATE NOT NULL,
+        estoque INTEGER NOT NULL DEFAULT 0,
     );
 `.then(() => {
         console.log('Tabela de celulares criada com sucesso!');
