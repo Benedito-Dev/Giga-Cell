@@ -6,6 +6,8 @@ import { DatabasePostgres } from './services/database-postgres.js'
 import { DatabasePostgresAcessorios } from './services/acessorios.js'
 import fastifyCors from '@fastify/cors'
 
+
+
 const server = fastify()
 
 // Obtém o diretório atual corretamente (equivalente a __dirname no ES6)

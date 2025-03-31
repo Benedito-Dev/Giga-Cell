@@ -91,23 +91,21 @@ function ProductsGrid() {
                 <h2 className="text-xl font-bold text-black text-center mb-2">
                   {product.modelo}
                 </h2>
-                <p className="text-gray-600 text-center mb-4 line-clamp-2">
-                  {product.descricao || 'Descrição não disponível'}
-                </p>
               </div>
 
               <div className="mt-auto">
-                <p className="text-green-600 font-bold text-2xl mb-4 text-center">
+                <p className="text-green-600 font-bold text-2xl text-center">
                   R$ {product.preco.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                   })}
                 </p>
+                <p className='text-black text-center text-xs text-opacity-50 mb-4'>à vista no Pix ou em até 12x de R$402,56 sem juros</p>
                 <button
                   onClick={() => addToCart(product)}
-                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-full border-2 border-black w-full transition-all duration-200"
+                  className="bg-green-600 hover:bg-green-700 flex items-center justify-center gap-2 text-white font-medium nowrap py-1 px-3 rounded-full border-2 border-black w-full transition-all duration-200"
                 >
-                  Adicionar ao Carrinho
+                  <i className='bx bx-basket text-2xl' ></i> Adicionar
                 </button>
               </div>
             </div>
