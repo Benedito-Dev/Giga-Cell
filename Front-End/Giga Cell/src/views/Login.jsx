@@ -158,7 +158,7 @@ function Login() {
                                     name="loginEmail"
                                     value={formData.loginEmail}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.loginEmail ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.loginEmail ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="seu@email.com"
                                 />
                                 {errors.loginEmail && <p className="mt-1 text-sm text-red-600">{errors.loginEmail}</p>}
@@ -174,7 +174,7 @@ function Login() {
                                     name="loginSenha"
                                     value={formData.loginSenha}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.loginSenha ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.loginSenha ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Digite sua senha"
                                 />
                                 {errors.loginSenha && <p className="mt-1 text-sm text-red-600">{errors.loginSenha}</p>}
