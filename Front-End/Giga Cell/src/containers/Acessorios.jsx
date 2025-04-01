@@ -5,6 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { useCart } from '../hooks/UseCart'; // Importando o hook de carrinho
+import { Link } from 'react-router-dom';
 
 function Acessorios() {
   // Estado para armazenar os produtos
@@ -41,7 +42,11 @@ function Acessorios() {
       <div className="w-[95vw] rounded-full h-1 bg-black mb-10 opacity-20"></div> {/* Linha Divisora de Containers */}
       <div className="title flex justify-between items-center w-full px-12">
         <h1 className="text-7xl font-bold text-black mb-12">Acessorios</h1>
-        <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">Todos os Acessorios</button>
+        <Link to="/produtos">
+          <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">
+            Mais Celulares
+          </button>
+        </Link>
       </div>
       <div className="w-full px-12">
         <Swiper

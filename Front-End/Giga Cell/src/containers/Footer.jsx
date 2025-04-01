@@ -66,7 +66,7 @@ function Footer() {
                             <input 
                                 type="email" 
                                 placeholder="Seu e-mail" 
-                                className="px-4 py-2 w-full rounded-l focus:outline-none text-gray-900"
+                                className="px-4 py-2 w-full rounded-l text-white focus:outline-none"
                             />
                             <button 
                                 type="submit" 
