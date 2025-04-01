@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useCart } from '../../hooks/useCart';
+import { useCart } from '../../hooks/UseCart'; // Importando o hook de carrinho
+import { Link } from 'react-router-dom';
 
 function ProductsGrid() {
   const [products, setProducts] = useState([]);
@@ -66,9 +67,14 @@ function ProductsGrid() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black text-opacity-80 mb-4 md:mb-0">
             Produtos
           </h1>
+          <div className="buttons">
+            <Link to="/produtos/adicionar">
+            <button className='bg-green-500 rounded-2xl px-6 gap-5 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i class='bx bx-plus-circle'></i>Adicionar Produtos</button>
+            </Link>
           <button className="bg-gray-700 border-2 border-white px-6 py-3 rounded-2xl text-lg transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">
             Ver Todos
           </button>
+          </div>
         </div>
 
         {/* Grid responsivo */}
