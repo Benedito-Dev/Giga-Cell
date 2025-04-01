@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Logo from '../images/logo.png';
 
 function Login() {
     const [activeTab, setActiveTab] = useState('login');
@@ -120,6 +121,11 @@ function Login() {
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg shadow-md w-full max-w-md overflow-hidden">
+                {/* Imagem logo */}
+                <div className="flex justify-center mt-4 mb-4">
+                    <img src={Logo} alt="Logo" className="h-12" />
+                </div>
+    
                 {/* Abas */}
                 <div className="flex border-b">
                     <button
@@ -202,7 +208,7 @@ function Login() {
                                     name="nomeCompleto"
                                     value={formData.nomeCompleto}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.nomeCompleto ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.nomeCompleto ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Seu nome completo"
                                 />
                                 {errors.nomeCompleto && <p className="mt-1 text-sm text-red-600">{errors.nomeCompleto}</p>}
@@ -218,7 +224,7 @@ function Login() {
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="seu@email.com"
                                 />
                                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -244,7 +250,7 @@ function Login() {
                                             });
                                         }
                                     }}
-                                    className={`w-full px-4 py-2 border ${errors.cpf ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.cpf ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="000.000.000-00"
                                 />
                                 {errors.cpf && <p className="mt-1 text-sm text-red-600">{errors.cpf}</p>}
@@ -270,7 +276,7 @@ function Login() {
                                             });
                                         }
                                     }}
-                                    className={`w-full px-4 py-2 border ${errors.telefone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.telefone ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="(00) 00000-0000"
                                 />
                                 {errors.telefone && <p className="mt-1 text-sm text-red-600">{errors.telefone}</p>}
@@ -286,7 +292,7 @@ function Login() {
                                     name="endereco"
                                     value={formData.endereco}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.endereco ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.endereco ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Rua, número, bairro, cidade"
                                 />
                                 {errors.endereco && <p className="mt-1 text-sm text-red-600">{errors.endereco}</p>}
@@ -302,7 +308,7 @@ function Login() {
                                     name="senha"
                                     value={formData.senha}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.senha ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.senha ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Mínimo 6 caracteres"
                                 />
                                 {errors.senha && <p className="mt-1 text-sm text-red-600">{errors.senha}</p>}
@@ -318,7 +324,7 @@ function Login() {
                                     name="confirmarSenha"
                                     value={formData.confirmarSenha}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-2 border ${errors.confirmarSenha ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    className={`w-full px-4 py-2 border ${errors.confirmarSenha ? 'border-red-500' : 'border-gray-300'} bg-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                     placeholder="Digite a senha novamente"
                                 />
                                 {errors.confirmarSenha && <p className="mt-1 text-sm text-red-600">{errors.confirmarSenha}</p>}
@@ -336,6 +342,7 @@ function Login() {
             </div>
         </div>
     );
+
 }
 
 export default Login;
