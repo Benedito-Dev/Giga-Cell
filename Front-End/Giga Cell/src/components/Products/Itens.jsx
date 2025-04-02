@@ -36,6 +36,38 @@ function ProductsGrid() {
     fetchProducts();
   }, []);
 
+  const deleteProduct = async (productId) => {
+    try {
+      // Mostra o alerta de confirmação
+      const confirmDelete = window.confirm(
+        'Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.'
+      );
+      
+      // Se o usuário cancelar, interrompe a execução
+      if (!confirmDelete) return;
+  
+      // Faz a requisição DELETE
+      const response = await fetch(`http://localhost:3000/produtos/${productId}`, {
+        method: 'DELETE'
+      });
+  
+      // Verifica se a exclusão foi bem sucedida
+      if (!response.ok) {
+        throw new Error('Falha ao excluir o produto');
+      }
+  
+      // Atualiza o estado removendo o produto
+      setProducts(products.filter(p => p.id !== productId));
+      
+      // Feedback visual opcional (você pode usar um toast/snackbar também)
+      alert('Produto excluído com sucesso!');
+  
+    } catch (error) {
+      console.error('Erro ao excluir:', error);
+      alert(`Erro ao excluir produto: ${error.message}`);
+    }
+  };
+
   // Estados de carregamento
   if (loading) {
     return (
@@ -65,6 +97,9 @@ function ProductsGrid() {
     );
   }
 
+
+  // Começo da Pagina HTML
+
   return (
     <div className="bg-gray-200 min-h-screen w-full p-6 md:p-12">
       <div className="max-w-7xl mx-auto">
@@ -72,23 +107,33 @@ function ProductsGrid() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black text-opacity-80 mb-4 md:mb-0">
             Produtos
           </h1>
-          <div className="buttons">
+          <div className="buttons flex">
             <Link to="/produtos/adicionar">
-            <button className='bg-green-500 rounded-2xl px-6 gap-5 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i className='bx bx-plus-circle'></i>Adicionar Produtos</button>
+            <button className='bg-green-500 flex items-center rounded-2xl px-6 gap-1 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i className='bx bx-plus-circle'></i>Adicionar Produtos</button>
             </Link>
-          <button className="bg-gray-700 border-2 border-white px-6 py-3 rounded-2xl text-lg transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">
-            Ver Todos
-          </button>
           </div>
         </div>
 
         {/* Grid responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-          {products.map((product) => (
+        {products.map((product) => (
             <div
               key={product.id}
-              className="bg-white border-2 border-black py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02] hover:cursor-pointer"
+              className="bg-white border-2 border-black py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02] hover:cursor-pointer relative" // Adicionei 'relative' aqui
             >
+              {/* Botão de excluir - novo elemento */}
+              <button
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   deleteProduct(product.id);
+                 }}
+                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-lg w-8 h-8 flex items-center justify-center"
+                title="Excluir produto"
+              >
+                <i className='bx bx-trash text-xl'></i>
+              </button>
+
+              {/* Conteúdo existente permanece igual */}
               <div className="flex-grow flex flex-col items-center">
                 <img
                   src={product.imagemurl}
