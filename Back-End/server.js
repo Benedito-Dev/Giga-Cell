@@ -42,7 +42,7 @@ server.get('/views/admin', async (request, reply) => {
 })
 
 // =========================
-// Rotas da API de celulares
+// Rotas da API de Produtos
 // =========================
 
 server.get('/produtos', async (request) => {
@@ -51,82 +51,49 @@ server.get('/produtos', async (request) => {
     return produtos
 })
 
-// =========================
-// Rotas da API de acessórios
-// =========================
+server.post('/produtos', async (request, response) => {
+    const { nome, imagemUrl, preco, categoria,descricao, estoque } = request.body;
 
-server.get('/acessorios', async (request) => {
-    const search = request.query.search
-    const acessorios = await databaseAcessorios.list(search)
-    return acessorios
-})
-
-server.post('/acessorios', async (request, response) => {
-    const { 
-        nome, 
-        tipo, 
-        marca, 
-        compatibilidade, 
-        imagemUrl, 
-        material, 
-        cores_disponiveis, 
-        preco, 
-        estoque, 
-        garantia_meses 
-    } = request.body
-
-    await databaseAcessorios.create({
+    await databaseProducts.create({
         nome,
-        tipo,
-        marca,
-        compatibilidade,
         imagemUrl,
-        material,
-        cores_disponiveis,
         preco,
-        estoque,
-        garantia_meses
+        categoria,
+        descricao,
+        estoque
     })
 
     return response.status(201).send()
 })
 
-server.put('/acessorios/:id', async (request, response) => {
-    const acessorioId = request.params.id
-    const { 
-        nome, 
-        tipo, 
-        marca, 
-        compatibilidade, 
-        imagemUrl, 
-        material, 
-        cores_disponiveis, 
-        preco, 
-        estoque, 
-        garantia_meses 
-    } = request.body
+server.put('/produtos/:id'), async (request, response) => {
+    const id = request.params.id
+    const { nome, imagemUrl, preco, categoria, descricao, estoque } = request.body
 
-    await databaseAcessorios.update(acessorioId, {
+    await databaseProducts.update(id, {
         nome,
-        tipo,
-        marca,
-        compatibilidade,
         imagemUrl,
-        material,
-        cores_disponiveis,
         preco,
-        estoque,
-        garantia_meses
+        categoria,
+        descricao,
+        estoque
     })
 
-    return response.status(204).send()
-})
+    return response.status(200).send()
+}
 
-server.delete('/acessorios/:id', async (request, response) => {
-    const acessorioId = request.params.id
-    await databaseAcessorios.delete(acessorioId)
+server.delete('/produtos/:id'), async (request, response) => {
+    const id = request.params.id
+
+    await databaseProducts.delete(id)
+
     return response.status(204).send()
-})
+}
+
+// =========================
+// Rotas da API de Usuarios
+// =========================
+
 
 server.listen({
     host: '0.0.0.0',
