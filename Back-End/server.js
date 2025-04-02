@@ -63,7 +63,7 @@ server.post('/produtos', async (request, response) => {
     return response.status(201).send()
 })
 
-server.put('/produtos/:id'), async (request, response) => {
+server.put('/produtos/:id', async (request, reply) => {
     const id = request.params.id
     const { nome, imagemUrl, preco, categoria, descricao, estoque } = request.body
 
@@ -74,18 +74,21 @@ server.put('/produtos/:id'), async (request, response) => {
         categoria,
         descricao,
         estoque
+    });
+
+    return reply.status(200).send({
+        sucess: true,
+        message: 'Produto atualizado com sucesso!'
     })
+});
 
-    return response.status(200).send()
-}
-
-server.delete('/produtos/:id'), async (request, response) => {
+server.delete('/produtos/:id', async (request, reply) => {
     const id = request.params.id
 
     await databaseProducts.delete(id)
 
-    return response.status(204).send()
-}
+    return reply.status(204).send()
+});
 
 // =========================
 // Rotas da API de Usuarios

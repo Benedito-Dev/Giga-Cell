@@ -1,7 +1,7 @@
-import NavBarr from "../components/NavBarr";
-import FilterSystem from "../components/Products/Filter";
-import SubBarr from "../components/SubBarr";
-import ProductsGrid from "../components/Products/Itens";
+import NavBarr from "../../components/NavBarr";
+import FilterSystem from "../../components/Products/Filter";
+import SubBarr from "../../components/SubBarr";
+import ProductsGrid from "../../components/Products/Itens";
 
 function Products() {
     return (

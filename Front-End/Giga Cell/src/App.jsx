@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './views/Home';
 import Login from './views/Login';
-import Products from './views/Products';
+import Products from './views/Products/Products';
 import AddProducts from './views/Products/AddProducts';
 
 export default function App() {
