@@ -51,16 +51,20 @@ server.get('/produtos', async (request) => {
 server.post('/produtos', async (request, response) => {
     const { nome, imagemUrl, preco, categoria,descricao, estoque } = request.body;
 
-    await databaseProducts.create({
-        nome,
-        imagemUrl,
-        preco,
-        categoria,
-        descricao,
-        estoque
-    })
+    try {
+        const produto = await databaseProducts.create({
+            nome,
+            imagemUrl,
+            preco,
+            categoria,
+            descricao,
+            estoque
+        })
 
-    return response.status(201).send()
+        return response.status(201).send(produto)
+    } catch {
+        return response.status(500).send({ mensagem: 'Erro ao criar produto' })
+    }
 })
 
 server.put('/produtos/:id', async (request, reply) => {
