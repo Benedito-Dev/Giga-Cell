@@ -154,9 +154,28 @@ function Login() {
     
                             {/* Formulário de Cadastro com etapas */}
                             <div className="mt-6">
+                                {/* Indicador de etapas animado */}
+                                <div className="flex justify-between mb-6 relative">
+                                    {/* Linha de fundo */}
+                                    <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
+                                    
+                                    {/* Etapas */}
+                                    {[1, 2, 3].map((stepNumber) => (
+                                        <div key={stepNumber} className="flex flex-col items-center z-10">
+                                            <div 
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step === stepNumber ? 'bg-blue-600 text-white scale-110' : step > stepNumber ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                {stepNumber}
+                                            </div>
+                                            <span className={`text-xs mt-1 ${step === stepNumber ? 'font-medium text-blue-600' : 'text-gray-500'}`}>
+                                                {stepNumber === 1 ? 'Dados' : stepNumber === 2 ? 'Endereço' : 'Senha'}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+    
                                 {step === 1 && (
                                     <div>
-                                        <h2 className="text-lg font-semibold mb-4">Dados Pessoais</h2>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Nome Completo</label>
                                             <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Seu nome completo" />
@@ -170,12 +189,12 @@ function Login() {
                                             <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="000.000.000-00" />
                                         </div>
                                         <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-2 rounded-md">Próximo</button>
+                                        <div className="mt-8"></div>
                                     </div>
                                 )}
     
                                 {step === 2 && (
                                     <div>
-                                        <h2 className="text-lg font-semibold mb-4">Endereço</h2>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Telefone</label>
                                             <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="(00) 00000-0000" />
@@ -188,24 +207,25 @@ function Login() {
                                             <button onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
                                             <button onClick={() => setStep(3)} className="bg-blue-600 text-white py-2 px-4 rounded-md">Próximo</button>
                                         </div>
+                                        <div className="mt-8"></div>
                                     </div>
                                 )}
     
                                 {step === 3 && (
                                     <div>
-                                        <h2 className="text-lg font-semibold mb-4">Senha</h2>
                                         <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Senha</label>
+                                            <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Senha</label>
                                             <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Mínimo 6 caracteres" />
                                         </div>
                                         <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                                            <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Confirmar Senha</label>
                                             <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Digite a senha novamente" />
                                         </div>
                                         <div className="flex justify-between">
                                             <button onClick={() => setStep(2)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
                                             <button className="bg-green-600 text-white py-2 px-4 rounded-md">Finalizar Cadastro</button>
                                         </div>
+                                        <div className="mt-8"></div>
                                     </div>
                                 )}
                             </div>
@@ -249,19 +269,36 @@ function Login() {
     
                             {/* Formulário de Login */}
                             <div className="mt-6">
-                                <h2 className="text-lg font-semibold mb-4">Acesse sua conta</h2>
                                 <form>
-                                    <input type="email" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-4" placeholder="E-mail" />
-                                    <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-4" placeholder="Senha" />
-                                    <button className="w-full bg-blue-600 text-white py-2 rounded-md">Entrar</button>
-                                </form>
+                                    <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">E-mail</label>
+                                    <input type="email" 
+                                            value={formData.loginEmail} 
+                                            onChange={handleChange} 
+                                            name="loginEmail" 
+                                            className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700" 
+                                            placeholder="seu@email.com" 
+                                        />
+                                        {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.logxinEmail}</p>}
+
+                                        <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Senha</label>
+                                        <input type="password"
+                                                value={formData.loginSenha}
+                                                onChange={handleChange}
+                                                name="loginSenha"
+                                                className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700"
+                                                placeholder="Digite sua senha"
+                                            />
+                                            {errors.loginSenha && <p className="text-red-500 text-xs mb-3">{errors.loginSenha}</p>}
+                                        <button className="w-full bg-blue-600 text-white py-2 rounded-md mt-6 hover:bg-blue-700 transition-colors">Entrar</button>
+                                        <div className="mt-8"></div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
-    );
+        );
     
 
 }
