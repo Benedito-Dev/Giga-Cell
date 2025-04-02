@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Logo from '../images/logo.png';
+import imgGiga from '../images/imgG.png';
 
 function Login() {
     const [activeTab, setActiveTab] = useState('login');
@@ -212,14 +213,14 @@ function Login() {
     
                         {/* Imagem - Lado Direito no Cadastro */}
                         <div className="w-1/2 hidden md:block">
-                            <img src="URL_DA_SUA_IMAGEM" alt="Imagem de Cadastro" className="w-full h-full object-cover" />
+                            <img src={imgGiga} alt="Imagem de Cadastro" className="w-full h-full object-cover" />
                         </div>
                     </>
                 ) : (
                     <>
                         {/* Imagem - Lado Esquerdo no Login */}
                         <div className="w-1/2 hidden md:block">
-                            <img src="URL_DA_SUA_IMAGEM" alt="Imagem de Login" className="w-full h-full object-cover" />
+                            <img src="URL_DA_IMAGEM" alt="Imagem de Login" className="w-full h-full object-cover" />
                         </div>
     
                         {/* Formulário - Lado Direito no Login */}
