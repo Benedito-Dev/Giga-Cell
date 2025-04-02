@@ -2,8 +2,6 @@ import { fastify } from 'fastify'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fastifyStatic from '@fastify/static'
-import { DatabasePostgres } from './services/database-postgres.js'
-import { DatabasePostgresAcessorios } from './services/acessorios.js'
 import { DatabasePostgresProdutos } from './services/products.js'
 import fastifyCors from '@fastify/cors'
 
@@ -17,8 +15,7 @@ const __dirname = path.dirname(__filename)
 
 const databaseProducts = new DatabasePostgresProdutos()
 
-const databaseCelulares = new DatabasePostgres()
-const databaseAcessorios = new DatabasePostgresAcessorios()
+
 
 // Servindo arquivos estáticos da pasta "public"
 server.register(fastifyStatic, {
