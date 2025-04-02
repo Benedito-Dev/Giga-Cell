@@ -18,7 +18,7 @@
     "@neondatabase/serverless": "^0.10.4",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "fastify": "^5.2.1",
+    "fastify": "^5.2.2",
     "nodemon": "^3.1.9"
   }
 }
