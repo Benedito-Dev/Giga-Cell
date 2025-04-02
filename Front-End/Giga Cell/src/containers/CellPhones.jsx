@@ -17,7 +17,7 @@ function CellPhones() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/celulares');
+        const response = await fetch('http://localhost:3000/produtos');
         if (!response.ok) {
           throw new Error('Erro ao buscar os produtos');
         }

@@ -7,6 +7,7 @@ sql`
         imagemUrl VARCHAR(255),
         preco NUMERIC(10, 2) NOT NULL,
         categoria TEXT NOT NULL,
+        descricao TEXT,
         estoque INTEGER NOT NULL DEFAULT 0
     );
 `.then(() => {

@@ -3,7 +3,7 @@ import { sql } from '../config/db.js'; // Importe a configuração do banco de d
 
 export class DatabasePostgresProdutos {
     // Método para listar produtos
-    async list(search) {
+    async list(search, category) {
         let produtos;
 
         if (search) {
@@ -27,7 +27,8 @@ export class DatabasePostgresProdutos {
             nome, 
             imagemUrl, 
             preco, 
-            categoria, 
+            categoria,
+            descricao, 
             estoque 
         } = produto;
         
@@ -37,10 +38,10 @@ export class DatabasePostgresProdutos {
         try {
             await sql`
                 INSERT INTO produtos (
-                    id, nome, imagemurl, preco, categoria, estoque
+                    id, nome, imagemurl, preco, categoria, descricao, estoque
                 ) 
                 VALUES (
-                    ${id}, ${nome}, ${imagemUrl}, ${preco}, ${categoria}, ${estoque}
+                    ${id}, ${nome}, ${imagemUrl}, ${preco}, ${categoria}, ${descricao}, ${estoque}
                 )
             `;
             
@@ -58,7 +59,8 @@ export class DatabasePostgresProdutos {
             nome, 
             imagemUrl, 
             preco, 
-            categoria, 
+            categoria,
+            descricao,
             estoque 
         } = produto;
 
@@ -70,6 +72,7 @@ export class DatabasePostgresProdutos {
                 imagemurl = ${imagemUrl},
                 preco = ${preco},
                 categoria = ${categoria},
+                descricao = ${descricao},
                 estoque = ${estoque}
             WHERE id = ${id}
         `;

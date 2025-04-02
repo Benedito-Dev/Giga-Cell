@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import fastifyStatic from '@fastify/static'
 import { DatabasePostgres } from './services/database-postgres.js'
 import { DatabasePostgresAcessorios } from './services/acessorios.js'
+import { DatabasePostgresProdutos } from './services/products.js'
 import fastifyCors from '@fastify/cors'
 
 
@@ -13,6 +14,8 @@ const server = fastify()
 // Obtém o diretório atual corretamente (equivalente a __dirname no ES6)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+const databaseProducts = new DatabasePostgresProdutos()
 
 const databaseCelulares = new DatabasePostgres()
 const databaseAcessorios = new DatabasePostgresAcessorios()
@@ -42,50 +45,10 @@ server.get('/views/admin', async (request, reply) => {
 // Rotas da API de celulares
 // =========================
 
-server.get('/celulares', async (request) => {
+server.get('/produtos', async (request) => {
     const search = request.query.search
-    const celulares = await databaseCelulares.list(search)
-    return celulares
-})
-
-server.post('/celulares', async (request, response) => {
-    const { marca, modelo, armazenamento_gb, ram_gb, sistema_operacional, preco, lancamento, imagemUrl } = request.body
-
-    await databaseCelulares.create({
-        marca,
-        modelo,
-        armazenamento_gb,
-        ram_gb,
-        sistema_operacional,
-        preco,
-        lancamento,
-        imagemUrl
-    })
-
-    return response.status(201).send()
-})
-
-server.put('/celulares/:id', async (request, response) => {
-    const celularId = request.params.id
-    const { marca, modelo, armazenamento_gb, ram_gb, sistema_operacional, preco, lancamento } = request.body
-
-    await databaseCelulares.update(celularId, {
-        marca,
-        modelo,
-        armazenamento_gb,
-        ram_gb,
-        sistema_operacional,
-        preco,
-        lancamento
-    })
-
-    return response.status(204).send()
-})
-
-server.delete('/celulares/:id', async (request, response) => {
-    const celularId = request.params.id
-    await databaseCelulares.delete(celularId)
-    return response.status(204).send()
+    const produtos = await databaseProducts.list(search)
+    return produtos
 })
 
 // =========================
