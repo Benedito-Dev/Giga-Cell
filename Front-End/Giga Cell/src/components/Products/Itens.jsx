@@ -10,10 +10,15 @@ function ProductsGrid() {
 
   // Função para buscar os produtos da API
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async (category) => {
       try {
-        const response = await fetch('http://localhost:3000/celulares');
+
+        const url = new URL('http://localhost:3000/produtos');
+        if (category) {
+          url.searchParams.append('category', category);
+        }
         
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -69,7 +74,7 @@ function ProductsGrid() {
           </h1>
           <div className="buttons">
             <Link to="/produtos/adicionar">
-            <button className='bg-green-500 rounded-2xl px-6 gap-5 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i class='bx bx-plus-circle'></i>Adicionar Produtos</button>
+            <button className='bg-green-500 rounded-2xl px-6 gap-5 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i className='bx bx-plus-circle'></i>Adicionar Produtos</button>
             </Link>
           <button className="bg-gray-700 border-2 border-white px-6 py-3 rounded-2xl text-lg transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">
             Ver Todos

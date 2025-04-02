@@ -7,13 +7,22 @@ export class DatabasePostgresProdutos {
         let produtos;
 
         if (search) {
-            // Busca produtos onde o nome ou categoria contém o termo de pesquisa
             produtos = await sql`
                 SELECT * FROM produtos 
-                WHERE nome ILIKE ${'%' + search + '%'} 
-                   OR categoria ILIKE ${'%' + search + '%'}
+                WHERE (nome ILIKE ${'%' + search + '%'} 
+                   OR categoria ILIKE ${'%' + search + '%'})
+                   ${category ? sql`AND categoria = ${category}` : sql``}
             `;
-        } else {
+        } 
+        
+        else if (category) {
+            // Busca produtos por categoria
+            produtos = await sql`
+                SELECT * FROM produtos WHERE categoria = ${category}
+            `;
+        }
+
+        else {
             // Busca todos os produtos
             produtos = await sql`SELECT * FROM produtos`;
         }

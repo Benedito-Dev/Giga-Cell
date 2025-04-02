@@ -15,21 +15,26 @@ function Acessorios() {
 
   // Função para buscar os produtos da API
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async (category) => {
       try {
-        const response = await fetch('http://localhost:3000/acessorios');
-        if (!response.ok) {
-          throw new Error('Erro ao buscar os produtos');
+        // Cria a URL com o parâmetro de categoria se existir
+        const url = new URL('http://localhost:3000/produtos');
+        if (category) {
+          url.searchParams.append('category', category);
         }
+    
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro ao buscar produtos');
+        
         const data = await response.json();
-        console.log('Dados recebidos:', data); // Verifique os dados no console
-        setProducts(data); // Ajuste conforme a estrutura da resposta
+        setProducts(data);
       } catch (error) {
         console.error('Erro:', error);
+        // Adicione tratamento de erro visível para o usuário
       }
     };
 
-    fetchProducts();
+    fetchProducts('acessorios');
   }, []);
 
   // Renderização condicional enquanto os dados são carregados

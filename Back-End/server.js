@@ -46,8 +46,8 @@ server.get('/views/admin', async (request, reply) => {
 // =========================
 
 server.get('/produtos', async (request) => {
-    const search = request.query.search
-    const produtos = await databaseProducts.list(search)
+    const { search, category } = request.query // Extrai ambos os parâmetros
+    const produtos = await databaseProducts.list(search, category) // Passa os dois para o método
     return produtos
 })
 
