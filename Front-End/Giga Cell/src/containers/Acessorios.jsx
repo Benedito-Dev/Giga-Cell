@@ -43,7 +43,7 @@ function Acessorios() {
   }
 
   return (
-    <div className="bg-gray-200 h-[90vh] w-full flex justify-start items-center flex-col">
+    <div className="bg-gray-200 h-auto w-full flex justify-start items-center flex-col">
       <div className="w-[95vw] rounded-full h-1 bg-black mb-10 opacity-20"></div> {/* Linha Divisora de Containers */}
       <div className="title flex justify-between items-center w-full px-12">
         <h1 className="text-7xl font-bold text-black mb-12">Acessorios</h1>
