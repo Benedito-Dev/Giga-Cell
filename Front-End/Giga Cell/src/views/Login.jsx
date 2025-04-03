@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Logo from '../images/logo.png';
 import imgGiga from '../images/imgG.png';
 
 function Login() {
@@ -130,9 +129,7 @@ function Login() {
                     <>
                         {/* Formulário - Lado Esquerdo no Cadastro */}
                         <div className="w-full md:w-1/2 p-6">
-                            <div className="flex justify-center mb-4">
-                                <img src={Logo} alt="Logo" className="h-12" />
-                            </div>
+                            
     
                             {/* Abas */}
                             <div className="flex border-b">
@@ -146,7 +143,7 @@ function Login() {
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('register')}
-                                    className="flex-1 py-4 font-medium text-sm text-blue-600 border-b-2 border-blue-600"
+                                    className="flex-1 py-4 font-medium text-sm text-orange-600 border-b-2 border-orange-400"
                                 >
                                     Cadastro
                                 </button>
@@ -159,72 +156,72 @@ function Login() {
                                     {/* Linha de fundo */}
                                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
                                     
-                                    {/* Etapas */}
-                                    {[1, 2, 3].map((stepNumber) => (
-                                        <div key={stepNumber} className="flex flex-col items-center z-10">
-                                            <div 
-                                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step === stepNumber ? 'bg-blue-600 text-white scale-110' : step > stepNumber ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                            >
-                                                {stepNumber}
+                                        {/* Etapas */}
+                                        {[1, 2, 3].map((stepNumber) => (
+                                            <div key={stepNumber} className="flex flex-col items-center z-10">
+                                                <div 
+                                                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step === stepNumber ? 'bg-blue-600 text-white scale-110' : step > stepNumber ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                                >
+                                                    {stepNumber}
+                                                </div>
+                                                <span className={`text-xs mt-1 ${step === stepNumber ? 'font-medium text-blue-600' : 'text-gray-500'}`}>
+                                                    {stepNumber === 1 ? 'Dados' : stepNumber === 2 ? 'Endereço' : 'Senha'}
+                                                </span>
                                             </div>
-                                            <span className={`text-xs mt-1 ${step === stepNumber ? 'font-medium text-blue-600' : 'text-gray-500'}`}>
-                                                {stepNumber === 1 ? 'Dados' : stepNumber === 2 ? 'Endereço' : 'Senha'}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-    
-                                {step === 1 && (
-                                    <div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Nome Completo</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Seu nome completo" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">E-mail</label>
-                                            <input type="email" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="seu@email.com" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">CPF</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="000.000.000-00" />
-                                        </div>
-                                        <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-2 rounded-md">Próximo</button>
-                                        <div className="mt-8"></div>
+                                        ))}
                                     </div>
-                                )}
-    
-                                {step === 2 && (
-                                    <div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Telefone</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="(00) 00000-0000" />
+        
+                                    {step === 1 && (
+                                        <div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
+                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Seu nome completo" />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+                                                <input type="email" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="seu@email.com" />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">CPF</label>
+                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="000.000.000-00" />
+                                            </div>
+                                            <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-2 rounded-md">Próximo</button>
+                                            <div className="mt-8"></div>
                                         </div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Endereço Completo</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Rua, número, bairro, cidade" />
+                                    )}
+        
+                                    {step === 2 && (
+                                        <div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">Telefone</label>
+                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="(00) 00000-0000" />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">Endereço Completo</label>
+                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Rua, número, bairro, cidade" />
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <button onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
+                                                <button onClick={() => setStep(3)} className="bg-blue-600 text-white py-2 px-4 rounded-md">Próximo</button>
+                                            </div>
+                                            <div className="mt-8"></div>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <button onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                            <button onClick={() => setStep(3)} className="bg-blue-600 text-white py-2 px-4 rounded-md">Próximo</button>
-                                        </div>
-                                        <div className="mt-8"></div>
-                                    </div>
-                                )}
-    
-                                {step === 3 && (
-                                    <div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Senha</label>
-                                            <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Mínimo 6 caracteres" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Confirmar Senha</label>
-                                            <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Digite a senha novamente" />
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <button onClick={() => setStep(2)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                            <button className="bg-green-600 text-white py-2 px-4 rounded-md">Finalizar Cadastro</button>
-                                        </div>
+                                    )}
+        
+                                    {step === 3 && (
+                                        <div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 rounded-md mb-2">Senha</label>
+                                                <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Mínimo 6 caracteres" />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700 rounded-md mb-2">Confirmar Senha</label>
+                                                <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Digite a senha novamente" />
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <button onClick={() => setStep(2)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
+                                                <button className="bg-green-600 text-white py-2 px-4 rounded-md">Finalizar Cadastro</button>
+                                            </div>
                                         <div className="mt-8"></div>
                                     </div>
                                 )}
@@ -240,21 +237,19 @@ function Login() {
                     <>
                         {/* Imagem - Lado Esquerdo no Login */}
                         <div className="w-1/2 hidden md:block">
-                            <img src="URL_DA_IMAGEM" alt="Imagem de Login" className="w-full h-full object-cover" />
+                            <img src={imgGiga} alt="Imagem de Login" className="w-full h-full object-cover" />
                         </div>
     
                         {/* Formulário - Lado Direito no Login */}
                         <div className="w-full md:w-1/2 p-6">
-                            <div className="flex justify-center mb-4">
-                                <img src={Logo} alt="Logo" className="h-12" />
-                            </div>
+                            
     
                             {/* Abas */}
                             <div className="flex border-b">
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('login')}
-                                    className="flex-1 py-4 font-medium text-sm text-blue-600 border-b-2 border-blue-600"
+                                    className="flex-1 py-4 font-medium text-sm text-orange-600 border-b-2 border-orange-400"
                                 >
                                     Login
                                 </button>
