@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'; // Importe o Link
+import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../services/api'; // Importe o serviço
 import Logo from '../images/logo.png';
 import imgGiga from '../images/imgG.png';
 
@@ -7,7 +8,7 @@ function Login() {
     const [activeTab, setActiveTab] = useState('login');
     const [formData, setFormData] = useState({
         // Campos de cadastro
-        nomeCompleto: '',
+        nome: '',
         email: '',
         cpf: '',
         telefone: '',
@@ -21,12 +22,23 @@ function Login() {
     });
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Formatação automática para CPF e Telefone
+        let formattedValue = value;
+        if (name === 'cpf') {
+            formattedValue = formatCpf(value);
+        } else if (name === 'telefone') {
+            formattedValue = formatPhone(value);
+        }
+        
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: formattedValue
         }));
         
         // Limpa erros quando o usuário começa a digitar
@@ -40,21 +52,20 @@ function Login() {
     };
 
     const validateCpf = (cpf) => {
-        // Validação básica de CPF (pode ser substituída por uma validação mais robusta)
         return cpf.replace(/\D/g, '').length === 11;
     };
 
     const validatePhone = (phone) => {
-        // Validação básica de telefone
         return phone.replace(/\D/g, '').length >= 10;
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const newErrors = {};
         
         // Validações
-        if (!formData.nomeCompleto.trim()) newErrors.nomeCompleto = 'Nome completo é obrigatório';
+        if (!formData.nome.trim()) newErrors.nome = 'Nome completo é obrigatório';
         if (!formData.email.includes('@')) newErrors.email = 'E-mail inválido';
         if (!validateCpf(formData.cpf)) newErrors.cpf = 'CPF inválido';
         if (!validatePhone(formData.telefone)) newErrors.telefone = 'Telefone inválido';
@@ -65,26 +76,38 @@ function Login() {
         setErrors(newErrors);
         
         if (Object.keys(newErrors).length === 0) {
-            // Simulação de cadastro bem-sucedido
-            console.log('Dados para cadastro:', {
-                nomeCompleto: formData.nomeCompleto,
-                email: formData.email,
-                cpf: formData.cpf.replace(/\D/g, ''),
-                telefone: formData.telefone.replace(/\D/g, ''),
-                endereco: formData.endereco,
-                senha: formData.senha // Na prática, isso seria um hash
-            });
-            
-            setSuccessMessage('Cadastro realizado com sucesso!');
-            setTimeout(() => {
-                setSuccessMessage('');
-                setActiveTab('login');
-            }, 3000);
+            try {
+                const userData = {
+                    nome: formData.nome,
+                    email: formData.email,
+                    cpf: formData.cpf.replace(/\D/g, ''),
+                    telefone: formData.telefone.replace(/\D/g, ''),
+                    endereco: formData.endereco,
+                    senha: formData.senha
+                };
+                
+                await authService.register(userData);
+                
+                setSuccessMessage('Cadastro realizado com sucesso!');
+                setTimeout(() => {
+                    setSuccessMessage('');
+                    setActiveTab('login');
+                    setFormData(prev => ({
+                        ...prev,
+                        loginEmail: formData.email,
+                        loginSenha: ''
+                    }));
+                }, 3000);
+            } catch (error) {
+                setErrors({ submit: error.message });
+            }
         }
+        setIsLoading(false);
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const newErrors = {};
         
         if (!formData.loginEmail.includes('@')) newErrors.loginEmail = 'E-mail inválido';
@@ -93,14 +116,20 @@ function Login() {
         setErrors(newErrors);
         
         if (Object.keys(newErrors).length === 0) {
-            // Simulação de login bem-sucedido
-            console.log('Dados para login:', {
-                email: formData.loginEmail,
-                senha: formData.loginSenha // Na prática, isso seria comparado com um hash
-            });
-            
-            alert('Login bem-sucedido!');
+            try {
+                const { user } = await authService.login(formData.loginEmail, formData.loginSenha);
+                
+                // Redirecionar para a página principal após login bem-sucedido
+                navigate('/');
+                
+                // Você pode adicionar aqui o armazenamento do token no contexto/state global
+                // Exemplo: authContext.setUser(user);
+                
+            } catch (error) {
+                setErrors({ submit: error.message });
+            }
         }
+        setIsLoading(false);
     };
 
     const formatCpf = (value) => {
@@ -120,27 +149,22 @@ function Login() {
             .replace(/(-\d{4})\d+?$/, '$1');
     };
 
-    const [step, setStep] = useState(1); // Controle das etapas do cadastro
+    const [step, setStep] = useState(1);
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            {/* Botão Voltar adicionado aqui */}
             <Link to="/" className="absolute top-6 left-6 bg-gray-400 hover:bg-gray-600 hover:scale-125 text-black font-bold py-2 px-4 rounded-full transition-all duration-200">
-            {/* <i class='bx bx-arrow-back'></i> */}Voltar
+                Voltar
             </Link>
             
             <div className="bg-white rounded-lg shadow-md w-full max-w-3xl flex overflow-hidden">
-    
-                {/* Inverte a posição da imagem no cadastro */}
                 {activeTab === 'register' ? (
                     <>
-                        {/* Formulário - Lado Esquerdo no Cadastro */}
                         <div className="w-full md:w-1/2 p-6">
                             <div className="flex justify-center mb-4">
                                 <img src={Logo} alt="Logo" className="h-12" />
                             </div>
     
-                            {/* Abas */}
                             <div className="flex border-b">
                                 <button
                                     type="button"
@@ -158,14 +182,10 @@ function Login() {
                                 </button>
                             </div>
     
-                            {/* Formulário de Cadastro com etapas */}
                             <div className="mt-6">
-                                {/* Indicador de etapas animado */}
                                 <div className="flex justify-between mb-6 relative">
-                                    {/* Linha de fundo */}
                                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
                                     
-                                    {/* Etapas */}
                                     {[1, 2, 3].map((stepNumber) => (
                                         <div key={stepNumber} className="flex flex-col items-center z-10">
                                             <div 
@@ -181,81 +201,167 @@ function Login() {
                                 </div>
     
                                 {step === 1 && (
-                                    <div>
+                                    <form onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Nome Completo</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Seu nome completo" />
+                                            <input 
+                                                type="text" 
+                                                name="nome"
+                                                value={formData.nome}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="Seu nome completo" 
+                                            />
+                                            {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome}</p>}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">E-mail</label>
-                                            <input type="email" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="seu@email.com" />
+                                            <input 
+                                                type="email" 
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="seu@email.com" 
+                                            />
+                                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">CPF</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="000.000.000-00" />
+                                            <input 
+                                                type="text" 
+                                                name="cpf"
+                                                value={formData.cpf}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="000.000.000-00" 
+                                                maxLength="14"
+                                            />
+                                            {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf}</p>}
                                         </div>
-                                        <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-2 rounded-md">Próximo</button>
-                                        <div className="mt-8"></div>
-                                    </div>
+                                        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md">
+                                            Próximo
+                                        </button>
+                                    </form>
                                 )}
     
                                 {step === 2 && (
-                                    <div>
+                                    <form onSubmit={(e) => { e.preventDefault(); setStep(3); }}>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Telefone</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="(00) 00000-0000" />
+                                            <input 
+                                                type="text" 
+                                                name="telefone"
+                                                value={formData.telefone}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="(00) 00000-0000" 
+                                                maxLength="15"
+                                            />
+                                            {errors.telefone && <p className="text-red-500 text-xs mt-1">{errors.telefone}</p>}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Endereço Completo</label>
-                                            <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Rua, número, bairro, cidade" />
+                                            <input 
+                                                type="text" 
+                                                name="endereco"
+                                                value={formData.endereco}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="Rua, número, bairro, cidade" 
+                                            />
+                                            {errors.endereco && <p className="text-red-500 text-xs mt-1">{errors.endereco}</p>}
                                         </div>
                                         <div className="flex justify-between">
-                                            <button onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                            <button onClick={() => setStep(3)} className="bg-blue-600 text-white py-2 px-4 rounded-md">Próximo</button>
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setStep(1)} 
+                                                className="bg-gray-400 text-white py-2 px-4 rounded-md"
+                                            >
+                                                Voltar
+                                            </button>
+                                            <button 
+                                                type="submit" 
+                                                className="bg-blue-600 text-white py-2 px-4 rounded-md"
+                                            >
+                                                Próximo
+                                            </button>
                                         </div>
-                                        <div className="mt-8"></div>
-                                    </div>
+                                    </form>
                                 )}
     
                                 {step === 3 && (
-                                    <div>
+                                    <form onSubmit={handleRegister}>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Senha</label>
-                                            <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Mínimo 6 caracteres" />
+                                            <input 
+                                                type="password" 
+                                                name="senha"
+                                                value={formData.senha}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="Mínimo 6 caracteres" 
+                                            />
+                                            {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha}</p>}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">Confirmar Senha</label>
-                                            <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Digite a senha novamente" />
+                                            <input 
+                                                type="password" 
+                                                name="confirmarSenha"
+                                                value={formData.confirmarSenha}
+                                                onChange={handleChange}
+                                                className="w-full text-black px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" 
+                                                placeholder="Digite a senha novamente" 
+                                            />
+                                            {errors.confirmarSenha && <p className="text-red-500 text-xs mt-1">{errors.confirmarSenha}</p>}
                                         </div>
                                         <div className="flex justify-between">
-                                            <button onClick={() => setStep(2)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                            <button className="bg-green-600 text-white py-2 px-4 rounded-md">Finalizar Cadastro</button>
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setStep(2)} 
+                                                className="bg-gray-400 text-white py-2 px-4 rounded-md"
+                                            >
+                                                Voltar
+                                            </button>
+                                            <button 
+                                                type="submit" 
+                                                className="bg-green-600 text-white py-2 px-4 rounded-md"
+                                                disabled={isLoading}
+                                            >
+                                                {isLoading ? 'Processando...' : 'Finalizar Cadastro'}
+                                            </button>
                                         </div>
-                                        <div className="mt-8"></div>
-                                    </div>
+                                        {successMessage && (
+                                            <div className="mt-4 p-2 bg-green-100 text-green-700 rounded text-center">
+                                                {successMessage}
+                                            </div>
+                                        )}
+                                        {errors.submit && (
+                                            <div className="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">
+                                                {errors.submit}
+                                            </div>
+                                        )}
+                                    </form>
                                 )}
                             </div>
                         </div>
     
-                        {/* Imagem - Lado Direito no Cadastro */}
                         <div className="w-1/2 hidden md:block">
                             <img src={imgGiga} alt="Imagem de Cadastro" className="w-full h-full object-cover" />
                         </div>
                     </>
                 ) : (
                     <>
-                        {/* Imagem - Lado Esquerdo no Login */}
                         <div className="w-1/2 hidden md:block">
                             <img src={imgGiga} alt="Imagem de Login" className="w-full h-full object-cover" />
                         </div>
     
-                        {/* Formulário - Lado Direito no Login */}
                         <div className="w-full md:w-1/2 p-6">
                             <div className="flex justify-center mb-4">
                                 <img src={Logo} alt="Logo" className="h-12" />
                             </div>
     
-                            {/* Abas */}
                             <div className="flex border-b">
                                 <button
                                     type="button"
@@ -266,45 +372,61 @@ function Login() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setActiveTab('register')}
+                                    onClick={() => {
+                                        setActiveTab('register');
+                                        setStep(1);
+                                    }}
                                     className="flex-1 py-4 font-medium text-sm text-gray-500 hover:text-gray-700"
                                 >
                                     Cadastro
                                 </button>
                             </div>
     
-                            {/* Formulário de Login */}
                             <div className="mt-6">
-                                <form>
+                                <form onSubmit={handleLogin}>
                                     <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">E-mail</label>
-                                    <input type="email" 
-                                            value={formData.loginEmail} 
-                                            onChange={handleChange} 
-                                            name="loginEmail" 
-                                            className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700" 
-                                            placeholder="seu@email.com" 
-                                        />
-                                        {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.loginEmail}</p>}
+                                    <input 
+                                        type="email" 
+                                        name="loginEmail"
+                                        value={formData.loginEmail}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700" 
+                                        placeholder="seu@email.com" 
+                                    />
+                                    {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.loginEmail}</p>}
 
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Senha</label>
-                                        <input type="password"
-                                                value={formData.loginSenha}
-                                                onChange={handleChange}
-                                                name="loginSenha"
-                                                className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700"
-                                                placeholder="Digite sua senha"
-                                            />
-                                            {errors.loginSenha && <p className="text-red-500 text-xs mb-3">{errors.loginSenha}</p>}
-                                        <button className="w-full bg-blue-600 text-white py-2 rounded-md mt-6 hover:bg-blue-700 transition-colors">Entrar</button>
-                                        <div className="mt-8"></div>
-                                    </form>
-                                </div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Senha</label>
+                                    <input 
+                                        type="password"
+                                        name="loginSenha"
+                                        value={formData.loginSenha}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700"
+                                        placeholder="Digite sua senha"
+                                    />
+                                    {errors.loginSenha && <p className="text-red-500 text-xs mb-3">{errors.loginSenha}</p>}
+                                    
+                                    <button 
+                                        type="submit" 
+                                        className="w-full bg-blue-600 text-white py-2 rounded-md mt-6 hover:bg-blue-700 transition-colors"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? 'Entrando...' : 'Entrar'}
+                                    </button>
+                                    
+                                    {errors.submit && (
+                                        <div className="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">
+                                            {errors.submit}
+                                        </div>
+                                    )}
+                                </form>
                             </div>
-                        </>
-                    )}
-                </div>
+                        </div>
+                    </>
+                )}
             </div>
-        );
+        </div>
+    );
 }
 
 export default Login;
