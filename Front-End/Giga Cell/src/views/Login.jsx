@@ -240,7 +240,7 @@ function Login() {
                     <>
                         {/* Imagem - Lado Esquerdo no Login */}
                         <div className="w-1/2 hidden md:block">
-                            <img src="URL_DA_IMAGEM" alt="Imagem de Login" className="w-full h-full object-cover" />
+                            <img src={imgGiga} alt="Imagem de Login" className="w-full h-full object-cover" />
                         </div>
     
                         {/* Formulário - Lado Direito no Login */}
