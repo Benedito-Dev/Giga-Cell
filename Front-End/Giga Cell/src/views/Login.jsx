@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Logo from '../images/logo.png';
 import imgGiga from '../images/imgG.png';
 
 function Login() {
@@ -19,6 +21,8 @@ function Login() {
     });
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
+    const [step, setStep] = useState(1);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +31,6 @@ function Login() {
             [name]: value
         }));
         
-        // Limpa erros quando o usuário começa a digitar
         if (errors[name]) {
             setErrors(prev => {
                 const newErrors = {...prev};
@@ -38,12 +41,10 @@ function Login() {
     };
 
     const validateCpf = (cpf) => {
-        // Validação básica de CPF (pode ser substituída por uma validação mais robusta)
         return cpf.replace(/\D/g, '').length === 11;
     };
 
     const validatePhone = (phone) => {
-        // Validação básica de telefone
         return phone.replace(/\D/g, '').length >= 10;
     };
 
@@ -51,7 +52,6 @@ function Login() {
         e.preventDefault();
         const newErrors = {};
         
-        // Validações
         if (!formData.nomeCompleto.trim()) newErrors.nomeCompleto = 'Nome completo é obrigatório';
         if (!formData.email.includes('@')) newErrors.email = 'E-mail inválido';
         if (!validateCpf(formData.cpf)) newErrors.cpf = 'CPF inválido';
@@ -63,14 +63,13 @@ function Login() {
         setErrors(newErrors);
         
         if (Object.keys(newErrors).length === 0) {
-            // Simulação de cadastro bem-sucedido
             console.log('Dados para cadastro:', {
                 nomeCompleto: formData.nomeCompleto,
                 email: formData.email,
                 cpf: formData.cpf.replace(/\D/g, ''),
                 telefone: formData.telefone.replace(/\D/g, ''),
                 endereco: formData.endereco,
-                senha: formData.senha // Na prática, isso seria um hash
+                senha: formData.senha
             });
             
             setSuccessMessage('Cadastro realizado com sucesso!');
@@ -91,10 +90,9 @@ function Login() {
         setErrors(newErrors);
         
         if (Object.keys(newErrors).length === 0) {
-            // Simulação de login bem-sucedido
             console.log('Dados para login:', {
                 email: formData.loginEmail,
-                senha: formData.loginSenha // Na prática, isso seria comparado com um hash
+                senha: formData.loginSenha
             });
             
             alert('Login bem-sucedido!');
@@ -118,19 +116,40 @@ function Login() {
             .replace(/(-\d{4})\d+?$/, '$1');
     };
 
-    const [step, setStep] = useState(1); // Controle das etapas do cadastro
+    const handleBackToHome = () => {
+        navigate('/');
+    };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 relative">
+            {/* Botão Voltar no canto superior esquerdo */}
+            <button 
+                onClick={handleBackToHome}
+                className="absolute top-4 left-4 flex items-center text-blue-800 hover:text-blue-600 transition-colors duration-200 z-10"
+            >
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    strokeWidth={1.5} 
+                    stroke="currentColor" 
+                    className="w-6 h-6 mr-2"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" 
+                    />
+                </svg>
+                <span className="font-medium">Voltar para a Página principal</span>
+            </button>
+
             <div className="bg-white rounded-lg shadow-md w-full max-w-3xl flex overflow-hidden">
-    
-                {/* Inverte a posição da imagem no cadastro */}
                 {activeTab === 'register' ? (
                     <>
                         {/* Formulário - Lado Esquerdo no Cadastro */}
                         <div className="w-full md:w-1/2 p-6">
-                            
-    
+
                             {/* Abas */}
                             <div className="flex border-b">
                                 <button
@@ -143,91 +162,182 @@ function Login() {
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('register')}
-                                    className="flex-1 py-4 font-medium text-sm text-orange-600 border-b-2 border-orange-400"
+                                    className="flex-1 py-4 font-medium text-sm text-blue-600 border-b-2 border-blue-600"
                                 >
                                     Cadastro
                                 </button>
                             </div>
-    
+
                             {/* Formulário de Cadastro com etapas */}
                             <div className="mt-6">
                                 {/* Indicador de etapas animado */}
                                 <div className="flex justify-between mb-6 relative">
-                                    {/* Linha de fundo */}
                                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
                                     
-                                        {/* Etapas */}
-                                        {[1, 2, 3].map((stepNumber) => (
-                                            <div key={stepNumber} className="flex flex-col items-center z-10">
-                                                <div 
-                                                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step === stepNumber ? 'bg-blue-600 text-white scale-110' : step > stepNumber ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
-                                                >
-                                                    {stepNumber}
-                                                </div>
-                                                <span className={`text-xs mt-1 ${step === stepNumber ? 'font-medium text-blue-600' : 'text-gray-500'}`}>
-                                                    {stepNumber === 1 ? 'Dados' : stepNumber === 2 ? 'Endereço' : 'Senha'}
-                                                </span>
+                                    {[1, 2, 3].map((stepNumber) => (
+                                        <div key={stepNumber} className="flex flex-col items-center z-10">
+                                            <div 
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step === stepNumber ? 'bg-blue-600 text-white scale-110' : step > stepNumber ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}
+                                            >
+                                                {stepNumber}
                                             </div>
-                                        ))}
-                                    </div>
-        
-                                    {step === 1 && (
-                                        <div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
-                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Seu nome completo" />
-                                            </div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
-                                                <input type="email" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="seu@email.com" />
-                                            </div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">CPF</label>
-                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="000.000.000-00" />
-                                            </div>
-                                            <button onClick={() => setStep(2)} className="w-full bg-blue-600 text-white py-2 rounded-md">Próximo</button>
-                                            <div className="mt-8"></div>
+                                            <span className={`text-xs mt-1 ${step === stepNumber ? 'font-medium text-blue-600' : 'text-gray-500'}`}>
+                                                {stepNumber === 1 ? 'Dados' : stepNumber === 2 ? 'Endereço' : 'Senha'}
+                                            </span>
                                         </div>
-                                    )}
-        
-                                    {step === 2 && (
-                                        <div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">Telefone</label>
-                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="(00) 00000-0000" />
-                                            </div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">Endereço Completo</label>
-                                                <input type="text" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Rua, número, bairro, cidade" />
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <button onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                                <button onClick={() => setStep(3)} className="bg-blue-600 text-white py-2 px-4 rounded-md">Próximo</button>
-                                            </div>
-                                            <div className="mt-8"></div>
+                                    ))}
+                                </div>
+
+                                {step === 1 && (
+                                    <form onSubmit={handleRegister}>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Nome Completo</label>
+                                            <input 
+                                                type="text" 
+                                                name="nomeCompleto"
+                                                value={formData.nomeCompleto}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black"
+                                                placeholder="Seu nome completo" 
+                                            />
+                                            {errors.nomeCompleto && <p className="text-red-500 text-xs mt-1">{errors.nomeCompleto}</p>}
                                         </div>
-                                    )}
-        
-                                    {step === 3 && (
-                                        <div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 rounded-md mb-2">Senha</label>
-                                                <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Mínimo 6 caracteres" />
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">E-mail</label>
+                                            <input 
+                                                type="email" 
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black"
+                                                placeholder="seu@email.com" 
+                                            />
+                                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">CPF</label>
+                                            <input 
+                                                type="text" 
+                                                name="cpf"
+                                                value={formData.cpf}
+                                                onChange={(e) => {
+                                                    e.target.value = formatCpf(e.target.value);
+                                                    handleChange(e);
+                                                }}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black"
+                                                placeholder="000.000.000-00" 
+                                            />
+                                            {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf}</p>}
+                                        </div>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setStep(2)} 
+                                            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+                                        >
+                                            Próximo
+                                        </button>
+                                    </form>
+                                )}
+
+                                {step === 2 && (
+                                    <form onSubmit={handleRegister}>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Telefone</label>
+                                            <input 
+                                                type="text" 
+                                                name="telefone"
+                                                value={formData.telefone}
+                                                onChange={(e) => {
+                                                    e.target.value = formatPhone(e.target.value);
+                                                    handleChange(e);
+                                                }}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black"
+                                                placeholder="(00) 00000-0000" 
+                                            />
+                                            {errors.telefone && <p className="text-red-500 text-xs mt-1">{errors.telefone}</p>}
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Endereço Completo</label>
+                                            <input 
+                                                type="text" 
+                                                name="endereco"
+                                                value={formData.endereco}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black" 
+                                                placeholder="Rua, número, bairro, cidade" 
+                                            />
+                                            {errors.endereco && <p className="text-red-500 text-xs mt-1">{errors.endereco}</p>}
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setStep(1)} 
+                                                className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition-colors"
+                                            >
+                                                Voltar
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setStep(3)} 
+                                                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                                            >
+                                                Próximo
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
+
+                                {step === 3 && (
+                                    <form onSubmit={handleRegister}>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Senha</label>
+                                            <input 
+                                                type="password" 
+                                                name="senha"
+                                                value={formData.senha}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black" 
+                                                placeholder="Mínimo 6 caracteres" 
+                                            />
+                                            {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha}</p>}
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                                            <input 
+                                                type="password" 
+                                                name="confirmarSenha"
+                                                value={formData.confirmarSenha}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black" 
+                                                placeholder="Digite a senha novamente" 
+                                            />
+                                            {errors.confirmarSenha && <p className="text-red-500 text-xs mt-1">{errors.confirmarSenha}</p>}
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setStep(2)} 
+                                                className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition-colors"
+                                            >
+                                                Voltar
+                                            </button>
+                                            <button 
+                                                type="submit" 
+                                                className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                                            >
+                                                Finalizar Cadastro
+                                            </button>
+                                        </div>
+                                        {successMessage && (
+                                            <div className="mt-4 p-3 bg-green-100 text-green-700 rounded-md text-center">
+                                                {successMessage}
                                             </div>
-                                            <div className="mb-4">
-                                                <label className="block text-sm font-medium text-gray-700 rounded-md mb-2">Confirmar Senha</label>
-                                                <input type="password" className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md" placeholder="Digite a senha novamente" />
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <button onClick={() => setStep(2)} className="bg-gray-400 text-white py-2 px-4 rounded-md">Voltar</button>
-                                                <button className="bg-green-600 text-white py-2 px-4 rounded-md">Finalizar Cadastro</button>
-                                            </div>
-                                        <div className="mt-8"></div>
-                                    </div>
+                                        )}
+                                    </form>
                                 )}
                             </div>
                         </div>
-    
+
                         {/* Imagem - Lado Direito no Cadastro */}
                         <div className="w-1/2 hidden md:block">
                             <img src={imgGiga} alt="Imagem de Cadastro" className="w-full h-full object-cover" />
@@ -239,17 +349,16 @@ function Login() {
                         <div className="w-1/2 hidden md:block">
                             <img src={imgGiga} alt="Imagem de Login" className="w-full h-full object-cover" />
                         </div>
-    
+
                         {/* Formulário - Lado Direito no Login */}
                         <div className="w-full md:w-1/2 p-6">
-                            
-    
+
                             {/* Abas */}
                             <div className="flex border-b">
                                 <button
                                     type="button"
                                     onClick={() => setActiveTab('login')}
-                                    className="flex-1 py-4 font-medium text-sm text-orange-600 border-b-2 border-orange-400"
+                                    className="flex-1 py-4 font-medium text-sm text-blue-600 border-b-2 border-blue-600"
                                 >
                                     Login
                                 </button>
@@ -261,41 +370,48 @@ function Login() {
                                     Cadastro
                                 </button>
                             </div>
-    
+
                             {/* Formulário de Login */}
-                            <div className="mt-6">
-                                <form>
-                                    <label className="block text-sm font-medium text-gray-700 rounded-md mb-4">E-mail</label>
-                                    <input type="email" 
-                                            value={formData.loginEmail} 
-                                            onChange={handleChange} 
-                                            name="loginEmail" 
-                                            className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700" 
-                                            placeholder="seu@email.com" 
-                                        />
-                                        {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.logxinEmail}</p>}
-
-                                        <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Senha</label>
-                                        <input type="password"
-                                                value={formData.loginSenha}
-                                                onChange={handleChange}
-                                                name="loginSenha"
-                                                className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700"
-                                                placeholder="Digite sua senha"
-                                            />
-                                            {errors.loginSenha && <p className="text-red-500 text-xs mb-3">{errors.loginSenha}</p>}
-                                        <button className="w-full bg-blue-600 text-white py-2 rounded-md mt-6 hover:bg-blue-700 transition-colors">Entrar</button>
-                                        <div className="mt-8"></div>
-                                    </form>
+                            <form onSubmit={handleLogin} className="mt-6">
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700">E-mail</label>
+                                    <input 
+                                        type="email" 
+                                        name="loginEmail"
+                                        value={formData.loginEmail}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black" 
+                                        placeholder="seu@email.com" 
+                                    />
+                                    {errors.loginEmail && <p className="text-red-500 text-xs mt-1">{errors.loginEmail}</p>}
                                 </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </div>
-        );
-    
 
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700">Senha</label>
+                                    <input 
+                                        type="password"
+                                        name="loginSenha"
+                                        value={formData.loginSenha}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100 text-black"
+                                        placeholder="Digite sua senha"
+                                    />
+                                    {errors.loginSenha && <p className="text-red-500 text-xs mt-1">{errors.loginSenha}</p>}
+                                </div>
+
+                                <button 
+                                    type="submit" 
+                                    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+                                >
+                                    Entrar
+                                </button>
+                            </form>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default Login;
