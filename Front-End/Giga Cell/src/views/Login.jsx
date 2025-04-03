@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Importe o Link
 import Logo from '../images/logo.png';
 import imgGiga from '../images/imgG.png';
 
@@ -123,6 +124,11 @@ function Login() {
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+            {/* Botão Voltar adicionado aqui */}
+            <Link to="/" className="absolute top-6 left-6 bg-gray-400 hover:bg-gray-600 hover:scale-125 text-black font-bold py-2 px-4 rounded-full transition-all duration-200">
+            {/* <i class='bx bx-arrow-back'></i> */}Voltar
+            </Link>
+            
             <div className="bg-white rounded-lg shadow-md w-full max-w-3xl flex overflow-hidden">
     
                 {/* Inverte a posição da imagem no cadastro */}
@@ -278,7 +284,7 @@ function Login() {
                                             className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md mb-1 text-gray-700" 
                                             placeholder="seu@email.com" 
                                         />
-                                        {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.logxinEmail}</p>}
+                                        {errors.loginEmail && <p className="text-red-500 text-xs mb-3">{errors.loginEmail}</p>}
 
                                         <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Senha</label>
                                         <input type="password"
@@ -299,8 +305,6 @@ function Login() {
                 </div>
             </div>
         );
-    
-
 }
 
 export default Login;
