@@ -120,10 +120,16 @@ server.delete('/produtos/:id', async (request, reply) => {
     return reply.status(204).send()
 });
 
+// =========================
+// Rotas de pedidos
+// ========================= 
+
+server.post("/pedidos/:id")
+
 
 // =========================
 // Rotas da API de Autenticação
-// =========================
+// ========================= 
 
 server.post('/api/auth/register', async (request, reply) => {
     try {
