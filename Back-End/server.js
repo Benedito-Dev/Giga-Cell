@@ -7,6 +7,8 @@ import { DatabasePostgresAuth } from './services/auth.js' // Importe o serviço 
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
+import { DatabasePostgresPedidos } from './services/pedidos.js'
+import { DatabasePostgresItens } from './services/itens.js'
 
 
 const server = fastify()
@@ -287,6 +289,86 @@ server.post('/api/auth/register', async (request, reply) => {
     reply.clearCookie('token')
     return { success: true, message: 'Logout realizado com sucesso' }
   })
+
+  // =========================
+// Rotas da API de Pedidos
+// =========================
+const databasePedidos = new DatabasePostgresPedidos();
+const databaseItens = new DatabasePostgresItens();
+
+// Criar novo pedido
+server.post('/pedidos', { preValidation: [authenticate] }, async (request, reply) => {
+    try {
+        const pedido = await databasePedidos.create({
+            usuario_id: request.user.id_usuario,
+            forma_pagamento: request.body.forma_pagamento,
+            itens: request.body.itens
+        });
+        return reply.status(201).send(pedido);
+    } catch (error) {
+        return reply.status(500).send({ 
+            success: false, 
+            message: 'Erro ao criar pedido' 
+        });
+    }
+});
+
+// Listar pedidos do usuário
+server.get('/pedidos', { preValidation: [authenticate] }, async (request, reply) => {
+    try {
+        const pedidos = await databasePedidos.list(request.user.id_usuario);
+        return { success: true, pedidos };
+    } catch (error) {
+        return reply.status(500).send({
+            success: false,
+            message: 'Erro ao listar pedidos'
+        });
+    }
+});
+
+// Detalhes de um pedido específico
+server.get('/pedidos/:id', { preValidation: [authenticate] }, async (request, reply) => {
+    try {
+        const pedido = await databasePedidos.getById(request.params.id);
+        
+        // Verifica se o pedido pertence ao usuário
+        if (pedido.usuario_id !== request.user.id_usuario) {
+            return reply.status(403).send({ 
+                success: false, 
+                message: 'Acesso não autorizado' 
+            });
+        }
+        
+        return { success: true, pedido };
+    } catch (error) {
+        return reply.status(404).send({
+            success: false,
+            message: 'Pedido não encontrado'
+        });
+    }
+});
+
+// Cancelar pedido
+server.put('/pedidos/:id/cancelar', { preValidation: [authenticate] }, async (request, reply) => {
+    try {
+        const pedido = await databasePedidos.getById(request.params.id);
+        
+        if (pedido.usuario_id !== request.user.id_usuario) {
+            return reply.status(403).send({ 
+                success: false, 
+                message: 'Acesso não autorizado' 
+            });
+        }
+        
+        await databasePedidos.cancel(request.params.id);
+        return { success: true, message: 'Pedido cancelado com sucesso' };
+    } catch (error) {
+        return reply.status(400).send({
+            success: false,
+            message: 'Erro ao cancelar pedido'
+        });
+    }
+});
   
 
 
