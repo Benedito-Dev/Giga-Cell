@@ -20,6 +20,7 @@ function NavBarr() {
                 if (data.success) {
                     setUser(data.user);
                 }
+            // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 setUser(null);
             } finally {
@@ -54,17 +55,29 @@ function NavBarr() {
             {loading ? (
                 <div>Carregando...</div>
             ) : user ? (
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
+                <div className="relative group">
+                    <button className="flex text-xl items-center gap-2 cursor-pointer">
                         <i className='bx bxs-user-circle text-xl'></i>
                         <span className="font-medium">{user.nome}</span>
-                    </div>
-                    <button 
-                        onClick={handleLogout}
-                        className="flex items-center justify-center gap-1 m-2 bg-red-500 px-4 py-2 rounded-full text-white transition-all hover:bg-red-600 hover:scale-105"
-                    >
-                        <i className='bx bx-log-out'></i> Sair
+                        <i className='bx bx-chevron-down text-sm transition-transform duration-200 group-hover:rotate-180'></i>
                     </button>
+                    
+                    <div className="absolute right-0 left-0 top-6 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                        <a 
+                            href="#" 
+                            className="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors"
+                        >
+                            <Link to="/Account" className="flex items-center">
+                            <i className='bx bx-user mr-2'></i> Minha Conta
+                            </Link>
+                        </a>
+                        <button 
+                            onClick={handleLogout}
+                            className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors flex items-center"
+                        >
+                            <i className='bx bx-log-out mr-2'></i> Sair
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <Link to="/Login">

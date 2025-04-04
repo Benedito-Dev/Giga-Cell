@@ -79,7 +79,7 @@ function Acessorios() {
         >
           {products.map((product) => (
             <SwiperSlide key={product.id}>
-              <div className="bg-white p-4 rounded-lg shadow-lg text-center h-96 flex justify-center items-center flex-col">
+              <div className="bg-white p-4 mb-5 rounded-lg shadow-lg text-center h-96 flex justify-center items-center flex-col">
                 {/* Tag da imagem adicionada aqui */}
                 <img 
                   src={product.imagemurl} 
