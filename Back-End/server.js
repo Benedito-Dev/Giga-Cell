@@ -124,8 +124,88 @@ server.delete('/produtos/:id', async (request, reply) => {
 // Rotas de pedidos
 // ========================= 
 
-server.post("/pedidos/:id")
+// Criar novo pedido com itens
+server.post('/pedidos', async (request, reply) => {
+  try {
+      const pedido = await databasePedidos.create({
+          usuario_id: request.body.usuario_id, // Agora vem do body
+          forma_pagamento: request.body.forma_pagamento,
+          itens: request.body.itens
+      });
+      return reply.status(201).send(pedido);
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao criar pedido' });
+  }
+});
 
+// Listar todos os pedidos
+server.get('/pedidos', async (request, reply) => {
+  try {
+      const pedidos = await databasePedidos.list();
+      return reply.send(pedidos);
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao listar pedidos' });
+  }
+});
+
+// Obter detalhes de um pedido específico (com itens)
+server.get('/pedidos/:id', async (request, reply) => {
+  try {
+      const pedido = await databasePedidos.getById(request.params.id);
+      return reply.send(pedido);
+  } catch (error) {
+      return reply.status(404).send({ message: 'Pedido não encontrado' });
+  }
+});
+
+// Cancelar pedido (muda status)
+server.put('/pedidos/:id/cancelar', async (request, reply) => {
+  try {
+      await databasePedidos.cancel(request.params.id);
+      return reply.send({ message: 'Pedido cancelado com sucesso' });
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao cancelar pedido' });
+  }
+});
+
+// Deletar pedido permanentemente (e itens por CASCADE)
+server.delete('/pedidos/:id', async (request, reply) => {
+  try {
+      await databasePedidos.delete(request.params.id);
+      return reply.status(204).send();
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao deletar pedido' });
+  }
+});
+
+// Adicionar item a pedido existente
+server.post('/pedidos/:id/itens', async (request, reply) => {
+  try {
+      const item = await databaseItens.create({
+          pedido_id: request.params.id,
+          ...request.body
+      });
+      // Atualiza total do pedido
+      const total = await databaseItens.calcularTotalPedido(request.params.id);
+      await databasePedidos.atualizarTotal(request.params.id, total);
+      return reply.status(201).send(item);
+  } catch (error) {
+      return reply.status(400).send({ message: error.message });
+  }
+});
+
+// Remover item específico de um pedido
+server.delete('/pedidos/:pedidoId/itens/:itemId', async (request, reply) => {
+  try {
+      await databaseItens.delete(request.params.itemId);
+      // Atualiza total do pedido
+      const total = await databaseItens.calcularTotalPedido(request.params.pedidoId);
+      await databasePedidos.atualizarTotal(request.params.pedidoId, total);
+      return reply.status(204).send();
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao remover item' });
+  }
+});
 
 // =========================
 // Rotas da API de Autenticação
@@ -375,8 +455,6 @@ server.put('/pedidos/:id/cancelar', { preValidation: [authenticate] }, async (re
         });
     }
 });
-  
-
 
 server.listen({
     host: '0.0.0.0',

@@ -1,0 +1,42 @@
+### ROTAS PARA PEDIDOS ###
+
+### Criar pedido (já com itens)
+POST http://localhost:3000/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "forma_pagamento": "pix",
+    "itens": [
+        {
+            "produto_id": "abc123",
+            "quantidade": 2
+        }
+    ]
+}
+
+### Listar pedidos
+GET http://localhost:3000/pedidos?status=
+Authorization: Bearer {{token}}
+
+### Detalhes de um pedido (já traz itens)
+GET http://localhost:3000/pedidos/{{pedido_id}}
+Authorization: Bearer {{token}}
+
+### Cancelar pedido (deleta automaticamente os itens via ON DELETE CASCADE)
+DELETE http://localhost:3000/pedidos/{{pedido_id}}
+Authorization: Bearer {{token}}
+
+### Adicionar item a um pedido existente
+POST http://localhost:3000/pedidos/{{pedido_id}}/itens
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "produto_id": "def456",
+    "quantidade": 1
+}
+
+### Remover item específico
+DELETE http://localhost:3000/pedidos/{{pedido_id}}/itens/{{item_id}}
+Authorization: Bearer {{token}}
