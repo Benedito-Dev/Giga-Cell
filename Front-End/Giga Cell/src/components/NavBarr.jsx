@@ -86,10 +86,6 @@ function NavBarr() {
                     </button>
                 </Link>
             )}
-            
-            <button className="mr-5 transition-all hover:text-yellow-400">
-                <i className='bx bxs-cart'></i> Carrinho
-            </button>
         </div>
     );
 }
