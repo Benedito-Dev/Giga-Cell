@@ -4,6 +4,7 @@ import Login from './views/Login';
 import Products from './views/Products/Products';
 import AddProducts from './views/Products/AddProducts';
 import AccountUser from './views/Account';
+import RotaProtegidas from './auth/RotaProtegida';
 
 export default function App() {
   return (
@@ -13,8 +14,15 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="Login" element={<Login />} />
         <Route path="/produtos" element={<Products />} />
-        <Route path="/produtos/adicionar" element={<AddProducts />} />
-        <Route path="/Account" element={<AccountUser />} />
+
+        <Route element={<RotaProtegidas />}>
+
+          <Route path="/produtos/adicionar" element={<AddProducts />} />
+          <Route path="/Account" element={<AccountUser />} />
+
+        </Route>
+
+        <Route path='*' element={<h1>404 Pagina não encontrada</h1>}></Route>
         {/* <Route path="/produtos" element={<Produtos />} />
         <Route path="/celulares" element={<Celulares />} />
         <Route path="/tablets" element={<Tablets />} />
