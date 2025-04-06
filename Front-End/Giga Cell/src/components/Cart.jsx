@@ -85,6 +85,12 @@ const FloatingCart = () => {
         <div className="flex flex-col h-full">
           {/* Cabeçalho */}
           <div className="flex justify-between items-center p-4 border-b">
+          <button 
+                onClick={() => setIsOpen(false)}
+                className="mr-2 text-xl text-red-500 hover:text-red-700 transition-colors"
+              >
+                <i className='bx bx-arrow-back'></i>
+              </button>
             <h3 className="text-xl font-bold text-gray-800">Seu Carrinho</h3>
             <button 
               className="text-gray-500 hover:text-gray-700"
