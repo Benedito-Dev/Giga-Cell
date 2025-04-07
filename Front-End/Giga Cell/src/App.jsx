@@ -6,7 +6,7 @@ import AddProducts from './views/Products/AddProducts';
 import AccountUser from './views/User/Account';
 import RotaProtegidas from './auth/RotaProtegida';
 import Pedidos from './views/User/Pedidos';
-import Checkout from './views/User/Buy/Checkout';
+import Checkout from './views/Checkout/Checkout';
 
 export default function App() {
   return (
