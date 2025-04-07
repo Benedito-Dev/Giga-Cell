@@ -3,9 +3,10 @@ import Home from './views/Home';
 import Login from './views/Login';
 import Products from './views/Products/Products';
 import AddProducts from './views/Products/AddProducts';
-import AccountUser from './views/Account';
+import AccountUser from './views/User/Account';
 import RotaProtegidas from './auth/RotaProtegida';
 import Pedidos from './views/User/Pedidos';
+import Checkout from './views/User/Buy/Checkout';
 
 export default function App() {
   return (
@@ -21,6 +22,9 @@ export default function App() {
           <Route path="/produtos/adicionar" element={<AddProducts />} />
           <Route path="/Account" element={<AccountUser />} />
           <Route path="/Account/meus-pedidos" element={<Pedidos />} />
+          {/* <Route path="/Account/meus-pedidos/:id" element={<Pedidos />} /> */}
+          <Route path="/Checkout" element={<Checkout />} />
+
 
         </Route>
 
