@@ -71,6 +71,14 @@ function NavBarr() {
                             <i className='bx bx-user mr-2'></i> Minha Conta
                         </Link>
                     </a>
+                    <a 
+                        href="#" 
+                        className="block px-4 py-2 text-gray-200 hover:bg-gray-700 transition-colors"
+                    >
+                        <Link to="/Account/meus-pedidos" className="flex items-center">
+                            <i className='bx bx-package'></i> Meus Pedidos
+                        </Link>
+                    </a>
                     <button 
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-gray-200 hover:bg-gray-700 transition-colors flex items-center"
