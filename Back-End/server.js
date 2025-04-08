@@ -8,7 +8,6 @@ import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 import { DatabasePostgresPedidos } from './services/pedidos.js'
-import { DatabasePostgresItens } from './services/itens.js'
 
 
 const server = fastify()
@@ -19,6 +18,7 @@ const __dirname = path.dirname(__filename)
 
 const databaseProducts = new DatabasePostgresProdutos()
 const databaseAuth = new DatabasePostgresAuth() // Instância do serviço de autenticação
+const databasePedidos = new DatabasePostgresPedidos()
 
 // Configuração JWT
 server.register(fastifyJwt, {
@@ -179,33 +179,33 @@ server.delete('/pedidos/:id', async (request, reply) => {
 });
 
 // Adicionar item a pedido existente
-server.post('/pedidos/:id/itens', async (request, reply) => {
-  try {
-      const item = await databaseItens.create({
-          pedido_id: request.params.id,
-          ...request.body
-      });
-      // Atualiza total do pedido
-      const total = await databaseItens.calcularTotalPedido(request.params.id);
-      await databasePedidos.atualizarTotal(request.params.id, total);
-      return reply.status(201).send(item);
-  } catch (error) {
-      return reply.status(400).send({ message: error.message });
-  }
-});
+// server.post('/pedidos/:id/itens', async (request, reply) => {
+//   try {
+//       const item = await databaseItens.create({
+//           pedido_id: request.params.id,
+//           ...request.body
+//       });
+//       // Atualiza total do pedido
+//       const total = await databaseItens.calcularTotalPedido(request.params.id);
+//       await databasePedidos.atualizarTotal(request.params.id, total);
+//       return reply.status(201).send(item);
+//   } catch (error) {
+//       return reply.status(400).send({ message: error.message });
+//   }
+// });
 
 // Remover item específico de um pedido
-server.delete('/pedidos/:pedidoId/itens/:itemId', async (request, reply) => {
-  try {
-      await databaseItens.delete(request.params.itemId);
-      // Atualiza total do pedido
-      const total = await databaseItens.calcularTotalPedido(request.params.pedidoId);
-      await databasePedidos.atualizarTotal(request.params.pedidoId, total);
-      return reply.status(204).send();
-  } catch (error) {
-      return reply.status(500).send({ message: 'Erro ao remover item' });
-  }
-});
+// server.delete('/pedidos/:pedidoId/itens/:itemId', async (request, reply) => {
+//   try {
+//       await databaseItens.delete(request.params.itemId);
+//       // Atualiza total do pedido
+//       const total = await databaseItens.calcularTotalPedido(request.params.pedidoId);
+//       await databasePedidos.atualizarTotal(request.params.pedidoId, total);
+//       return reply.status(204).send();
+//   } catch (error) {
+//       return reply.status(500).send({ message: 'Erro ao remover item' });
+//   }
+// });
 
 // =========================
 // Rotas da API de Autenticação
@@ -399,85 +399,7 @@ server.post('/api/auth/register', async (request, reply) => {
     return { success: true, message: 'Logout realizado com sucesso' }
   })
 
-  // =========================
-// Rotas da API de Pedidos
 // =========================
-const databasePedidos = new DatabasePostgresPedidos();
-const databaseItens = new DatabasePostgresItens();
-
-// Criar novo pedido
-server.post('/pedidos', { preValidation: [authenticate] }, async (request, reply) => {
-    try {
-        const pedido = await databasePedidos.create({
-            usuario_id: request.user.id_usuario,
-            forma_pagamento: request.body.forma_pagamento,
-            itens: request.body.itens
-        });
-        return reply.status(201).send(pedido);
-    } catch (error) {
-        return reply.status(500).send({ 
-            success: false, 
-            message: 'Erro ao criar pedido' 
-        });
-    }
-});
-
-// Listar pedidos do usuário
-server.get('/pedidos', { preValidation: [authenticate] }, async (request, reply) => {
-    try {
-        const pedidos = await databasePedidos.list(request.user.id_usuario);
-        return { success: true, pedidos };
-    } catch (error) {
-        return reply.status(500).send({
-            success: false,
-            message: 'Erro ao listar pedidos'
-        });
-    }
-});
-
-// Detalhes de um pedido específico
-server.get('/pedidos/:id', { preValidation: [authenticate] }, async (request, reply) => {
-    try {
-        const pedido = await databasePedidos.getById(request.params.id);
-        
-        // Verifica se o pedido pertence ao usuário
-        if (pedido.usuario_id !== request.user.id_usuario) {
-            return reply.status(403).send({ 
-                success: false, 
-                message: 'Acesso não autorizado' 
-            });
-        }
-        
-        return { success: true, pedido };
-    } catch (error) {
-        return reply.status(404).send({
-            success: false,
-            message: 'Pedido não encontrado'
-        });
-    }
-});
-
-// Cancelar pedido
-server.put('/pedidos/:id/cancelar', { preValidation: [authenticate] }, async (request, reply) => {
-    try {
-        const pedido = await databasePedidos.getById(request.params.id);
-        
-        if (pedido.usuario_id !== request.user.id_usuario) {
-            return reply.status(403).send({ 
-                success: false, 
-                message: 'Acesso não autorizado' 
-            });
-        }
-        
-        await databasePedidos.cancel(request.params.id);
-        return { success: true, message: 'Pedido cancelado com sucesso' };
-    } catch (error) {
-        return reply.status(400).send({
-            success: false,
-            message: 'Erro ao cancelar pedido'
-        });
-    }
-});
 
 server.listen({
     host: '0.0.0.0',
