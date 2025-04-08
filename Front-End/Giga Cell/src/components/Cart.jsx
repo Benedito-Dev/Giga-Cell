@@ -112,7 +112,6 @@ const FloatingCart = () => {
                 <span className="font-bold text-gray-800">Total:</span>
                 <span className="font-bold text-indigo-600">R$ {total.toFixed(2)}</span>
               </div>
-              Link to="/checkout" className="w-full">
               <Link to="/checkout">
                 <button className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition-colors duration-200">
                   Finalizar Compra

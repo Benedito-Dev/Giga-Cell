@@ -1,19 +1,13 @@
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
+import { useCart } from '../../hooks/UseCart';
 
-// Componente de Checkout
 const Pedidos = () => {
-  // Dados estáticos que podem ser substituídos por chamada API no futuro
-  const orderSummary = {
-    items: [
-      { id: 1, name: 'Camiseta Branca', price: 49.90, quantity: 2 },
-      { id: 2, name: 'Calça Jeans', price: 129.90, quantity: 1 },
-      { id: 3, name: 'Tênis Esportivo', price: 199.90, quantity: 1 },
-    ],
-    subtotal: 429.60,
-    shipping: 15.00,
-    total: 444.60,
-  };
+  // Usando dados do hook useCart
+  // eslint-disable-next-line no-unused-vars
+  const { cart, removeFromCart, updateQuantity } = useCart();
+
+  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
 
   const customerInfo = {
     name: 'João Silva',
@@ -36,29 +30,21 @@ const Pedidos = () => {
             <h2 className="text-xl font-semibold mb-4">Resumo do Pedido</h2>
             
             <div className="divide-y">
-              {orderSummary.items.map(item => (
-                <div key={item.id} className="py-4 flex justify-between">
-                  <div>
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-gray-600">{item.quantity} × R$ {item.price.toFixed(2)}</p>
-                  </div>
-                  <p className="font-medium">R$ {(item.price * item.quantity).toFixed(2)}</p>
+            {cart.map(item => (
+              <div key={item.id} className="py-4 flex justify-between">
+                <div>
+                  <p className="font-medium">{item.nome}</p>
+                  <p className="text-gray-600">{item.quantity || 1} × R$ {item.preco}</p>
                 </div>
-              ))}
+                <p className="font-medium">R$ {(item.preco * (item.quantity || 1)).toFixed(2) || '00.00'}</p>
+              </div>
+            ))}
             </div>
             
             <div className="border-t mt-4 pt-4 space-y-2">
-              <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span>R$ {orderSummary.subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Frete:</span>
-                <span>R$ {orderSummary.shipping.toFixed(2)}</span>
-              </div>
               <div className="flex justify-between font-bold text-lg mt-2">
                 <span>Total:</span>
-                <span>R$ {orderSummary.total.toFixed(2)}</span>
+                <span className='text-green-600' >R$ {total.toFixed(2)}</span>
               </div>
             </div>
           </div>
