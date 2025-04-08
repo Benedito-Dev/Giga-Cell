@@ -1,21 +1,11 @@
-// src/hooks/useCart.js
-import { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+// CartContext.js
+import { createContext, useContext, useState } from 'react';
 
-export function useCart() {
-  // Carrega do LocalStorage ao iniciar
-  const [cart, setCart] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedCart = localStorage.getItem('cart');
-      console.log('📦 Carrinho carregado do LocalStorage:', savedCart); // Debug inicial
-      return savedCart ? JSON.parse(savedCart) : [];
-    }
-    return [];
-  });
+const CartContext = createContext();
 
-  // Salva no LocalStorage sempre que o carrinho mudar
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
+export function CartProvider({ children }) {
+  const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
     console.log('➕ Adicionando produto ao carrinho:', product); // Debug de ação
@@ -87,5 +77,12 @@ export function useCart() {
     });
   };
 
-  return { cart, addToCart, removeFromCart, updateQuantity };
+  
+  return (
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity }}>
+      {children}
+    </CartContext.Provider>
+  );
 }
+
+export const useCart = () => useContext(CartContext);

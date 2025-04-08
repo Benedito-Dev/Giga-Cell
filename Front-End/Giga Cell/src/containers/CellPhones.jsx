@@ -1,17 +1,19 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import { useCart } from '../hooks/UseCart'; // Importando o hook de carrinho
 import { Link } from 'react-router-dom';
+import { useCart } from '../hooks/UseCart'; // Corrigi o nome do arquivo para case-sensitive
+
 
 function CellPhones() {
   // Estado para armazenar os produtos
   const [products, setProducts] = useState([]);
-
-  const { addToCart } = useCart();
+  // eslint-disable-next-line no-unused-vars
+  const { cart, addToCart } = useCart(); // Usando o hook useCart
 
   // Função para buscar os produtos da API
   useEffect(() => {

@@ -268,6 +268,29 @@ server.post('/api/auth/register', async (request, reply) => {
       })
     }
   })
+
+
+  server.get('/api/auth/verify', async (request, reply) => {
+    try {
+        // O token está no cookie, não precisa pegar do header
+        const token = request.cookies.token;
+        
+        if (!token) {
+            return reply.status(401).send({ valid: false });
+        }
+
+        const decoded = server.jwt.verify(token);
+        const user = await databaseAuth.getUserById(decoded.id_usuario);
+        
+        if (!user) {
+            return reply.status(401).send({ valid: false });
+        }
+
+        return { valid: true, user };
+    } catch (error) {
+        return reply.status(401).send({ valid: false });
+    }
+});
   
 // =========================
 // Rotas CRUD para Usuários (Protegidas)

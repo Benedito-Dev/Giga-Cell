@@ -153,8 +153,26 @@ function Login() {
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <Link to="/" className="absolute top-6 left-6 bg-gray-400 hover:bg-gray-600 hover:scale-125 text-black font-bold py-2 px-4 rounded-full transition-all duration-200">
-                Voltar
+            <Link to="/">
+            <button 
+                className="absolute top-4 left-4 flex items-center text-blue-800 hover:text-blue-600 transition-colors duration-200 z-10"
+            >
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    strokeWidth={1.5} 
+                    stroke="currentColor" 
+                    className="w-6 h-6 mr-2"
+                >
+                    <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" 
+                    />
+                </svg>
+                <span className="font-medium">Voltar para a Página principal</span>
+            </button>
             </Link>
             
             <div className="bg-white rounded-lg shadow-md w-full max-w-3xl flex overflow-hidden">
