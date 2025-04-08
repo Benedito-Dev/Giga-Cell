@@ -14,7 +14,6 @@ export function useCart() {
 
   // Salva no LocalStorage sempre que o carrinho mudar
   useEffect(() => {
-    console.log('🔄 Carrinho atualizado, salvando no LocalStorage:', cart); // Debug de atualização
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
@@ -88,6 +87,5 @@ export function useCart() {
     });
   };
 
-  console.log('🛒 Estado atual do carrinho (para renderização):', cart); // Debug de estado
   return { cart, addToCart, removeFromCart, updateQuantity };
 }

@@ -32,8 +32,6 @@ function NavBarr() {
         fetchUser();
     }, []);
 
-    console.log('Dados do cliente:', user);
-
     const handleLogout = async () => {
         try {
             await fetch('http://localhost:3000/api/auth/logout', {
