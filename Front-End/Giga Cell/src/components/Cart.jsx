@@ -1,63 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useCart } from '../hooks/UseCart'; // Corrigi o nome do arquivo para case-sensitive
 
 const FloatingCart = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cart, setCart] = useState([]);
-  
-  // Carrega o carrinho do localStorage
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-  }, []);
-
-  // Atualiza o localStorage quando o carrinho muda
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
-  // Função para adicionar item ao carrinho (mantida para referência)
-  // eslint-disable-next-line no-unused-vars
-  const addToCart = (product) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
-      
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
-  };
-
-  // Remove item do carrinho
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
-  };
-
-  // Atualiza quantidade de um item
-  const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
-    
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === productId 
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
-  };
+  const { cart, removeFromCart, updateQuantity } = useCart(); // Use o hook
 
   // Calcula o total
-  const total = cart.reduce(
-    (sum, item) => sum + (item.preco * item.quantity), 
-    0
-  );
+  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
 
   return (
     <>
