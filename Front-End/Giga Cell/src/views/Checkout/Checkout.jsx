@@ -150,6 +150,11 @@ const Pedidos = () => {
                 <h3 className="font-medium text-gray-700">Telefone</h3>
                 <p>{customerInfo.telefone || 'Não informado'}</p>
               </div>
+
+              <div>
+                <h3 className="font-medium text-gray-700">Metodo De Pagamento</h3>
+                <p>{customerInfo.Payment || 'Não informado'}</p>
+              </div>
               
               <button className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition mt-6">
                 Confirmar Pedido
