@@ -6,11 +6,14 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import { useCart } from '../hooks/UseCart'; // Corrigi o nome do arquivo para case-sensitive
 
 
 function CellPhones() {
   // Estado para armazenar os produtos
   const [products, setProducts] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const { cart, addToCart } = useCart(); // Usando o hook useCart
 
   // Função para buscar os produtos da API
   useEffect(() => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
 

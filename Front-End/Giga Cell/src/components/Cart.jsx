@@ -2,45 +2,50 @@ import { useState, useEffect } from 'react';
 
 const FloatingCart = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState([]);
   
+  // Carrega o carrinho do localStorage
   useEffect(() => {
-    const savedCart = localStorage.getItem('cartItems');
+    const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+      setCart(JSON.parse(savedCart));
     }
   }, []);
 
+  // Atualiza o localStorage quando o carrinho muda
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
+  // Função para adicionar item ao carrinho (mantida para referência)
   // eslint-disable-next-line no-unused-vars
   const addToCart = (product) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === product.id);
       
       if (existingItem) {
-        return prevItems.map(item =>
+        return prevCart.map(item =>
           item.id === product.id 
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
       
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevCart, { ...product, quantity: 1 }];
     });
   };
 
+  // Remove item do carrinho
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
+  // Atualiza quantidade de um item
   const updateQuantity = (productId, newQuantity) => {
     if (newQuantity < 1) return;
     
-    setCartItems(prevItems =>
-      prevItems.map(item =>
+    setCart(prevCart =>
+      prevCart.map(item =>
         item.id === productId 
           ? { ...item, quantity: newQuantity }
           : item
@@ -48,8 +53,9 @@ const FloatingCart = () => {
     );
   };
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + (item.price * item.quantity), 
+  // Calcula o total
+  const total = cart.reduce(
+    (sum, item) => sum + (item.preco * item.quantity), 
     0
   );
 
@@ -61,9 +67,9 @@ const FloatingCart = () => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <i className='bx bxs-cart'></i>
-        {cartItems.length > 0 && (
+        {cart.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
-            {cartItems.length}
+            {cart.length}
           </span>
         )}
       </button>
@@ -85,37 +91,39 @@ const FloatingCart = () => {
         <div className="flex flex-col h-full">
           {/* Cabeçalho */}
           <div className="flex justify-between items-center p-4 border-b">
-          <button 
-                onClick={() => setIsOpen(false)}
-                className="mr-2 text-xl text-red-500 hover:text-red-700 transition-colors"
-              >
-                <i className='bx bx-arrow-back'></i>
-              </button>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="mr-2 text-xl text-red-500 hover:text-red-700 transition-colors"
+            >
+              <i className='bx bx-arrow-back'></i>
+            </button>
             <h3 className="text-xl font-bold text-gray-800">Seu Carrinho</h3>
             <button 
               className="text-gray-500 hover:text-gray-700"
               onClick={() => setIsOpen(false)}
             >
+              <i className='bx bx-x'></i>
             </button>
           </div>
 
           {/* Conteúdo */}
           <div className="flex-1 overflow-y-auto p-4">
-            {cartItems.length === 0 ? (
+            {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <i className='bx bx-cart text-4xl mb-2'></i>
                 <p>Seu carrinho está vazio</p>
               </div>
             ) : (
               <ul className="space-y-4">
-                {cartItems.map(item => (
+                {cart.map(item => (
                   <li key={item.id} className="flex items-start border-b pb-4">
                     <img 
-                      src={item.image} 
-                      alt={item.name} 
+                      src={item.imagemurl} 
+                      alt={item.nome} 
                       className="w-20 h-20 object-cover rounded mr-4"
                     />
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-800">{item.name}</h4>
+                      <h4 className="font-medium text-gray-800">{item.nome}</h4>
                       <div className="flex items-center mt-2">
                         <button 
                           className="w-8 h-8 flex items-center justify-center border rounded-md text-gray-600 hover:bg-gray-100"
@@ -131,7 +139,7 @@ const FloatingCart = () => {
                           +
                         </button>
                         <span className="ml-auto font-medium text-gray-800">
-                          R$ {(item.price * item.quantity).toFixed(2)}
+                          R$ {(item.preco * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -139,6 +147,7 @@ const FloatingCart = () => {
                       className="text-gray-400 hover:text-red-500 ml-2"
                       onClick={() => removeFromCart(item.id)}
                     >
+                      <i className='bx bx-trash'></i>
                     </button>
                   </li>
                 ))}
@@ -147,7 +156,7 @@ const FloatingCart = () => {
           </div>
 
           {/* Rodapé (só aparece se tiver itens) */}
-          {cartItems.length > 0 && (
+          {cart.length > 0 && (
             <div className="border-t p-4">
               <div className="flex justify-between items-center mb-4">
                 <span className="font-bold text-gray-800">Total:</span>
