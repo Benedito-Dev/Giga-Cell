@@ -3,3 +3,4 @@ import { neon } from '@neondatabase/serverless'; // Importa a função neon do m
 
 // Conecta ao banco de dados usando a URL do .env
 export const sql = neon(process.env.DATABASE_URL);
+

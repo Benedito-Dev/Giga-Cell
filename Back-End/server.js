@@ -7,6 +7,7 @@ import { DatabasePostgresAuth } from './services/auth.js' // Importe o serviço 
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
+import { DatabasePostgresPedidos } from './services/pedidos.js'
 
 
 const server = fastify()
@@ -17,6 +18,7 @@ const __dirname = path.dirname(__filename)
 
 const databaseProducts = new DatabasePostgresProdutos()
 const databaseAuth = new DatabasePostgresAuth() // Instância do serviço de autenticação
+const databasePedidos = new DatabasePostgresPedidos()
 
 // Configuração JWT
 server.register(fastifyJwt, {
@@ -118,10 +120,96 @@ server.delete('/produtos/:id', async (request, reply) => {
     return reply.status(204).send()
 });
 
+// =========================
+// Rotas de pedidos
+// ========================= 
+
+// Criar novo pedido com itens
+server.post('/pedidos', async (request, reply) => {
+  try {
+      const pedido = await databasePedidos.create({
+          usuario_id: request.body.usuario_id, // Agora vem do body
+          forma_pagamento: request.body.forma_pagamento,
+          itens: request.body.itens
+      });
+      return reply.status(201).send(pedido);
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao criar pedido' });
+  }
+});
+
+// Listar todos os pedidos
+server.get('/pedidos', async (request, reply) => {
+  try {
+      const pedidos = await databasePedidos.list();
+      return reply.send(pedidos);
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao listar pedidos' });
+  }
+});
+
+// Obter detalhes de um pedido específico (com itens)
+server.get('/pedidos/:id', async (request, reply) => {
+  try {
+      const pedido = await databasePedidos.getById(request.params.id);
+      return reply.send(pedido);
+  } catch (error) {
+      return reply.status(404).send({ message: 'Pedido não encontrado' });
+  }
+});
+
+// Cancelar pedido (muda status)
+server.put('/pedidos/:id/cancelar', async (request, reply) => {
+  try {
+      await databasePedidos.cancel(request.params.id);
+      return reply.send({ message: 'Pedido cancelado com sucesso' });
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao cancelar pedido' });
+  }
+});
+
+// Deletar pedido permanentemente (e itens por CASCADE)
+server.delete('/pedidos/:id', async (request, reply) => {
+  try {
+      await databasePedidos.delete(request.params.id);
+      return reply.status(204).send();
+  } catch (error) {
+      return reply.status(500).send({ message: 'Erro ao deletar pedido' });
+  }
+});
+
+// Adicionar item a pedido existente
+// server.post('/pedidos/:id/itens', async (request, reply) => {
+//   try {
+//       const item = await databaseItens.create({
+//           pedido_id: request.params.id,
+//           ...request.body
+//       });
+//       // Atualiza total do pedido
+//       const total = await databaseItens.calcularTotalPedido(request.params.id);
+//       await databasePedidos.atualizarTotal(request.params.id, total);
+//       return reply.status(201).send(item);
+//   } catch (error) {
+//       return reply.status(400).send({ message: error.message });
+//   }
+// });
+
+// Remover item específico de um pedido
+// server.delete('/pedidos/:pedidoId/itens/:itemId', async (request, reply) => {
+//   try {
+//       await databaseItens.delete(request.params.itemId);
+//       // Atualiza total do pedido
+//       const total = await databaseItens.calcularTotalPedido(request.params.pedidoId);
+//       await databasePedidos.atualizarTotal(request.params.pedidoId, total);
+//       return reply.status(204).send();
+//   } catch (error) {
+//       return reply.status(500).send({ message: 'Erro ao remover item' });
+//   }
+// });
 
 // =========================
 // Rotas da API de Autenticação
-// =========================
+// ========================= 
 
 server.post('/api/auth/register', async (request, reply) => {
     try {
@@ -310,8 +398,8 @@ server.post('/api/auth/register', async (request, reply) => {
     reply.clearCookie('token')
     return { success: true, message: 'Logout realizado com sucesso' }
   })
-  
 
+// =========================
 
 server.listen({
     host: '0.0.0.0',

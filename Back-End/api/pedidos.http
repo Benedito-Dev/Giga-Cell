@@ -1,0 +1,9 @@
+### Teste sem token
+POST http://localhost:3000/pedidos
+Content-Type: application/json
+
+{
+    "usuario_id": "595a107c-b797-4a31-96c5-7b662badc251",
+    "forma_pagamento": "pix",
+    "itens": [{"produto_id": "04a5d39a-a343-4c9d-8fd7-bec5e51dc8ca", "quantidade": 2, "preco_unitario": 10.50}]
+}
