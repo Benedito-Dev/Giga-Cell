@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCart } from '../hooks/UseCart'; // Corrigi o nome do arquivo para case-sensitive
+import { Link } from 'react-router-dom';
 
 const FloatingCart = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,9 +112,12 @@ const FloatingCart = () => {
                 <span className="font-bold text-gray-800">Total:</span>
                 <span className="font-bold text-indigo-600">R$ {total.toFixed(2)}</span>
               </div>
-              <button className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition-colors duration-200">
-                Finalizar Compra
-              </button>
+              Link to="/checkout" className="w-full">
+              <Link to="/checkout">
+                <button className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition-colors duration-200">
+                  Finalizar Compra
+                </button>
+              </Link>
             </div>
           )}
         </div>
