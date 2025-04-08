@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // CartContext.js
 import { createContext, useContext, useState } from 'react';
 
