@@ -1,20 +1,42 @@
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
 import { useCart } from '../../hooks/UseCart';
+import { useEffect, useState } from 'react';
 
 const Pedidos = () => {
   // Usando dados do hook useCart
   // eslint-disable-next-line no-unused-vars
   const { cart, removeFromCart, updateQuantity } = useCart();
+  const [customerInfo, setCustomerInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        console.log('Cookie :', document.cookie); // Debug de busca
+        const response = await fetch('http://localhost:3000/api/auth/me', {
+          credentials: 'include' // envia cookies (ex: token de sessão)
+        });
+
+        if (!response.ok) {
+          throw new Error('Não autenticado');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          setCustomerInfo(data.user);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário:', error);
+        setCustomerInfo(null);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  console.log('Dados do cliente:', customerInfo); // Debug de dados do cliente
 
   const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
-
-  const customerInfo = {
-    name: 'João Silva',
-    email: 'joao@example.com',
-    address: 'Rua Exemplo, 123 - Centro, São Paulo/SP',
-    paymentMethod: 'Cartão de Crédito (**** **** **** 4242)',
-  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -56,23 +78,27 @@ const Pedidos = () => {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium text-gray-700">Nome</h3>
-                <p>{customerInfo.name}</p>
+                <p>{customerInfo.nome}</p>
               </div>
-              
+
               <div>
                 <h3 className="font-medium text-gray-700">E-mail</h3>
                 <p>{customerInfo.email}</p>
               </div>
-              
+
               <div>
                 <h3 className="font-medium text-gray-700">Endereço de Entrega</h3>
-                <p>{customerInfo.address}</p>
+                <p>{customerInfo.endereco}</p>
               </div>
-              
+
               <div>
+                <h3 className="font-medium text-gray-700">Telefone</h3>
+                <p>{customerInfo.telefone}</p>
+              </div>
+              {/* <div>
                 <h3 className="font-medium text-gray-700">Método de Pagamento</h3>
                 <p>{customerInfo.paymentMethod}</p>
-              </div>
+              </div> */}
               
               <button className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition mt-6">
                 Confirmar Pedido

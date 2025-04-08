@@ -8,6 +8,7 @@ function NavBarr() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                console.log('Cookie :', document.cookie);
                 const response = await fetch('http://localhost:3000/api/auth/me', {
                     credentials: 'include' // Importante para enviar cookies
                 });
@@ -30,6 +31,8 @@ function NavBarr() {
 
         fetchUser();
     }, []);
+
+    console.log('Dados do cliente:', user);
 
     const handleLogout = async () => {
         try {
