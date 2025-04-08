@@ -94,36 +94,70 @@ export class DatabasePostgresPedidos {
 
     async listar(usuarioId, status) {
         try {
-            let query = sql`
-                SELECT * FROM pedidos 
-                WHERE usuario_id = ${usuarioId}
-            `;
-            
-            if (status) {
-                query = sql`${query} AND status = ${status}`;
+            let pedidos;
+    
+            if (usuarioId && status) {
+                // Caso 1: Filtro por usuário E status
+                pedidos = await sql`
+                    SELECT * FROM pedidos 
+                    WHERE usuario_id = ${usuarioId}
+                    AND status = ${status}
+                    ORDER BY data DESC
+                `;
+            } 
+            else if (usuarioId) {
+                // Caso 2: Filtro apenas por usuário
+                pedidos = await sql`
+                    SELECT * FROM pedidos 
+                    WHERE usuario_id = ${usuarioId}
+                    ORDER BY data DESC
+                `;
             }
-            
-            query = sql`${query} ORDER BY data DESC`;
-            
-            const pedidos = await query;
-
-            // Busca os itens para cada pedido
-            for (const pedido of pedidos) {
-                pedido.itens = await sql`
+            else {
+                // Caso 3: Sem filtros (não deveria ocorrer pela validação da rota)
+                pedidos = await sql`
+                    SELECT * FROM pedidos 
+                    ORDER BY data DESC
+                    LIMIT 100
+                `;
+            }
+    
+            // Carrega os itens para cada pedido (otimizado)
+            if (pedidos && pedidos.length > 0) {
+                const pedidoIds = pedidos.map(p => p.id);
+                const itensComProdutos = await sql`
                     SELECT 
                         ip.*,
                         p.nome as produto_nome,
                         p.imagemUrl as produto_imagem
-                    FROM itens_pedido ip
+                    FROM items ip
                     JOIN produtos p ON ip.produto_id = p.id
-                    WHERE ip.pedido_id = ${pedido.id}
+                    WHERE ip.pedido_id = ANY(${pedidoIds})
                 `;
+    
+                // Agrupa itens por pedido
+                const itensPorPedido = itensComProdutos.reduce((acc, item) => {
+                    if (!acc[item.pedido_id]) {
+                        acc[item.pedido_id] = [];
+                    }
+                    acc[item.pedido_id].push(item);
+                    return acc;
+                }, {});
+    
+                // Atribui os itens aos pedidos
+                pedidos.forEach(pedido => {
+                    pedido.itens = itensPorPedido[pedido.id] || [];
+                });
             }
-
-            return pedidos;
+    
+            return pedidos || [];
         } catch (error) {
-            console.error('Erro ao listar pedidos:', error);
-            throw new Error('Falha ao buscar pedidos.');
+            console.error('Erro detalhado ao listar pedidos:', {
+                usuarioId,
+                status,
+                error: error.message
+            });
+            throw new Error('Falha ao buscar pedidos. Verifique os parâmetros e tente novamente.');
         }
     }
 
@@ -132,15 +166,17 @@ export class DatabasePostgresPedidos {
             const pedido = await sql`
                 SELECT * FROM pedidos WHERE id = ${id}
             `.then(res => res[0]);
+
             
             if (!pedido) return null;
+
             
             pedido.itens = await sql`
                 SELECT 
                     ip.*,
                     p.nome as produto_nome,
                     p.imagemUrl as produto_imagem
-                FROM itens_pedido ip
+                FROM items ip
                 JOIN produtos p ON ip.produto_id = p.id
                 WHERE ip.pedido_id = ${id}
             `;
@@ -175,7 +211,7 @@ export class DatabasePostgresPedidos {
         try {
             // Primeiro deleta os itens
             await sql`
-                DELETE FROM itens_pedido WHERE pedido_id = ${id}
+                DELETE FROM items WHERE pedido_id = ${id}
             `;
             
             // Depois deleta o pedido

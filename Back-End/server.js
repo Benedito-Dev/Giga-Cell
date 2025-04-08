@@ -141,20 +141,114 @@ server.post('/pedidos', async (request, reply) => {
 // Listar todos os pedidos
 server.get('/pedidos', async (request, reply) => {
   try {
-      const pedidos = await databasePedidos.list();
+      // Obtém os query parameters
+      const { usuario_id, status } = request.query;
+      
+      // Validação básica
+      if (!usuario_id) {
+          return reply.status(400).send({ message: 'O parâmetro usuario_id é obrigatório' });
+      }
+
+      
+      // Chama o método listar com os parâmetros
+      const pedidos = await databasePedidos.listar(usuario_id, status);
       return reply.send(pedidos);
+      
   } catch (error) {
-      return reply.status(500).send({ message: 'Erro ao listar pedidos' });
+      console.error('Erro na rota /pedidos:', error);
+      return reply.status(500).send({ 
+          message: 'Erro ao listar pedidos',
+          details: error.message 
+      });
   }
 });
 
 // Obter detalhes de um pedido específico (com itens)
 server.get('/pedidos/:id', async (request, reply) => {
   try {
-      const pedido = await databasePedidos.getById(request.params.id);
+      const pedido = await databasePedidos.buscarPorId(request.params.id);
       return reply.send(pedido);
   } catch (error) {
       return reply.status(404).send({ message: 'Pedido não encontrado' });
+  }
+});
+
+server.patch('/pedidos/:id/status', async (request, reply) => {
+  try {
+      // 1. Extração dos parâmetros
+      const { id } = request.params;
+      const { status } = request.body;
+
+      // 2. Validações básicas
+      if (!id) {
+          return reply.status(400).send({
+              error: 'missing_parameter',
+              message: 'ID do pedido é obrigatório na URL',
+              example: 'PATCH /pedidos/:id/status'
+          });
+      }
+
+      if (!status) {
+          return reply.status(400).send({
+              error: 'missing_parameter',
+              message: 'O novo status é obrigatório no body',
+              example: { "status": "novo_status" }
+          });
+      }
+
+      // 3. Validação do formato do UUID
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(id)) {
+          return reply.status(400).send({
+              error: 'invalid_id_format',
+              message: 'O ID deve estar no formato UUID v4',
+              received: id,
+              example: 'cfbd0f46-9fe9-4d0d-891f-d0261dea6c0e'
+          });
+      }
+
+      // 4. Validação do status (opcional - ajuste conforme seus status válidos)
+      const statusValidos = ['pendente', 'processando', 'concluido', 'cancelado'];
+      if (!statusValidos.includes(status)) {
+          return reply.status(400).send({
+              error: 'invalid_status',
+              message: 'Status fornecido é inválido',
+              received: status,
+              valid_statuses: statusValidos
+          });
+      }
+
+      // 5. Atualização no banco de dados
+      const atualizado = await databasePedidos.atualizarStatus(id, status);
+      
+      if (!atualizado) {
+          return reply.status(404).send({
+              error: 'not_found',
+              message: 'Pedido não encontrado',
+              pedido_id: id
+          });
+      }
+
+      // 6. Resposta de sucesso
+      return reply.send({
+          success: true,
+          message: 'Status do pedido atualizado com sucesso',
+          pedido_id: id,
+          novo_status: status
+      });
+
+  } catch (error) {
+      console.error(`Erro ao atualizar status do pedido ${request.params.id}:`, {
+          error: error.message,
+          stack: error.stack,
+          body: request.body
+      });
+      
+      return reply.status(500).send({
+          error: 'update_error',
+          message: 'Erro ao atualizar status do pedido',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
   }
 });
 
@@ -171,7 +265,7 @@ server.put('/pedidos/:id/cancelar', async (request, reply) => {
 // Deletar pedido permanentemente (e itens por CASCADE)
 server.delete('/pedidos/:id', async (request, reply) => {
   try {
-      await databasePedidos.delete(request.params.id);
+      await databasePedidos.deletar(request.params.id);
       return reply.status(204).send();
   } catch (error) {
       return reply.status(500).send({ message: 'Erro ao deletar pedido' });
