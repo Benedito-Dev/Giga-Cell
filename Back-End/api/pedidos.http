@@ -6,11 +6,19 @@ Content-Type: application/json
     "usuario_id": "595a107c-b797-4a31-96c5-7b662badc251",
     "forma_pagamento": "cartao",
     "itens": [
-        {"produto_id": "2abea576-ffb5-4a69-b8f5-b206aa1f6dae", "quantidade": 2, "preco_unitario": 10.50},
-        {"produto_id": "3cdf20ea-c84e-473c-838e-4d5762fb5c5d", "quantidade": 1, "preco_unitario": 25.99}
-    ]
+        {
+            "produto_id": "2abea576-ffb5-4a69-b8f5-b206aa1f6dae",
+            "quantidade": 2,
+            "preco_unitario": 10.50
+        },
+        {
+            "produto_id": "3cdf20ea-c84e-473c-838e-4d5762fb5c5d",
+            "quantidade": 1,
+            "preco_unitario": 25.99
+        }
+    ],
+    "total": 46.99
 }
-
 ### Listar todos os pedidos de um usuário
 GET http://localhost:3000/pedidos?usuario_id=595a107c-b797-4a31-96c5-7b662badc251
 

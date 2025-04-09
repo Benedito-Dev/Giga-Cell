@@ -127,14 +127,33 @@ server.delete('/produtos/:id', async (request, reply) => {
 // Criar novo pedido com itens
 server.post('/pedidos', async (request, reply) => {
   try {
-      const pedido = await databasePedidos.create({
-          usuario_id: request.body.usuario_id, // Agora vem do body
-          forma_pagamento: request.body.forma_pagamento,
-          itens: request.body.itens
+    // Obtém os dados do corpo da requisição
+    const { usuario_id, itens, forma_pagamento, total } = request.body;
+    
+    // Validação básica
+    if (!usuario_id || !itens || !Array.isArray(itens) || itens.length === 0) {
+      return reply.status(400).send({ 
+        message: 'Dados incompletos: usuario_id e itens são obrigatórios' 
       });
-      return reply.status(201).send(pedido);
+    }
+
+    // Chama o método para criar o pedido
+    const novoPedido = await databasePedidos.create({
+      usuario_id,
+      itens,
+      forma_pagamento,
+      total,
+      status: 'pendente' // status inicial
+    });
+    
+    return reply.status(201).send(novoPedido);
+    
   } catch (error) {
-      return reply.status(500).send({ message: 'Erro ao criar pedido' });
+    console.error('Erro na rota POST /pedidos:', error);
+    return reply.status(500).send({ 
+      message: 'Erro ao criar pedido',
+      details: error.message 
+    });
   }
 });
 

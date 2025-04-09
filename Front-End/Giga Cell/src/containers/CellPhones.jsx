@@ -90,7 +90,7 @@ function CellPhones() {
                 />
                 <h2 className="text-lg font-semibold text-black rounded-full drop-shadow-2xl">{product.modelo}</h2>
                 <p className="text-gray-600">Lorem ipsum dolor sit amet...</p>
-                <p className="text-green-600 font-bold">R$ {product.preco}</p>
+                <p className="text-green-600 font-bold">R$ {product.preco_unitario}</p>
                 <button onClick={() => addToCart(product)} className='bg-green-600 mt-5 py-2 px-4 rounded-full border-2 border-black transition-all hover:scale-110 hover:bg-purple-500' >Adicionar ao Carrinho</button>
               </div>
             </SwiperSlide>
