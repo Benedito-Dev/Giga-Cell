@@ -4,10 +4,10 @@ Content-Type: application/json
 
 {
     "usuario_id": "595a107c-b797-4a31-96c5-7b662badc251",
-    "forma_pagamento": "pix",
+    "forma_pagamento": "cartao",
     "itens": [
-        {"produto_id": "04a5d39a-a343-4c9d-8fd7-bec5e51dc8ca", "quantidade": 2, "preco_unitario": 10.50},
-        {"produto_id": "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed", "quantidade": 1, "preco_unitario": 25.99}
+        {"produto_id": "2abea576-ffb5-4a69-b8f5-b206aa1f6dae", "quantidade": 2, "preco_unitario": 10.50},
+        {"produto_id": "3cdf20ea-c84e-473c-838e-4d5762fb5c5d", "quantidade": 1, "preco_unitario": 25.99}
     ]
 }
 
@@ -32,4 +32,4 @@ Content-Type: application/json
 PATCH http://localhost:3000/pedidos/3fa85f64-5717-4562-b3fc-2c963f66afa6/cancelar
 
 ### Deletar pedido
-DELETE http://localhost:3000/pedidos/cfbd0f46-9fe9-4d0d-891f-d0261dea6c0e
+DELETE http://localhost:3000/pedidos/3466433a-483c-4dab-87ce-6f3ac5efb9db
