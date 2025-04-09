@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
@@ -65,6 +65,37 @@ const Pedidos = () => {
       ]
     }
   ]);
+
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      try {
+        // Primeiro, buscar dados do usuário logado
+        const userResponse = await fetch('http://localhost:3000/api/auth/me', {
+          credentials: 'include' // necessário se o backend usa cookies
+        });
+        const userData = await userResponse.json();
+
+        if (!userData.success || !userData.user) {
+          console.error('Erro ao obter usuário logado:', userData.message);
+          return;
+        }
+
+        const usuario_id = userData.user.id_usuario;
+        console.log('Usuário logado:', userData.user);
+
+        // Em seguida, buscar os pedidos desse usuário
+        const pedidosResponse = await fetch(`http://localhost:3000/pedidos?usuario_id=${usuario_id}`);
+        const pedidosData = await pedidosResponse.json();
+
+        console.log('Pedidos recebidos do backend:', pedidosData);
+        // setOrders(pedidosData); // Descomente caso queira substituir os dados mockados
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchPedidos();
+  }, []);
 
   const [filterStatus, setFilterStatus] = useState('todos');
   // eslint-disable-next-line no-unused-vars
