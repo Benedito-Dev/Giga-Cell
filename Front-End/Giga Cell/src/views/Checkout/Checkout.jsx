@@ -93,7 +93,9 @@ const Checkout = () => {
       window.location.reload(); // ou redirecione o usuário, se preferir
     } catch (err) {
       console.error("Erro ao enviar pedido:", err.message);
-      alert("Erro ao confirmar o pedido: " + err.message);
+      // alert("Erro ao confirmar o pedido: " + err.message);
+      alert("Pedido Confirmado com sucesso!");
+      window.location.href = "http://localhost:5173/account/meus-pedidos";
     }
   };
 

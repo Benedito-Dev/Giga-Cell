@@ -34,6 +34,7 @@ export function useCart() {
       
       const newCart = [...prevCart, { ...product, quantity: 1 }];
       console.log('🆕 Novo produto adicionado:', newCart); // Debug de adição
+      alert(`Produto "${product.nome}" adicionado ao carrinho!`); // Alerta de adição
       return newCart;
     });
   };
