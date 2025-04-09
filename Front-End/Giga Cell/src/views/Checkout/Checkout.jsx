@@ -41,7 +41,7 @@ const Checkout = () => {
     fetchUserInfo();
   }, []);
 
-  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
+  const total = cart.reduce((sum, item) => sum + (item.preco_unitario * item.quantity), 0);
 
   const handlePaymentChange = (paymentMethod) => {
     setCustomerInfo(prevState => ({
@@ -59,7 +59,7 @@ const Checkout = () => {
     const itensCorrigidos = cart.map(item => ({
       produto_id: item.id,
       nome: item.nome,
-      preco_unitario: Number(item.preco),
+      preco_unitario: Number(item.preco_unitario),
       quantidade: item.quantity
     }));
 
@@ -171,7 +171,7 @@ const Checkout = () => {
                       <p className="text-gray-600">{item.quantity || 1} × R$ {item.preco}</p>
                     </div>
                   </div>
-                  <p className="font-medium">R$ {(item.preco * (item.quantity || 1)).toFixed(2)}</p>
+                  <p className="font-medium">R$ {(item.preco_unitario * (item.quantity || 1)).toFixed(2)}</p>
                 </div>
               ))}
             </div>

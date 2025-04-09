@@ -1,18 +1,21 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
 
 const Pedidos = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('todos');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedOrder, setExpandedOrder] = useState(null);
+  const [filterDate, setFilterDate] = useState('');
 
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        // Primeiro, buscar dados do usuário logado
         const userResponse = await fetch('http://localhost:3000/api/auth/me', {
-          credentials: 'include' // necessário se o backend usa cookies
+          credentials: 'include'
         });
         const userData = await userResponse.json();
 
@@ -22,24 +25,20 @@ const Pedidos = () => {
         }
 
         const usuario_id = userData.user.id_usuario;
-        console.log('Usuário logado:', userData.user);
 
-        // Em seguida, buscar os pedidos desse usuário
         const pedidosResponse = await fetch(`http://localhost:3000/pedidos?usuario_id=${usuario_id}`);
         const pedidosData = await pedidosResponse.json();
 
-        console.log('Pedidos recebidos do backend:', pedidosData);
-
         const pedidosFormatados = pedidosData.map(pedido => {
           const total = pedido.itens.reduce((acc, item) => acc + parseFloat(item.subtotal), 0);
-  
+
           return {
             id: pedido.id,
             date: new Date(pedido.data).toLocaleDateString('pt-BR'),
-            status: 'Entregue', // você pode alterar conforme o backend passar isso
+            status: pedido.status.toLowerCase(),
             total,
             payment: pedido.forma_pagamento,
-            tracking: '', // adicionar se o backend retornar
+            tracking: '',
             items: pedido.itens.map(item => ({
               id: item.id,
               name: item.produto_nome,
@@ -49,27 +48,20 @@ const Pedidos = () => {
             }))
           };
         });
-  
+
         setOrders(pedidosFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
     };
-  
+
     fetchPedidos();
   }, []);
 
-  const [filterStatus, setFilterStatus] = useState('todos');
-  // eslint-disable-next-line no-unused-vars
-  const [searchTerm, setSearchTerm] = useState('');
-  const [expandedOrder, setExpandedOrder] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [filterDate, setFilterDate] = useState('');
-
   const filteredOrders = orders.filter(order => {
     const matchesStatus = filterStatus === 'todos' || order.status.toLowerCase() === filterStatus;
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         order.items.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          order.items.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
 
@@ -83,7 +75,7 @@ const Pedidos = () => {
         return <i className='bx bx-check-circle text-green-500'></i>;
       case 'Enviado':
         return <i className='bx bx-paper-plane text-blue-500'></i>;
-      case 'Processando':
+      case 'pendente':
         return <i className='bx bx-time-five text-yellow-500'></i>;
       case 'Cancelado':
         return <i className='bx bx-x-circle text-red-500'></i>;
@@ -105,8 +97,6 @@ const Pedidos = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-
-            
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}

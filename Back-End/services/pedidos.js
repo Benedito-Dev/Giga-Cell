@@ -38,7 +38,7 @@ export class DatabasePostgresPedidos {
     async create(pedidoData) {
         console.log('Dados recebidos no create:', JSON.stringify(pedidoData, null, 2));
         
-        const { usuario_id, forma_pagamento, itens = [] } = pedidoData;
+        const { usuario_id, forma_pagamento, status,  itens = [] } = pedidoData;
         const id = randomUUID();
         
         try {
@@ -54,8 +54,8 @@ export class DatabasePostgresPedidos {
     
             // 1. Cria o pedido
             await sql`
-                INSERT INTO pedidos (id, usuario_id, forma_pagamento, total)
-                VALUES (${id}, ${usuario_id}, ${forma_pagamento}, 0)
+                INSERT INTO pedidos (id, usuario_id, forma_pagamento, status, total)
+                VALUES (${id}, ${usuario_id}, ${forma_pagamento}, ${status}, 0)
             `;
     
             // 2. Insere os itens (usando a tabela 'items')
