@@ -45,7 +45,7 @@ function AddProducts() {
         },
         body: JSON.stringify({
           ...product,
-          preco: Number(product.preco),
+          preco_unitario: Number(product.preco),
           estoque: Number(product.estoque)
         })
       });
@@ -56,6 +56,8 @@ function AddProducts() {
       }
   
       const createdProduct = await response.json(); // Renomeado para melhor semântica
+
+      console.log('Produto cadastrado com sucesso:', createdProduct); // Log do produto criado
       
       // Usando o dado retornado para feedback mais completo
       setSuccessMessage(`Produto "${createdProduct.nome}" cadastrado com sucesso com ID ${createdProduct.id}`);

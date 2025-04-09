@@ -137,7 +137,7 @@ function ProductsGrid() {
               <div className="flex-grow flex flex-col items-center">
                 <img
                   src={product.imagemurl}
-                  alt={product.modelo}
+                  alt={product.nome}
                   className="w-40 h-40 object-contain mb-6"
                   onError={(e) => {
                     e.target.onerror = null;
@@ -145,13 +145,13 @@ function ProductsGrid() {
                   }}
                 />
                 <h2 className="text-xl font-bold text-black text-center mb-2">
-                  {product.modelo}
+                  {product.nome}
                 </h2>
               </div>
 
               <div className="mt-auto">
                 <p className="text-green-600 font-bold text-2xl text-center">
-                  R$ {product.preco.toLocaleString('pt-BR', {
+                  R$ {product.preco_unitario.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                   })}

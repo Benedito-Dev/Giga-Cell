@@ -47,7 +47,7 @@ export class DatabasePostgresProdutos {
         try {
             await sql`
                 INSERT INTO produtos (
-                    id, nome, imagemurl, preco, categoria, descricao, estoque
+                    id, nome, imagemurl, preco_unitario, categoria, descricao, estoque
                 ) 
                 VALUES (
                     ${id}, ${nome}, ${imagemUrl}, ${preco}, ${categoria}, ${descricao}, ${estoque}
@@ -79,7 +79,7 @@ export class DatabasePostgresProdutos {
             SET 
                 nome = ${nome},
                 imagemurl = ${imagemUrl},
-                preco = ${preco},
+                preco_unitario = ${preco},
                 categoria = ${categoria},
                 descricao = ${descricao},
                 estoque = ${estoque}
