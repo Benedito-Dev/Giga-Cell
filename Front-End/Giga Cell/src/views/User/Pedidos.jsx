@@ -5,66 +5,7 @@ import SubBarr from '../../components/SubBarr';
 
 const Pedidos = () => {
   // eslint-disable-next-line no-unused-vars
-  const [orders, setOrders] = useState([
-    {
-      id: 'ORD-2023-0015',
-      date: '15/10/2023',
-      status: 'Entregue',
-      total: 287.90,
-      payment: 'Cartão de Crédito',
-      tracking: 'ABC123456789',
-      items: [
-        {
-          id: 1,
-          name: 'iPhone 13 Pro',
-          price: 259.90,
-          quantity: 1,
-          image: '/images/iphone13.jpg'
-        },
-        {
-          id: 2,
-          name: 'Capa Protetora',
-          price: 28.00,
-          quantity: 1,
-          image: '/images/capa-iphone.jpg'
-        }
-      ]
-    },
-    {
-      id: 'ORD-2023-0012',
-      date: '05/09/2023',
-      status: 'Cancelado',
-      total: 1599.90,
-      payment: 'PIX',
-      tracking: '',
-      items: [
-        {
-          id: 3,
-          name: 'Samsung Galaxy S22',
-          price: 1599.90,
-          quantity: 1,
-          image: '/images/s22.jpg'
-        }
-      ]
-    },
-    {
-      id: 'ORD-2023-0008',
-      date: '22/07/2023',
-      status: 'Enviado',
-      total: 899.90,
-      payment: 'Cartão de Débito',
-      tracking: 'XYZ987654321',
-      items: [
-        {
-          id: 4,
-          name: 'Xiaomi Redmi Note 11',
-          price: 899.90,
-          quantity: 1,
-          image: '/images/redmi-note11.jpg'
-        }
-      ]
-    }
-  ]);
+  const [orders, setOrders] = useState([])
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -88,12 +29,33 @@ const Pedidos = () => {
         const pedidosData = await pedidosResponse.json();
 
         console.log('Pedidos recebidos do backend:', pedidosData);
-        // setOrders(pedidosData); // Descomente caso queira substituir os dados mockados
+
+        const pedidosFormatados = pedidosData.map(pedido => {
+          const total = pedido.itens.reduce((acc, item) => acc + parseFloat(item.subtotal), 0);
+  
+          return {
+            id: pedido.id,
+            date: new Date(pedido.data).toLocaleDateString('pt-BR'),
+            status: 'Entregue', // você pode alterar conforme o backend passar isso
+            total,
+            payment: pedido.forma_pagamento,
+            tracking: '', // adicionar se o backend retornar
+            items: pedido.itens.map(item => ({
+              id: item.id,
+              name: item.produto_nome,
+              price: parseFloat(item.preco_unitario),
+              quantity: item.quantidade,
+              image: item.produto_imagem
+            }))
+          };
+        });
+  
+        setOrders(pedidosFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
     };
-
+  
     fetchPedidos();
   }, []);
 
