@@ -64,8 +64,8 @@ export class DatabasePostgresPedidos {
                 const itemId = randomUUID();
                 await sql`
                     INSERT INTO items 
-                    (id, pedido_id, produto_id, quantidade, preco_unitario)
-                    VALUES (${itemId}, ${id}, ${item.produto_id}, ${item.quantidade}, ${item.preco_unitario})
+                    (id, pedido_id, produto_id, quantidade, preco_unitario, nome)
+                    VALUES (${itemId}, ${id}, ${item.produto_id}, ${item.quantidade}, ${item.preco_unitario}, ${item.nome})
                 `;
                 
                 // O subtotal é calculado automaticamente pelo banco (STORED GENERATED)

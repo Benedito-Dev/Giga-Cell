@@ -71,13 +71,13 @@ const Pedidos = () => {
 
   const getStatusIcon = (status) => {
     switch(status) {
-      case 'Entregue':
+      case 'entregue':
         return <i className='bx bx-check-circle text-green-500'></i>;
-      case 'Enviado':
+      case 'enviado':
         return <i className='bx bx-paper-plane text-blue-500'></i>;
       case 'pendente':
         return <i className='bx bx-time-five text-yellow-500'></i>;
-      case 'Cancelado':
+      case 'cancelado':
         return <i className='bx bx-x-circle text-red-500'></i>;
       default:
         return <i className='bx bx-package text-gray-500'></i>;
@@ -104,7 +104,7 @@ const Pedidos = () => {
             >
               <option value="todos">Todos</option>
               <option value="entregue">Entregue</option>
-              <option value="processando">Processando</option>
+              <option value="pendente">Pendente</option>
               <option value="enviado">Enviado</option>
               <option value="cancelado">Cancelado</option>
             </select>
@@ -143,9 +143,9 @@ const Pedidos = () => {
                         <p className="text-sm text-gray-500">{order.date}</p>
                         <div className="flex items-center mt-1">
                           <span className={`text-xs px-2 py-1 rounded-full ${
-                            order.status === 'Entregue' ? 'bg-green-100 text-green-800' :
-                            order.status === 'Cancelado' ? 'bg-red-100 text-red-800' :
-                            order.status === 'Enviado' ? 'bg-blue-100 text-blue-800' :
+                            order.status === 'entregue' ? 'bg-green-100 text-green-800' :
+                            order.status === 'cancelado' ? 'bg-red-100 text-red-800' :
+                            order.status === 'enviado' ? 'bg-blue-100 text-blue-800' :
                             'bg-yellow-100 text-yellow-800'
                           }`}>
                             {order.status}
