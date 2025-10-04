@@ -63,6 +63,19 @@ const options = {
                 data_cadastro: { type: 'string', format: 'date-time', example: '2025-10-04T12:00:00Z' },
                 garantia_meses: { type: 'integer', example: 12 }
             }
+        },
+        Produto: {
+          type: 'object',
+          required: ['id', 'nome', 'preco', 'categoria', 'estoque'],
+          properties: {
+            id: { type: 'string', example: 'prod-1234-5678' },
+            nome: { type: 'string', example: 'Cabo USB-C' },
+            imagemUrl: { type: 'string', format: 'uri', example: 'http://localhost:3000/images/cabo-usbc.png' },
+            preco: { type: 'number', format: 'float', example: 79.90 },
+            categoria: { type: 'string', example: 'Acessório' },
+            descricao: { type: 'string', example: 'Cabo USB-C de 1 metro para carregamento rápido.' },
+            estoque: { type: 'integer', example: 25 }
+          }
         }
       }
     },

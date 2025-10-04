@@ -27,6 +27,7 @@ function Acessorios() {
         if (!response.ok) throw new Error('Erro ao buscar produtos');
         
         const data = await response.json();
+        console.log("Acessorios :", data)
         setProducts(data);
       } catch (error) {
         console.error('Erro:', error);
@@ -49,7 +50,7 @@ function Acessorios() {
         <h1 className="text-7xl font-bold text-black mb-12">Acessorios</h1>
         <Link to="/produtos">
           <button className="bg-gray-700 border-2 border-white p-5 rounded-3xl text-2xl transition-all duration-300 hover:bg-gray-800 hover:border-opacity-80 hover:shadow-lg">
-            Mais Celulares
+            Mais Acessorios
           </button>
         </Link>
       </div>
@@ -82,7 +83,7 @@ function Acessorios() {
               <div className="bg-white p-4 mb-5 rounded-lg shadow-lg text-center h-96 flex justify-center items-center flex-col">
                 {/* Tag da imagem adicionada aqui */}
                 <img 
-                  src={product.imagemurl} 
+                  src={product.imagemUrl} 
                   alt={product.modelo} 
                   className="w-32 h-32 object-cover mb-4" 
                 />

@@ -4,7 +4,7 @@ import FilterSystem from "../../components/Products/Filter";
 import SubBarr from "../../components/SubBarr";
 import ProductsGrid from "../../components/Products/Itens";
 
-function CellPhones() {
+function Celulares() {
     const [filters, setFilters] = useState({}); // guarda filtros aplicados
 
     return (
@@ -27,4 +27,4 @@ function CellPhones() {
     );
 }
 
-export default CellPhones;
+export default Celulares;

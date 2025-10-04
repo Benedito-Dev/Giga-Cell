@@ -7,6 +7,7 @@ const path = require('path');
 // Rotas
 const celularesRoutes = require('./routes/celularRoutes');
 const acessoriosRoutes = require('./routes/acessoriosRoutes');
+const produtosRoutes = require('./routes/produtoRoutes')
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
@@ -41,6 +42,7 @@ class Server {
   routes() {
     this.app.use('/celulares', celularesRoutes);
     this.app.use('/acessorios', acessoriosRoutes);
+    this.app.use('/produtos', produtosRoutes);
 
     // Rota base
     this.app.get('/', (req, res) => {

@@ -5,7 +5,7 @@ import Contato from './views/Contato/Contato'
 import Agendamento from './views/Agendamento/Agendamento';
 import Login from './views/Login';
 import Products from './views/Products/Products';
-import CellPhones from './views/CellPhones/CellPhones';
+import Celulares from './views/Celulares/Celulares';
 import Tablets from './views/Tablets/Tablets';
 import Acessorios from './views/Acessorios/Acessorios';
 import AddProducts from './views/Products/AddProducts';
@@ -25,7 +25,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="Login" element={<Login />} />
           <Route path="/produtos" element={<Products />} />
-          <Route path="/celulares" element={<CellPhones />} />
+          <Route path="/celulares" element={<Celulares />} />
           <Route path="/acessorios" element={<Acessorios />} />
           <Route path="/tablets" element={<Tablets />} />
           <Route path="/sobre" element={<AboutPage />} />
