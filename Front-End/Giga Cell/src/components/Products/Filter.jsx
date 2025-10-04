@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const FilterSystem = () => {
+const FilterSystem = ({ onChangeFilters }) => {
   const [openFilter, setOpenFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
     collection: 'Todas',
@@ -23,33 +23,32 @@ const FilterSystem = () => {
   };
 
   const handleSelect = (filterName, value) => {
+    let newFilters;
+
     if (filterName === 'collection') {
-      setSelectedFilters({
-        ...selectedFilters,
-        [filterName]: value
-      });
+      newFilters = { ...selectedFilters, [filterName]: value };
     } else {
       const currentSelection = [...selectedFilters[filterName]];
       const index = currentSelection.indexOf(value);
-      
+
       if (index === -1) {
         currentSelection.push(value);
       } else {
         currentSelection.splice(index, 1);
       }
-      
-      setSelectedFilters({
-        ...selectedFilters,
-        [filterName]: currentSelection
-      });
+
+      newFilters = { ...selectedFilters, [filterName]: currentSelection };
     }
+
+    setSelectedFilters(newFilters);
+    onChangeFilters(newFilters); // 🔑 avisa o pai
   };
 
   return (
     <div className="w-full max-w-md bg-white p-4 rounded-lg shadow-md border border-gray-200">
       <h2 className="text-lg font-semibold mb-4 text-gray-900">Filtrar por</h2>
-      
-      {/* Filtro de Coleção */}
+
+      {/* Exemplo: Coleção */}
       <div className="mb-4 border-b border-gray-200 pb-2">
         <button 
           className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"

@@ -1,104 +1,99 @@
 import { useEffect, useState } from 'react';
-import { useCart } from '../../hooks/UseCart'; // Importando o hook de carrinho
+import { useCart } from '../../hooks/UseCart';
 import { Link } from 'react-router-dom';
 
-function ProductsGrid() {
+function ProductsGrid({ filters }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
 
-  // Função para buscar os produtos da API
-  useEffect(() => {
-    const fetchProducts = async (category) => {
-      try {
+  console.log('Filters received:', filters);
 
-        const url = new URL('http://localhost:3000/produtos');
-        if (category) {
-          url.searchParams.append('category', category);
-        }
-        
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        
+  // Buscar produtos da API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/produtos');
+        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
         const data = await response.json();
         setProducts(data);
-      } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
-        setError(error.message);
+        console.log('Products fetched:', data);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
+  // Função para filtrar produtos
+  const applyFilters = (products, filters) => {
+    if (!filters) return products;
+
+    return products.filter(product => {
+      let match = true;
+
+      // Coleção
+      if (filters.collection && filters.collection !== 'Todas') {
+        match = match && product.collection === filters.collection;
+      }
+
+      // Preço
+      if (filters.price && filters.price.length > 0) {
+        match = match && filters.price.some(priceRange => {
+          if (priceRange === 'Até R$ 500') return product.preco_unitario <= 500;
+          if (priceRange === 'R$ 500 - R$ 1000') return product.preco_unitario > 500 && product.preco_unitario <= 1000;
+          if (priceRange === 'R$ 1000 - R$ 1500') return product.preco_unitario > 1000 && product.preco_unitario <= 1500;
+          if (priceRange === 'Acima de R$ 1500') return product.preco_unitario > 1500;
+          return false;
+        });
+      }
+
+      // Cor
+      if (filters.color && filters.color.length > 0) {
+        match = match && filters.color.includes(product.color);
+      }
+
+      // Marca
+      if (filters.brand && filters.brand.length > 0) {
+        match = match && filters.brand.includes(product.brand);
+      }
+
+      // Produtos (tipo)
+      if (filters.products && filters.products.length > 0) {
+        match = match && filters.products.includes(product.productType);
+      }
+
+      return match;
+    });
+  };
+
+  const filteredProducts = applyFilters(products, filters);
+  console.log('Filtered products:', filteredProducts);
+
   const deleteProduct = async (productId) => {
     try {
-      // Mostra o alerta de confirmação
       const confirmDelete = window.confirm(
         'Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.'
       );
-      
-      // Se o usuário cancelar, interrompe a execução
       if (!confirmDelete) return;
-  
-      // Faz a requisição DELETE
-      const response = await fetch(`http://localhost:3000/produtos/${productId}`, {
-        method: 'DELETE'
-      });
-  
-      // Verifica se a exclusão foi bem sucedida
-      if (!response.ok) {
-        throw new Error('Falha ao excluir o produto');
-      }
-  
-      // Atualiza o estado removendo o produto
+
+      const response = await fetch(`http://localhost:3000/produtos/${productId}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Falha ao excluir o produto');
+
       setProducts(products.filter(p => p.id !== productId));
-      
-      // Feedback visual opcional (você pode usar um toast/snackbar também)
       alert('Produto excluído com sucesso!');
-  
     } catch (error) {
       console.error('Erro ao excluir:', error);
       alert(`Erro ao excluir produto: ${error.message}`);
     }
   };
 
-  // Estados de carregamento
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[50vh]">
-        <div className="text-2xl font-semibold text-black">Carregando produtos...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-[50vh]">
-        <div className="text-2xl font-semibold text-red-600">
-          Erro ao carregar produtos: {error}
-        </div>
-      </div>
-    );
-  }
-
-  if (products.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-[50vh]">
-        <div className="text-2xl font-semibold text-gray-600">
-          Nenhum produto disponível no momento
-        </div>
-      </div>
-    );
-  }
-
-
-  // Começo da Pagina HTML
+  if (loading) return <div className="flex justify-center items-center h-[50vh]"><div className="text-2xl font-semibold text-black">Carregando produtos...</div></div>;
+  if (error) return <div className="flex justify-center items-center h-[50vh]"><div className="text-2xl font-semibold text-red-600">Erro ao carregar produtos: {error}</div></div>;
+  if (filteredProducts.length === 0) return <div className="flex justify-center items-center h-[50vh]"><div className="text-2xl font-semibold text-gray-600">Nenhum produto disponível no momento</div></div>;
 
   return (
     <div className="bg-gray-200 min-h-screen w-full p-6 md:p-12">
@@ -109,59 +104,45 @@ function ProductsGrid() {
           </h1>
           <div className="buttons flex">
             <Link to="/produtos/adicionar">
-            <button className='bg-green-500 flex items-center rounded-2xl px-6 gap-1 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700' ><i className='bx bx-plus-circle'></i>Adicionar Produtos</button>
+              <button className='bg-green-500 flex items-center rounded-2xl px-6 gap-1 mr-5 py-3 border-white border-2 text-lg transition-all hover:bg-green-700'>
+                <i className='bx bx-plus-circle'></i>Adicionar Produtos
+              </button>
             </Link>
           </div>
         </div>
 
         {/* Grid responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white border-2 border-black py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02] hover:cursor-pointer relative" // Adicionei 'relative' aqui
-            >
-              {/* Botão de excluir - novo elemento */}
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="bg-white border-2 border-black py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02] hover:cursor-pointer relative">
               <button
-                 onClick={(e) => {
-                   e.stopPropagation();
-                   deleteProduct(product.id);
-                 }}
+                onClick={(e) => { e.stopPropagation(); deleteProduct(product.id); }}
                 className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-lg w-8 h-8 flex items-center justify-center"
                 title="Excluir produto"
               >
                 <i className='bx bx-trash text-xl'></i>
               </button>
 
-              {/* Conteúdo existente permanece igual */}
               <div className="flex-grow flex flex-col items-center">
                 <img
                   src={product.imagemurl}
                   alt={product.nome}
                   className="w-40 h-40 object-contain mb-6"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/placeholder-product.png';
-                  }}
+                  onError={(e) => { e.target.onerror = null; e.target.src = '/placeholder-product.png'; }}
                 />
-                <h2 className="text-xl font-bold text-black text-center mb-2">
-                  {product.nome}
-                </h2>
+                <h2 className="text-xl font-bold text-black text-center mb-2">{product.nome}</h2>
               </div>
 
               <div className="mt-auto">
                 <p className="text-green-600 font-bold text-2xl text-center">
-                  R$ {product.preco_unitario.toLocaleString('pt-BR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
+                  R$ {product.preco_unitario.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
                 <p className='text-black text-center text-xs text-opacity-50 mb-4'>à vista no Pix ou em até 12x de R$402,56 sem juros</p>
                 <button
                   onClick={() => addToCart(product)}
                   className="bg-green-600 hover:bg-green-700 flex items-center justify-center gap-2 text-white font-medium nowrap py-1 px-3 rounded-full border-2 border-black w-full transition-all duration-200"
                 >
-                  <i className='bx bx-basket text-2xl' ></i> Adicionar
+                  <i className='bx bx-basket text-2xl'></i> Adicionar
                 </button>
               </div>
             </div>
