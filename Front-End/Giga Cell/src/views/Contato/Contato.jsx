@@ -53,7 +53,7 @@ function Contato() {
         </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-6 mb-16">
+        <section className="max-w-6xl mx-auto px-6 mb-16 ">
         <div className="rounded-xl overflow-hidden border-2 border-black shadow">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248.80580287060175!2d-38.49320851851128!3d-3.833166818461656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c74f8d1e90eccb%3A0x3c594be259d88274!2sShopping%20Giga%20Mall!5e0!3m2!1spt-BR!2sbr!4v1759595591531!5m2!1spt-BR!2sbr"
