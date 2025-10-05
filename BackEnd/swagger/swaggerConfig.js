@@ -76,6 +76,20 @@ const options = {
             descricao: { type: 'string', example: 'Cabo USB-C de 1 metro para carregamento rápido.' },
             estoque: { type: 'integer', example: 25 }
           }
+        },
+        Usuario: {
+          type: 'object',
+          required: ['id_usuario', 'nome', 'email', 'senha', 'cpf'],
+          properties: {
+            id_usuario: { type: 'string', format: 'uuid', example: '595a107c-b797-4a31-96c5-7b662badc251' },
+            nome: { type: 'string', example: 'Benedito Bittencourt' },
+            email: { type: 'string', example: 'benedito@gmail.com' },
+            senha: { type: 'string', example: '********' },
+            cpf: { type: 'string', example: '22429748740' },
+            telefone: { type: 'string', example: '85988640696' },
+            endereco: { type: 'string', example: 'Rua Lucas Maia, 107 - Passaré' },
+            data_cadastro: { type: 'string', format: 'date-time', example: '2025-04-10T21:55:49.592Z' }
+          }
         }
       }
     },
