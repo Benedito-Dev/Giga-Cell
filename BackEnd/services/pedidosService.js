@@ -1,4 +1,4 @@
-const repository = require('../repository/produtosRepository');
+const repository = require('../repository/pedidosRepository');
 const { ValidationError, NotFoundError } = require('../utils/errors');
 
 class ProductService {
@@ -6,8 +6,8 @@ class ProductService {
     return await repository.findAll();
   }
 
-  static async findByCategory(category) {
-    return await repository.findByCategory(category)
+  static async getByUsuario(id_usuario) {
+    return await repository.findByUsuario(id_usuario)
   }
 
   static async getById(id) {

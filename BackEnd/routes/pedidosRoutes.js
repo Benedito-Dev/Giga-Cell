@@ -37,7 +37,7 @@ class PedidosRoutes {
      *       - in: path
      *         name: id
      *         schema:
-     *           type: integer
+     *           type: string
      *         required: true
      *         description: ID do pedido
      *     responses:
@@ -47,6 +47,28 @@ class PedidosRoutes {
      *         description: Pedido não encontrado
      */
     this.router.get('/:id', controller.getById);
+
+    /**
+     * @swagger
+     * /pedidos/usuario/{usuario_id}:
+     *   get:
+     *     summary: Obtém os pedidos de um usuario
+     *     tags: [Pedidos]
+     *     parameters:
+     *       - in: path
+     *         name: usuario_id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: ID do usuario
+     *         example: "595a107c-b797-4a31-96c5-7b662badc251"  # 👈 exemplo real ajuda
+     *     responses:
+     *       200:
+     *         description: Pedidos encontrado
+     *       404:
+     *         description: Pedido não encontrado
+     */
+    this.router.get('/usuario/:usuario_id', controller.getByUsuario);
 
     /**
      * @swagger

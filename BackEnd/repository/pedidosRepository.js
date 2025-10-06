@@ -34,6 +34,7 @@ class PedidoRepository {
   }
 
   async findByUsuario(usuario_id) {
+    console.log('Buscando pedidos do usuário:', usuario_id);
     const result = await db.query(`
       SELECT 
         id,
@@ -46,6 +47,7 @@ class PedidoRepository {
       WHERE usuario_id = $1
       ORDER BY data DESC
     `, [usuario_id]);
+    
 
     return result.rows.map(row => new Pedido(row));
   }
