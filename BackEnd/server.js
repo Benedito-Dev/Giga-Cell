@@ -9,6 +9,7 @@ const celularesRoutes = require('./routes/celularRoutes');
 const acessoriosRoutes = require('./routes/acessoriosRoutes');
 const produtosRoutes = require('./routes/produtoRoutes')
 const usuarioRoutes = require('./routes/usuarioRoutes')
+const PedidosRoutes = require('./routes/pedidosRoutes')
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
@@ -16,6 +17,7 @@ const swaggerSpec = require('./swagger/swaggerConfig');
 
 // Middleware global de erros
 const errorHandler = require('./middleware/errorHandler');
+const pedidosRoutes = require('./routes/pedidosRoutes');
 
 class Server {
   constructor() {
@@ -45,6 +47,7 @@ class Server {
     this.app.use('/acessorios', acessoriosRoutes);
     this.app.use('/produtos', produtosRoutes);
     this.app.use('/usuarios', usuarioRoutes);
+    this.app.use('/pedidos', pedidosRoutes);
 
     // Rota base
     this.app.get('/', (req, res) => {
