@@ -1,4 +1,5 @@
 const db = require('../db/db');
+const bcrypt = require('bcrypt');
 const Usuario = require('../models/UsuarioModel');
 
 class UsuarioRepository {
@@ -43,6 +44,42 @@ class UsuarioRepository {
       ]
     );
     return new Usuario(result.rows[0]);
+  }
+  async verifyCredentials(email, senha) {
+    const usuario = await this.findByEmail(email);
+
+    if (!usuario) {
+      const error = new Error('Credenciais inválidas');
+      error.code = 401;
+      throw error;
+    }
+
+    const senhaMatch = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaMatch) {
+      const error = new Error('Credenciais inválidas');
+      error.code = 401;
+      throw error;
+  }
+
+    // Aqui não há campo "ativo" no modelo, então removemos essa verificação
+    // Se futuramente você incluir ativo, pode descomentar:
+    // if (usuario.ativo === false) {
+    //   const error = new Error('Conta desativada');
+    //   error.code = 403;
+    //   throw error;
+    // }
+
+    // Retorna o objeto sem expor a senha
+    return new Usuario({
+      id_usuario: usuario.id_usuario,
+      nome: usuario.nome,
+      email: usuario.email,
+      senha: undefined, // remove a senha
+      cpf: usuario.cpf,
+      telefone: usuario.telefone,
+      endereco: usuario.endereco,
+      data_cadastro: usuario.data_cadastro
+    });
   }
 
   async update(id_usuario, dados) {

@@ -1,114 +1,40 @@
-const rateLimiter = require('../../utils/rateLimiter');
+// src/services/authService.js
 const jwt = require('jsonwebtoken');
 const authConfig = require('../../config/auth');
-const pacienteRepository = require('../../repository/pacientesRepository');
+const usuarioRepository = require('../../repository/usuarioRepository');
 
 class AuthService {
-  async login(email, senha, ip) {
-    console.log('Tentativa de login:', email, 'IP:', ip);
-
-    // 1️⃣ Verifica se o usuário está bloqueado
-    const { blocked, cooldown } = await rateLimiter.check(email, ip);
-    if (blocked) {
-      const error = new Error(`Muitas tentativas. Aguarde ${cooldown} segundos.`);
-      error.code = 429;
-      error.cooldown = cooldown;
-      throw error;
-    }
-
+  async login(email, senha) {
     try {
-      // 2️⃣ Verifica credenciais
-      const usuario = await pacienteRepository.verifyCredentials(email, senha);
+      // Verifica credenciais
+      const usuario = await usuarioRepository.verifyCredentials(email, senha);
 
-      // 3️⃣ Login sucesso → resetar tentativas
-      await rateLimiter.reset(email);
-
-      // 4️⃣ Calcular idade
-      const idade = this.calcularIdade(usuario.data_nascimento);
-
-      // 5️⃣ Reativar conta se estiver desativada
-      if (usuario.ativo === false) {
-        await pacienteRepository.reativar(usuario.id_usuario);
+      // Reativa conta se estiver desativada
+      if (!usuario.ativo) {
+        await usuarioRepository.reativar(usuario.id);
       }
 
-      // 6️⃣ Gerar JWT
-      const token = jwt.sign(
-        { id: usuario.id_usuario },
-        authConfig.secret,
-        { expiresIn: authConfig.expiresIn }
-      );
+      // Gera token JWT
+      const token = jwt.sign({ id: usuario.id }, authConfig.secret, { expiresIn: authConfig.expiresIn });
 
-      return {
-        usuario: {
-          id: usuario.id,
-          nome: usuario.nome,
-          email: usuario.email,
-          idade,
-          genero: usuario.genero
-        },
-        token
-      };
-
+      return { usuario, token };
     } catch (error) {
-      // 🔹 Registra falha no rate limiter para erros de credenciais (401)
-      if (error.code === 401) {
-        await rateLimiter.registerFailure(email, ip);
-      }
-      
-      // 🔹 IMPORTANTE: Preserva o código e a mensagem original do erro
-      if (error.code) {
-        // Mantém o erro original com código e mensagem
-        throw error;
-      }
-      
-      // 🔹 Para outros erros sem código, cria um novo erro com código 400
-      const newError = new Error(error.message);
-      newError.code = 400;
-      throw newError;
+      // Mantém código de erro caso exista, ou define 400 para outros erros
+      throw error.code ? error : Object.assign(new Error(error.message), { code: 400 });
     }
-  }
-
-  calcularIdade(dataNascimento) {
-    const nascimento = new Date(dataNascimento);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const m = hoje.getMonth() - nascimento.getMonth();
-
-    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--;
-    }
-
-    return idade;
   }
 
   async verifyToken(token) {
     try {
       const decoded = jwt.verify(token, authConfig.secret);
-      const usuario = await pacienteRepository.findById(decoded.id);
-      
-      if (!usuario) {
-        const error = new Error('Usuário não encontrado');
-        error.code = 401;
-        throw error;
-      }
-      
-      if (usuario.ativo === false) {
-        const error = new Error('Conta desativada');
-        error.code = 403;
-        throw error;
-      }
-      
+      const usuario = await usuarioRepository.findById(decoded.id);
+
+      if (!usuario) throw Object.assign(new Error('Usuário não encontrado'), { code: 401 });
+      if (!usuario.ativo) throw Object.assign(new Error('Conta desativada'), { code: 403 });
+
       return usuario;
     } catch (error) {
-      // Preserva códigos de erro existentes
-      if (error.code) {
-        throw error;
-      }
-      
-      // Para erros JWT sem código, define como 401
-      const newError = new Error('Token inválido');
-      newError.code = 401;
-      throw newError;
+      throw error.code ? error : Object.assign(new Error('Token inválido'), { code: 401 });
     }
   }
 }

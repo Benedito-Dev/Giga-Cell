@@ -1,6 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 const Usuario = require('../models/UsuarioModel');
 const usuarioRepository = require('../repository/usuarioRepository');
+
+const SALT_ROUNDS = 10;
 
 class UsuarioService {
   async listarTodos() {
@@ -17,7 +20,9 @@ class UsuarioService {
     const existente = await usuarioRepository.findByEmail(dados.email);
     if (existente) throw new Error('E-mail já cadastrado');
 
-    const senhaHash = await Usuario.hashPassword(dados.senha);
+    // Hash da senha usando bcrypt
+    const senhaHash = await bcrypt.hash(dados.senha, SALT_ROUNDS);
+
     const novoUsuario = new Usuario({
       id_usuario: uuidv4(),
       nome: dados.nome,

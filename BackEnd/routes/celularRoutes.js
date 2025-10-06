@@ -1,6 +1,5 @@
 const express = require('express');
 const controller = require('../controllers/celularesController');
-const authMiddleware = require('../middleware/authMiddleware');
 
 class CelularesRoutes {
   constructor() {

@@ -12,6 +12,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes')
 const pedidosRoutes = require('./routes/pedidosRoutes');
 const itensRoutes = require('./routes/itensRoutes')
 const adminRoutes = require('./routes/adminRoutes')
+const authRoutes = require('./routes/authRoutes')
 // Swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger/swaggerConfig');
@@ -48,6 +49,7 @@ class Server {
     this.app.use('/acessorios', acessoriosRoutes);
     this.app.use('/produtos', produtosRoutes);
     this.app.use('/usuarios', usuarioRoutes);
+    this.app.use('/auth', authRoutes)
     this.app.use('/pedidos', pedidosRoutes);
     this.app.use('/itens', itensRoutes)
     this.app.use('/admin', adminRoutes)
