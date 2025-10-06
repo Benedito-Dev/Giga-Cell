@@ -34,7 +34,6 @@ class PedidoRepository {
   }
 
   async findByUsuario(usuario_id) {
-    console.log('Buscando pedidos do usuário:', usuario_id);
     const result = await db.query(`
       SELECT 
         id,
