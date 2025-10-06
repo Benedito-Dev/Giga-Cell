@@ -12,7 +12,7 @@ function Celulares() {
             <NavBarr />
             <SubBarr />
             
-            <div className="flex flex-col lg:flex-row flex-1 w-full">
+            <div className="flex flex-col lg:flex-row flex-1 w-full bg-gray-900">
                 {/* Filtros no canto superior esquerdo (fixo em telas grandes) */}
                 <div className="lg:sticky lg:top-20 lg:self-start lg:ml-4 lg:mt-4 w-[20vw]">
                     <FilterSystem onChangeFilters={setFilters} />
