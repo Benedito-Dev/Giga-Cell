@@ -19,7 +19,7 @@ class ProductRepository {
 
   async findByCategory(category) {
     const result = await db.query(`
-        SELECT id, nome, imagemurl AS "imagemUrl", preco_unitario, categoria, descricao, estoque
+        SELECT id, nome, imagemurl AS "imagemUrl", preco_unitario AS "preco", categoria, descricao, estoque
         FROM produtos
         WHERE LOWER(categoria) = LOWER($1)
     `, [category]);

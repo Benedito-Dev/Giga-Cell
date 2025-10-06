@@ -23,6 +23,7 @@ function CellPhones() {
         if (!response.ok) throw new Error('Erro ao buscar produtos');
         
         const data = await response.json();
+        console.log(data)
         
         setProducts(data);
       } catch (error) {
@@ -90,7 +91,7 @@ function CellPhones() {
                 <h2 className="text-lg font-semibold text-black rounded-full drop-shadow-2xl">
                   {product.nome} {/* Corrigido para 'nome' */}
                 </h2>
-                <p className="text-gray-600">{product.descricao}</p>
+                <p className="text-gray-600 text-[10px]">{product.descricao}</p>
                 <p className="text-green-600 font-bold">
                   R$ {product.preco || product.preco_unitario} {/* Tenta ambos */}
                 </p>

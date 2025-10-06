@@ -41,157 +41,70 @@ const FilterSystem = ({ onChangeFilters }) => {
     }
 
     setSelectedFilters(newFilters);
-    onChangeFilters(newFilters); // 🔑 avisa o pai
+    onChangeFilters(newFilters);
   };
 
   return (
-    <div className="w-full max-w-md bg-white p-4 rounded-lg shadow-md border border-gray-200">
-      <h2 className="text-lg font-semibold mb-4 text-gray-900">Filtrar por</h2>
+    <div className="w-full max-w-md bg-gray-900 border-2 border-orange-500 p-5 rounded-2xl shadow-lg text-white">
+      <h2 className="text-xl font-bold mb-4 text-orange-500 text-center">Filtros</h2>
 
-      {/* Exemplo: Coleção */}
-      <div className="mb-4 border-b border-gray-200 pb-2">
-        <button 
-          className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"
-          onClick={() => toggleFilter('collection')}
-        >
-          <span className="font-medium">Coleção</span>
-          <span className="text-gray-600">{openFilter === 'collection' ? '−' : '+'}</span>
-        </button>
-        
-        {openFilter === 'collection' && (
-          <div className="mt-2 space-y-2 pl-2">
-            {filterOptions.collection.map(option => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  id={`collection-${option}`}
-                  name="collection"
-                  checked={selectedFilters.collection === option}
-                  onChange={() => handleSelect('collection', option)}
-                  className="mr-2 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor={`collection-${option}`} className="text-gray-700">{option}</label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {/* Filtro de Preço */}
-      <div className="mb-4 border-b border-gray-200 pb-2">
-        <button 
-          className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"
-          onClick={() => toggleFilter('price')}
-        >
-          <span className="font-medium">Preço</span>
-          <span className="text-gray-600">{openFilter === 'price' ? '−' : '+'}</span>
-        </button>
-        
-        {openFilter === 'price' && (
-          <div className="mt-2 space-y-2 pl-2">
-            {filterOptions.price.map(option => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`price-${option}`}
-                  checked={selectedFilters.price.includes(option)}
-                  onChange={() => handleSelect('price', option)}
-                  className="mr-2 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor={`price-${option}`} className="text-gray-700">{option}</label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {/* Filtro de Cor */}
-      <div className="mb-4 border-b border-gray-200 pb-2">
-        <button 
-          className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"
-          onClick={() => toggleFilter('color')}
-        >
-          <span className="font-medium">Cor</span>
-          <span className="text-gray-600">{openFilter === 'color' ? '−' : '+'}</span>
-        </button>
-        
-        {openFilter === 'color' && (
-          <div className="mt-2 space-y-2 pl-2">
-            {filterOptions.color.map(option => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`color-${option}`}
-                  checked={selectedFilters.color.includes(option)}
-                  onChange={() => handleSelect('color', option)}
-                  className="mr-2 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor={`color-${option}`} className="text-gray-700">{option}</label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {/* Filtro de Marca */}
-      <div className="mb-4 border-b border-gray-200 pb-2">
-        <button 
-          className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"
-          onClick={() => toggleFilter('brand')}
-        >
-          <span className="font-medium">Marca</span>
-          <span className="text-gray-600">{openFilter === 'brand' ? '−' : '+'}</span>
-        </button>
-        
-        {openFilter === 'brand' && (
-          <div className="mt-2 space-y-2 pl-2">
-            {filterOptions.brand.map(option => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`brand-${option}`}
-                  checked={selectedFilters.brand.includes(option)}
-                  onChange={() => handleSelect('brand', option)}
-                  className="mr-2 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor={`brand-${option}`} className="text-gray-700">{option}</label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {/* Filtro de Produtos */}
-      <div className="mb-4">
-        <button 
-          className="flex justify-between items-center w-full text-gray-800 hover:text-gray-900"
-          onClick={() => toggleFilter('products')}
-        >
-          <span className="font-medium">Produtos</span>
-          <span className="text-gray-600">{openFilter === 'products' ? '−' : '+'}</span>
-        </button>
-        
-        {openFilter === 'products' && (
-          <div className="mt-2 space-y-2 pl-2">
-            {filterOptions.products.map(option => (
-              <div key={option} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`products-${option}`}
-                  checked={selectedFilters.products.includes(option)}
-                  onChange={() => handleSelect('products', option)}
-                  className="mr-2 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor={`products-${option}`} className="text-gray-700">{option}</label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      
-      {/* Botão para aplicar filtros */}
-      <button 
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+      {Object.entries(filterOptions).map(([filterName, options]) => (
+        <div key={filterName} className="mb-4 border-b border-gray-700 pb-2">
+          <button
+            className="flex justify-between items-center w-full text-gray-200 hover:text-orange-400 transition-all duration-200"
+            onClick={() => toggleFilter(filterName)}
+          >
+            <span className="font-medium capitalize">
+              {filterName === 'collection'
+                ? 'Coleção'
+                : filterName === 'price'
+                ? 'Preço'
+                : filterName === 'color'
+                ? 'Cor'
+                : filterName === 'brand'
+                ? 'Marca'
+                : 'Produtos'}
+            </span>
+            <span className="text-orange-400 text-lg">
+              {openFilter === filterName ? '−' : '+'}
+            </span>
+          </button>
+
+          {openFilter === filterName && (
+            <div className="mt-2 space-y-2 pl-2">
+              {options.map(option => (
+                <div
+                  key={option}
+                  className="flex items-center bg-gray-800 hover:bg-gray-700 transition-all rounded-lg px-2 py-1 cursor-pointer"
+                >
+                  <input
+                    type={filterName === 'collection' ? 'radio' : 'checkbox'}
+                    id={`${filterName}-${option}`}
+                    name={filterName}
+                    checked={
+                      filterName === 'collection'
+                        ? selectedFilters.collection === option
+                        : selectedFilters[filterName].includes(option)
+                    }
+                    onChange={() => handleSelect(filterName, option)}
+                    className="mr-2 text-orange-500 focus:ring-orange-400 accent-orange-500"
+                  />
+                  <label
+                    htmlFor={`${filterName}-${option}`}
+                    className="text-gray-300 cursor-pointer select-none"
+                  >
+                    {option}
+                  </label>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+      <button
+        className="w-full bg-orange-600 text-white py-2 rounded-xl font-semibold border-2 border-black
+                   hover:bg-orange-700 hover:scale-105 transition-all duration-200 ease-in-out"
         onClick={() => console.log('Filtros aplicados:', selectedFilters)}
       >
         Aplicar Filtros
