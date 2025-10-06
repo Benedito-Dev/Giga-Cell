@@ -50,6 +50,15 @@ class DatabaseError extends AppError {
   }
 }
 
+function handleControllerError(res, error) {
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+
+  console.error('Erro inesperado no controller:', error);
+  return res.status(500).json({ error: 'Erro interno do servidor.' });
+}
+
 module.exports = {
   AppError,
   ValidationError,
@@ -57,5 +66,6 @@ module.exports = {
   ConflictError,
   UnauthorizedError,
   ForbiddenError,
-  DatabaseError
+  DatabaseError,
+  handleControllerError
 };
