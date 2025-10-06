@@ -35,6 +35,15 @@ class ProductService {
     if (!removed) throw new NotFoundError('Produto não encontrado para remover.');
     return removed;
   }
+
+  static async filter(filtros) {
+  if (!filtros || typeof filtros !== 'object') {
+    throw new ValidationError('Filtros inválidos.');
+  }
+
+  const produtos = await repository.filterProducts(filtros);
+  return produtos;
+  }
 }
 
 module.exports = ProductService;

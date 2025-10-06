@@ -3,7 +3,7 @@ import { useState } from 'react';
 const FilterSystem = ({ onChangeFilters }) => {
   const [openFilter, setOpenFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    collection: 'Todas',
+    collection: 'Todas', 
     price: [],
     color: [],
     brand: [],

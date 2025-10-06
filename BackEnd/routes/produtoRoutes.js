@@ -29,6 +29,56 @@ class ProductsRoutes {
 
     /**
      * @swagger
+     * /produtos/filtro:
+     *   post:
+     *     summary: Filtra produtos com base nas especificações
+     *     tags: [Produtos]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               collection:
+     *                 type: string
+     *                 example: 'Telefones Celulares Novos'
+     *               price:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                 example: ['Até R$ 500', 'R$ 500 - R$ 1000']
+     *               color:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                 example: ['Preto', 'Azul']
+     *               brand:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                 example: ['Samsung', 'Apple']
+     *               products:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                 example: ['Mais vendidos', 'Lançamentos']
+     *     responses:
+ *       200:
+ *         description: Lista de produtos filtrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Produto'
+ *       500:
+ *         description: Erro interno do servidor
+     */
+    this.router.post('/filtro', controller.filter);
+
+    /**
+     * @swagger
      * /produtos/{id}:
      *   get:
      *     summary: Obtém um produto pelo ID

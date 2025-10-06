@@ -90,66 +90,30 @@ const options = {
           },
         },
 
-        Usuario: {
+        ProdutoFiltro: {
           type: 'object',
-          required: ['id_usuario', 'nome', 'email', 'senha', 'cpf'],
           properties: {
-            id_usuario: { type: 'string', format: 'uuid', example: '595a107c-b797-4a31-96c5-7b662badc251' },
-            nome: { type: 'string', example: 'Benedito Bittencourt' },
-            email: { type: 'string', example: 'benedito@gmail.com' },
-            senha: { type: 'string', example: '********' },
-            cpf: { type: 'string', example: '22429748740' },
-            telefone: { type: 'string', example: '85988640696' },
-            endereco: { type: 'string', example: 'Rua Lucas Maia, 107 - Passaré' },
-            data_cadastro: { type: 'string', format: 'date-time', example: '2025-04-10T21:55:49.592Z' },
-          },
-        },
-
-        Item: {
-          type: 'object',
-          required: ['id', 'pedido_id', 'produto_id', 'nome', 'quantidade', 'preco_unitario', 'subtotal'],
-          properties: {
-            id: { type: 'string', example: 'item-1234-5678' },
-            pedido_id: { type: 'string', example: 'ped-1234-5678' },
-            produto_id: { type: 'string', example: 'prod-1234-5678' },
-            nome: { type: 'string', example: 'Cabo USB-C' },
-            quantidade: { type: 'integer', example: 2 },
-            preco_unitario: { type: 'number', format: 'float', example: 79.9 },
-            subtotal: { type: 'number', format: 'float', example: 159.8 },
-          },
-        },
-
-        Pedido: {
-          type: 'object',
-          required: ['id_pedido', 'id_usuario', 'itens', 'valor_total', 'status', 'data_pedido'],
-          properties: {
-            id_pedido: { type: 'string', format: 'uuid', example: 'ped-1234-5678' },
-            id_usuario: { type: 'string', format: 'uuid', example: 'usr-9999-8888' },
-            itens: {
+            collection: { type: 'string', example: 'Telefones Celulares Novos' },
+            price: { 
               type: 'array',
-              description: 'Lista de itens incluídos no pedido',
-              items: { $ref: '#/components/schemas/Item' },
+              items: { type: 'string' },
+              example: ['Até R$ 500', 'R$ 500 - R$ 1000']
             },
-            valor_total: { type: 'number', format: 'float', example: 159.8 },
-            status: {
-              type: 'string',
-              enum: ['pendente', 'pago', 'enviado', 'entregue', 'cancelado'],
-              example: 'pago',
+            color: { 
+              type: 'array',
+              items: { type: 'string' },
+              example: ['Preto', 'Azul']
             },
-            data_pedido: { type: 'string', format: 'date-time', example: '2025-10-05T15:30:00Z' },
-          },
-        },
-
-        /** 🆕 Schema Admin */
-        Admin: {
-          type: 'object',
-          required: ['id_admin', 'nome', 'email', 'senha', 'nivel_acesso'],
-          properties: {
-            id_admin: { type: 'string', format: 'uuid', example: 'adm-1234-5678' },
-            nome: { type: 'string', example: 'Carlos Administrador' },
-            email: { type: 'string', example: 'carlos@admin.com' },
-            senha: { type: 'string', example: '********' },
-            nivel_acesso: { type: 'string', example: 'A', description: 'Nível de acesso do administrador' },
+            brand: { 
+              type: 'array',
+              items: { type: 'string' },
+              example: ['Samsung', 'Apple']
+            },
+            products: { 
+              type: 'array',
+              items: { type: 'string' },
+              example: ['Mais vendidos', 'Lançamentos']
+            },
           },
         },
       },
