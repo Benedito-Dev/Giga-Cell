@@ -45,6 +45,7 @@ class UsuarioRepository {
     );
     return new Usuario(result.rows[0]);
   }
+
   async verifyCredentials(email, senha) {
     const usuario = await this.findByEmail(email);
 

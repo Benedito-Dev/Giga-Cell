@@ -32,7 +32,12 @@ class Server {
 
   configureMiddlewares() {
     this.app.use(express.json());
-    this.app.use(cors());
+    this.app.use(cors({
+      origin: 'http://localhost:5173', // 🔒 origem permitida (seu front)
+      credentials: true,               // 🔑 permite envio de cookies/autenticação
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }));
     this.app.use(morgan('dev'));
 
     // Pasta 'uploads' pública

@@ -109,26 +109,36 @@ function Login() {
         e.preventDefault();
         setIsLoading(true);
         const newErrors = {};
-        
+
         if (!formData.loginEmail.includes('@')) newErrors.loginEmail = 'E-mail inválido';
         if (formData.loginSenha.length < 6) newErrors.loginSenha = 'Senha inválida';
-        
+
         setErrors(newErrors);
-        
+
         if (Object.keys(newErrors).length === 0) {
             try {
-                const { user } = await authService.login(formData.loginEmail, formData.loginSenha);
-                
-                // Redirecionar para a página principal após login bem-sucedido
+                const response = await authService.login(formData.loginEmail, formData.loginSenha);
+
+                // A API retorna { usuario, token }
+                const { usuario, token } = response;
+
+                console.log('usuario', usuario)
+                console.log('token', token)
+
+                // Armazena o token (para proteger rotas)
+                localStorage.setItem('token', token);
+
+                // Opcional: armazenar dados do usuário também
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+
+                // Redirecionar após login bem-sucedido
                 navigate('/');
-                
-                // Você pode adicionar aqui o armazenamento do token no contexto/state global
-                // Exemplo: authContext.setUser(user);
-                
+
             } catch (error) {
-                setErrors({ submit: error.message });
+                setErrors({ submit: error.message || 'Erro ao fazer login' });
             }
         }
+
         setIsLoading(false);
     };
 

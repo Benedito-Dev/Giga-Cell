@@ -23,7 +23,16 @@ class AuthController {
       return res.status(200).json(usuario);
     } catch (error) {
       console.error(error);
-      return res.status(error.code || 500).json({ message: error.message });
+      if (error.code === 401) {
+        return res.status(401).json({ error: error.message });
+      }
+      if (error.code === 403) {
+        return res.status(403).json({ error: error.message });
+      }
+      return res.status(500).json({ 
+        error: 'Erro interno no servidor',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   }
 }

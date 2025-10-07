@@ -8,9 +8,14 @@ function NavBarr() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                console.log('Cookie :', document.cookie);
-                const response = await fetch('http://localhost:3000/api/auth/me', {
-                    credentials: 'include' // Importante para enviar cookies
+                const token = localStorage.getItem('token'); // pega o JWT do localStorage
+                if (!token) throw new Error('Não autenticado');
+
+                const response = await fetch('http://localhost:3000/auth/me', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // envia o token no header
+                    }
                 });
 
                 if (!response.ok) {
@@ -18,10 +23,8 @@ function NavBarr() {
                 }
 
                 const data = await response.json();
-                if (data.success) {
-                    setUser(data.user);
-                }
-            // eslint-disable-next-line no-unused-vars
+
+                setUser(data); // assume que o backend retorna o usuário diretamente
             } catch (error) {
                 setUser(null);
             } finally {

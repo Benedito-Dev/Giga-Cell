@@ -20,21 +20,31 @@ export const authService = {
   },
 
   async login(email, senha) {
-    const response = await fetch(`${API_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, senha }),
-      credentials: 'include'
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Erro no login');
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha }),
+        credentials: 'include' // ✅ envia cookies se o backend usar cookies HTTP-only
+      });
+
+      // Verifica status da resposta
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({})); // evita erro se não vier JSON
+        throw new Error(errorData.message || 'Erro ao fazer login');
+      }
+
+      // Retorna o JSON da resposta (usuário + token)
+      const data = await response.json();
+      console.log('Login bem-sucedido:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Erro no serviço de login:', error.message);
+      throw error;
     }
-    
-    return response.json();
   },
 
   async getProfile() {

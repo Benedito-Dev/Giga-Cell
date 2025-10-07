@@ -15,17 +15,23 @@ const Checkout = () => {
     const fetchUserInfo = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/auth/me', {
-          credentials: 'include'
-        });
+        const token = localStorage.getItem('token'); // pega o JWT do localStorage
+          if (!token) throw new Error('Não autenticado');
+
+          const response = await fetch('http://localhost:3000/auth/me', {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}` // envia o token no header
+            }
+          });
 
         if (!response.ok) {
           throw new Error('Não autenticado');
         }
 
         const data = await response.json();
-        if (data.success) {
-          setCustomerInfo(data.user);
+        if (data) {
+          setCustomerInfo(data);
         } else {
           throw new Error('Dados do usuário não encontrados');
         }
@@ -41,7 +47,7 @@ const Checkout = () => {
     fetchUserInfo();
   }, []);
 
-  const total = cart.reduce((sum, item) => sum + (item.preco_unitario * item.quantity), 0);
+  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
 
   const handlePaymentChange = (paymentMethod) => {
     setCustomerInfo(prevState => ({
@@ -59,7 +65,7 @@ const Checkout = () => {
     const itensCorrigidos = cart.map(item => ({
       produto_id: item.id,
       nome: item.nome,
-      preco_unitario: Number(item.preco_unitario),
+      preco_unitario: Number(item.preco),
       quantidade: item.quantity
     }));
 
@@ -164,7 +170,7 @@ const Checkout = () => {
                 <div key={item.id} className="py-4 flex justify-between">
                   <div className="flex items-center">
                     <img 
-                      src={item.imagemurl} 
+                      src={item.imagemUrl} 
                       alt={item.nome} 
                       className="w-20 h-20 object-cover rounded mr-4"
                     />
@@ -173,7 +179,7 @@ const Checkout = () => {
                       <p className="text-gray-600">{item.quantity || 1} × R$ {item.preco}</p>
                     </div>
                   </div>
-                  <p className="font-medium">R$ {(item.preco_unitario * (item.quantity || 1)).toFixed(2)}</p>
+                  <p className="font-medium">R$ {(item.preco * (item.quantity || 1)).toFixed(2)}</p>
                 </div>
               ))}
             </div>
