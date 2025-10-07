@@ -2,6 +2,7 @@ const repository = require('../repository/pedidosRepository');
 const ItensRepository = require('../repository/itensRepository')
 const db = require('../db/db')
 const { ValidationError, NotFoundError } = require('../utils/errors');
+const { it } = require('node:test');
 
 class PedidoService {
   // Retorna todos os pedidos
@@ -26,6 +27,7 @@ class PedidoService {
     const pedidosComItens = await Promise.all(
       pedidos.map(async (pedido) => {
         const itens = await ItensRepository.findByPedidoId(pedido.id);
+        console.log(itens)
         return {
           ...pedido,
           itens,
@@ -79,6 +81,7 @@ class PedidoService {
             id: item.id,
             pedido_id: pedido.id,
             produto_id: item.produto_id,
+            imageurl: item.imageurl,
             nome: item.nome,
             quantidade: item.quantidade,
             preco_unitario: item.preco_unitario

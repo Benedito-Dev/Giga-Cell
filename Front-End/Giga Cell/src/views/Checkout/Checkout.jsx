@@ -78,6 +78,7 @@ const Checkout = () => {
     const itensCorrigidos = cart.map(item => ({
       id: uuidv4(),
       produto_id: item.id,
+      imageurl: item.imagemUrl,
       nome: item.nome,
       preco_unitario: Number(item.preco),
       quantidade: item.quantity

@@ -6,7 +6,8 @@ class Items {
     nome,
     quantidade,
     preco_unitario,
-    subtotal
+    subtotal,
+    image_url
   }) {
     this.id = id;
     this.pedido_id = pedido_id;
@@ -15,6 +16,7 @@ class Items {
     this.quantidade = quantidade;
     this.preco_unitario = preco_unitario;
     this.subtotal = subtotal;
+    this.image_url = image_url
   }
 
   // Representação completa para retorno de dados
@@ -26,7 +28,8 @@ class Items {
       nome: this.nome,
       quantidade: this.quantidade,
       preco_unitario: this.preco_unitario,
-      subtotal: this.subtotal
+      subtotal: this.subtotal,
+      image_url: this.image_url
     };
   }
 

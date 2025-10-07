@@ -60,7 +60,7 @@ const Pedidos = () => {
               name: item.nome,
               price: item.preco_unitario,
               quantity: item.quantidade,
-              image: item.imagemUrl || '' // se não houver imagem, deixar vazio
+              image: item.image_url || '' // se não houver imagem, deixar vazio
             }))
           };
         });
