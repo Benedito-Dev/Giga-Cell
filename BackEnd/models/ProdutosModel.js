@@ -8,7 +8,10 @@ class Produto {
     preco,
     categoria,
     descricao,
-    estoque
+    estoque,
+    marca,
+    cor,
+    armazenamento
   }) {
     this.id = id;
     this.nome = nome;
@@ -17,6 +20,9 @@ class Produto {
     this.categoria = categoria;
     this.descricao = descricao;
     this.estoque = estoque;
+    this.marca = marca;
+    this.cor = cor;
+    this.armazenamento = armazenamento;
   }
 
   toJSON() {
@@ -27,7 +33,10 @@ class Produto {
       preco: this.preco,
       categoria: this.categoria,
       descricao: this.descricao,
-      estoque: this.estoque
+      estoque: this.estoque,
+      marca: this.marca,
+      cor: this.cor,
+      armazenamento: this.armazenamento
     };
   }
 

@@ -27,6 +27,34 @@ class ProductsRoutes {
      */
     this.router.get('/', controller.getAll);
 
+   /**
+     * @swagger
+     * /produtos/filtro:
+     *   post:
+     *     summary: Filtra produtos com base em marca, cor e armazenamento
+     *     tags: [Produtos]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/ProdutoFiltro'
+     *     responses:
+     *       200:
+     *         description: Lista de produtos filtrados
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Produto'
+     *       400:
+     *         description: Filtros inválidos
+     *       500:
+     *         description: Erro interno do servidor
+     */
+    this.router.post('/filtro', controller.filter);
+
     /**
      * @swagger
      * /produtos/{id}:
