@@ -74,19 +74,42 @@ class PedidosRoutes {
      * @swagger
      * /pedidos:
      *   post:
-     *     summary: Cria um novo pedido
+     *     summary: Cria um novo pedido com itens
      *     tags: [Pedidos]
      *     requestBody:
      *       required: true
      *       content:
      *         application/json:
      *           schema:
-     *             $ref: '#/components/schemas/Pedido'
+     *             $ref: '#/components/schemas/PedidoCreate'
+     *           example:
+     *             id: "a1b2c3d4-e5f6-7890-1234-56789abcdef0"
+     *             usuario_id: "595a107c-b797-4a31-96c5-7b662badc251"
+     *             data: "2025-10-06T23:00:00Z"
+     *             status: "pendente"
+     *             total: 150.75
+     *             forma_pagamento: "cartao_credito"
+     *             itens:
+     *               - id: "item1-uuid-1234"
+     *                 produto_id: "produto-uuid-1111"
+     *                 nome: "Iphone 15"
+     *                 quantidade: 2
+     *                 preco_unitario: 50.00
+     *               - id: "item2-uuid-5678"
+     *                 produto_id: "produto-uuid-2222"
+     *                 nome: "TV"
+     *                 quantidade: 1
+     *                 preco_unitario: 50.75
      *     responses:
      *       201:
      *         description: Pedido criado com sucesso
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Pedido'
      */
     this.router.post('/', controller.create);
+
 
     /**
      * @swagger

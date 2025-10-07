@@ -140,6 +140,40 @@ const options = {
           },
         },
 
+        ItemCreate: {
+          type: 'object',
+          required: ['id', 'produto_id', 'nome', 'quantidade', 'preco_unitario'],
+          properties: {
+            id: { type: 'string', format: 'uuid', example: 'item1-uuid-1234' },
+            produto_id: { type: 'string', format: 'uuid', example: 'produto-uuid-1111' },
+            nome: { type: 'string', example: 'Iphone 15' },
+            quantidade: { type: 'integer', example: 2 },
+            preco_unitario: { type: 'number', format: 'float', example: 50.00 }
+          }
+        },
+        PedidoCreate: {
+          type: 'object',
+          required: ['id_pedido', 'id_usuario', 'itens', 'valor_total', 'status', 'data_pedido', 'forma_pagamento'],
+          properties: {
+            id_pedido: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-1234-56789abcdef0' },
+            id_usuario: { type: 'string', format: 'uuid', example: '595a107c-b797-4a31-96c5-7b662badc251' },
+            data_pedido: { type: 'string', format: 'date-time', example: '2025-10-06T23:00:00Z' },
+            status: { 
+              type: 'string', 
+              enum: ['pendente', 'pago', 'enviado', 'entregue', 'cancelado'], 
+              example: 'pendente' 
+            },
+            valor_total: { type: 'number', format: 'float', example: 150.75 },
+            forma_pagamento: { type: 'string', example: 'cartao_credito' },
+            itens: {
+              type: 'array',
+              description: 'Lista de itens incluídos no pedido',
+              items: { $ref: '#/components/schemas/ItemCreate' }
+            }
+          }
+        },
+
+
         /** 🆕 Schema Admin */
         Admin: {
           type: 'object',

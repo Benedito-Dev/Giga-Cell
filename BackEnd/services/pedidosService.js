@@ -1,5 +1,6 @@
 const repository = require('../repository/pedidosRepository');
 const ItensRepository = require('../repository/itensRepository')
+const db = require('../db/db')
 const { ValidationError, NotFoundError } = require('../utils/errors');
 
 class PedidoService {
@@ -44,21 +45,63 @@ class PedidoService {
   }
 
   // Cria um novo pedido
+
+  // 🔥 Novo método de criação de pedido com itens
   static async create(data) {
-    const { id, usuario_id, data: dataPedido, status, total, forma_pagamento } = data;
+    const client = await db.pool.connect(); // pega o client da pool
+    try {
+      await client.query('BEGIN');
 
-    if (!usuario_id || !total || !forma_pagamento) {
-      throw new ValidationError('Campos obrigatórios: usuario_id, total, forma_pagamento.');
+      // 1️⃣ Cria o pedido
+      const pedido = await repository.create(
+        {
+          id: data.id,
+          usuario_id: data.usuario_id,
+          data: data.data,
+          status: data.status,
+          total: data.total,
+          forma_pagamento: data.forma_pagamento
+        },
+        client // Passa o client para manter a transação
+      );
+
+      if (!pedido) {
+        throw new ValidationError('Erro ao criar pedido.');
+      }
+
+      // 2️⃣ Cria os itens vinculados ao pedido
+      const itens = Array.isArray(data.itens) ? data.itens : [];
+
+      for (const item of itens) {
+        console.log(item)
+        await ItensRepository.create(
+          {
+            id: item.id,
+            pedido_id: pedido.id,
+            produto_id: item.produto_id,
+            nome: item.nome,
+            quantidade: item.quantidade,
+            preco_unitario: item.preco_unitario
+          },
+          client
+        );
+      }
+
+      await client.query('COMMIT');
+
+      // 3️⃣ Retorna o pedido com os itens completos
+      const itensCriados = await ItensRepository.findByPedidoId(pedido.id);
+      return {
+        ...pedido,
+        itens: itensCriados
+      };
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('Erro ao criar pedido com itens:', err);
+      throw new Error('Erro ao criar pedido com itens.');
+    } finally {
+      client.release();
     }
-
-    return await repository.create({
-      id,
-      usuario_id,
-      data: dataPedido,
-      status,
-      total,
-      forma_pagamento,
-    });
   }
 
   // Atualiza um pedido existente
