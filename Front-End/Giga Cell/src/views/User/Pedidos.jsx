@@ -9,46 +9,63 @@ const Pedidos = () => {
   const [filterStatus, setFilterStatus] = useState('todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedOrder, setExpandedOrder] = useState(null);
-  const [filterDate, setFilterDate] = useState('');
+
+  const paymentMap = {
+    cartao_credito: 'Cartão de Crédito',
+    boleto: 'Boleto',
+    pix: 'PIX',
+    transferencia: 'Transferência Bancária',
+    dinheiro: 'Dinheiro'
+  };
 
   useEffect(() => {
     const fetchPedidos = async () => {
       try {
-        const userResponse = await fetch('http://localhost:3000/api/auth/me', {
-          credentials: 'include'
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('Não autenticado');
+
+        const userResponse = await fetch('http://localhost:3000/auth/me', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
         });
         const userData = await userResponse.json();
 
-        if (!userData.success || !userData.user) {
-          console.error('Erro ao obter usuário logado:', userData.message);
+        if (!userData || !userData.id_usuario) {
+          console.error('Erro ao obter usuário logado');
           return;
         }
 
-        const usuario_id = userData.user.id_usuario;
+        const usuario_id = userData.id_usuario;
 
-        const pedidosResponse = await fetch(`http://localhost:3000/pedidos?usuario_id=${usuario_id}`);
+        const pedidosResponse = await fetch(`http://localhost:3000/pedidos/usuario/${usuario_id}`);
         const pedidosData = await pedidosResponse.json();
 
         const pedidosFormatados = pedidosData.map(pedido => {
-          const total = pedido.itens.reduce((acc, item) => acc + parseFloat(item.subtotal), 0);
+          const total = pedido.itens.reduce(
+            (acc, item) => acc + item.preco_unitario * item.quantidade,
+            0
+          );
 
           return {
             id: pedido.id,
             date: new Date(pedido.data).toLocaleDateString('pt-BR'),
             status: pedido.status.toLowerCase(),
             total,
-            payment: pedido.forma_pagamento,
-            tracking: '',
+            payment: paymentMap[pedido.forma_pagamento] || pedido.forma_pagamento,
+            tracking: pedido.tracking || '',
             items: pedido.itens.map(item => ({
               id: item.id,
-              name: item.produto_nome,
-              price: parseFloat(item.preco_unitario),
+              name: item.nome,
+              price: item.preco_unitario,
               quantity: item.quantidade,
-              image: item.produto_imagem
+              image: item.imagemUrl || '' // se não houver imagem, deixar vazio
             }))
           };
         });
-
+        
+        console.log(pedidosData)
         setOrders(pedidosFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
@@ -59,9 +76,10 @@ const Pedidos = () => {
   }, []);
 
   const filteredOrders = orders.filter(order => {
-    const matchesStatus = filterStatus === 'todos' || order.status.toLowerCase() === filterStatus;
-    const matchesSearch = String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          order.items.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesStatus = filterStatus === 'todos' || order.status === filterStatus;
+    const matchesSearch =
+      String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.items.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
 
@@ -219,7 +237,7 @@ const Pedidos = () => {
                             <p className="text-sm text-gray-500">Quantidade: {item.quantity}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-medium text-gray-800">R$ {item.price.toFixed(2).replace('.', ',')}</p>
+                            <p className="font-medium text-gray-800">R$ {(Number(item.price) || 0).toFixed(2).replace('.', ',')}</p>
                             <p className="text-xs text-gray-500">unidade</p>
                           </div>
                         </div>
