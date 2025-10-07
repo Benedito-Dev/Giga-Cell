@@ -3,6 +3,7 @@ import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
 import { useCart } from '../../hooks/UseCart';
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const Checkout = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();
@@ -15,15 +16,15 @@ const Checkout = () => {
     const fetchUserInfo = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token'); // pega o JWT do localStorage
-          if (!token) throw new Error('Não autenticado');
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('Não autenticado');
 
-          const response = await fetch('http://localhost:3000/auth/me', {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}` // envia o token no header
-            }
-          });
+        const response = await fetch('http://localhost:3000/auth/me', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
         if (!response.ok) {
           throw new Error('Não autenticado');
@@ -62,26 +63,43 @@ const Checkout = () => {
       return;
     }
 
+    // Mapeia forma de pagamento para padrão do backend
+    const formaPagamentoMap = {
+      "Cartão de Crédito": "cartao_credito",
+      "Boleto": "boleto",
+      "PIX": "pix",
+      "Transferência Bancária": "transferencia",
+      "Dinheiro": "dinheiro"
+    };
+    const forma_pagamento = formaPagamentoMap[customerInfo.Payment] || "pendente";
+
+    // Gera UUID para pedido e itens
+    const pedidoId = uuidv4();
     const itensCorrigidos = cart.map(item => ({
+      id: uuidv4(),
       produto_id: item.id,
       nome: item.nome,
       preco_unitario: Number(item.preco),
       quantidade: item.quantity
     }));
 
-    
+    const pedidoData = {
+      id: pedidoId,
+      usuario_id: customerInfo.id_usuario,
+      data: new Date().toISOString(),
+      status: "pendente",
+      total,
+      forma_pagamento,
+      itens: itensCorrigidos
+    };
+
     try {
       const response = await fetch('http://localhost:3000/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          usuario_id: customerInfo.id_usuario,
-          itens: itensCorrigidos,
-          forma_pagamento: customerInfo.Payment,
-          total
-        })
+        body: JSON.stringify(pedidoData)
       });
 
       if (!response.ok) {
@@ -93,15 +111,13 @@ const Checkout = () => {
       console.log("Pedido confirmado:", result);
       setPedidoConfirmado(true);
 
-      // Limpar o carrinho após confirmar o pedido
+      // Limpar carrinho
       localStorage.removeItem("cart");
-      // Se estiver usando um estado de carrinho global, esvazie aqui também
-      window.location.reload(); // ou redirecione o usuário, se preferir
+      window.location.href = "http://localhost:5173/account/meus-pedidos";
+
     } catch (err) {
       console.error("Erro ao enviar pedido:", err.message);
-      // alert("Erro ao confirmar o pedido: " + err.message);
-      alert("Pedido Confirmado com sucesso!");
-      window.location.href = "http://localhost:5173/account/meus-pedidos";
+      alert("Erro ao confirmar o pedido: " + err.message);
     }
   };
 
