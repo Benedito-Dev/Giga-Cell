@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useCart } from '../../hooks/UseCart';
 import { Link } from 'react-router-dom';
 
-function ProductsGrid() {
+function ProductsGrid({ categoria }) {
+  console.log(categoria)
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,8 +12,17 @@ function ProductsGrid() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/produtos');
+        setLoading(true);
+
+        // ✅ monta URL corretamente
+        const url = new URL('http://localhost:3000/produtos');
+        if (categoria) {
+          url.searchParams.append('category', categoria);
+        }
+
+        const response = await fetch(url);
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
         const data = await response.json();
         setProducts(data);
       } catch (err) {
@@ -21,8 +31,9 @@ function ProductsGrid() {
         setLoading(false);
       }
     };
+
     fetchProducts();
-  }, []);
+  }, [categoria]); // ✅ dependência adicionada
 
   const deleteProduct = async (productId) => {
     try {
@@ -88,7 +99,7 @@ function ProductsGrid() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-gray-800 border-2 border-orange-500 py-6 px-8 rounded-xl shadow-lg flex flex-col h-full 
+              className="bg-gray-600 border-2 border-orange-500 py-6 px-8 rounded-xl shadow-lg flex flex-col h-full 
                 transition-all duration-[160ms] ease-in-out hover:scale-105 hover:bg-gray-700 hover:shadow-orange-500/40 cursor-pointer relative"
             >
               {/* Botão de exclusão */}

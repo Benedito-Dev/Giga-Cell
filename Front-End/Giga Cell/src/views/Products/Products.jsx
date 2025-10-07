@@ -2,12 +2,14 @@ import NavBarr from "../../components/NavBarr";
 import FilterSystem from "../../components/Products/Filter";
 import SubBarr from "../../components/SubBarr";
 import ProductsGrid from "../../components/Products/Itens";
+import FloatingCart from '../../components/Cart'
 
 function Products() {
     return (
         <div className="Produtos min-h-screen flex flex-col">
             <NavBarr />
             <SubBarr />
+            <FloatingCart />
             
             <div className="flex flex-col lg:flex-row flex-1 w-full bg-gray-900">
                 {/* Filtros no canto superior esquerdo (fixo em telas grandes) */}

@@ -7,7 +7,7 @@ const FloatingCart = () => {
   const { cart, removeFromCart, updateQuantity } = useCart(); // Use o hook
 
   // Calcula o total
-  const total = cart.reduce((sum, item) => sum + (item.preco_unitario * item.quantity), 0);
+  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
 
   return (
     <>
@@ -68,7 +68,7 @@ const FloatingCart = () => {
                 {cart.map(item => (
                   <li key={item.id} className="flex items-start border-b pb-4">
                     <img 
-                      src={item.imagemurl} 
+                      src={item.imagemUrl} 
                       alt={item.nome} 
                       className="w-20 h-20 object-cover rounded mr-4"
                     />
@@ -89,7 +89,7 @@ const FloatingCart = () => {
                           +
                         </button>
                         <span className="ml-auto font-medium text-gray-800">
-                          R$ {(item.preco_unitario * item.quantity).toFixed(2)}
+                          R$ {(item.preco * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>
