@@ -100,27 +100,23 @@ class ProductRepository {
     const params = [];
     let idx = 1;
 
-    // Filtro por marca
+    // Apenas adiciona filtros se forem válidos
     if (filtros.marca) {
       query += ` AND marca ILIKE $${idx++}`;
       params.push(`%${filtros.marca}%`);
     }
 
-    // Filtro por cor
     if (filtros.cor) {
       query += ` AND cor ILIKE $${idx++}`;
       params.push(`%${filtros.cor}%`);
     }
 
-    // Filtro por armazenamento
-    if (filtros.armazenamento) {
+    if (filtros.armazenamento && filtros.armazenamento !== 'Todas') {
       query += ` AND armazenamento = $${idx++}`;
       params.push(filtros.armazenamento);
     }
 
-    // Filtro por faixa de preço
     if (filtros.preco) {
-      // Aqui podemos definir faixas pré-definidas
       const faixaPrecos = [
         { nome: 'Até R$ 500', min: 0, max: 500 },
         { nome: 'R$ 500 - R$ 1000', min: 500, max: 1000 },
@@ -128,10 +124,9 @@ class ProductRepository {
         { nome: 'Acima de R$ 1500', min: 1500, max: null }
       ];
 
-      // Determinar em qual faixa o valor enviado se encaixa
-      let condicaoPreco = '';
       const precoNumero = Number(filtros.preco);
       if (!isNaN(precoNumero)) {
+        let condicaoPreco = '';
         for (const faixa of faixaPrecos) {
           if ((faixa.max === null && precoNumero >= faixa.min) ||
               (precoNumero >= faixa.min && precoNumero <= faixa.max)) {
@@ -143,13 +138,11 @@ class ProductRepository {
             break;
           }
         }
-      }
-
-      if (condicaoPreco) {
-        query += ` AND (${condicaoPreco})`;
+        if (condicaoPreco) query += ` AND (${condicaoPreco})`;
       }
     }
 
+    // Se nenhum filtro for aplicado, a query continuará como 'SELECT * FROM produtos WHERE 1=1'
     console.log('Query final:', query);
     console.log('Params:', params);
 

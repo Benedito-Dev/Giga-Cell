@@ -16,12 +16,18 @@ function ProductsGrid({ categoria, filtros }) {
       try {
         setLoading(true);
 
-        // Se houver algum filtro selecionado
-        const hasFilters = filtros && Object.values(filtros).some(f => f && f.length !== 0 && f !== 'Todas');
+        // Verifica se existe algum filtro "válido"
+        const hasFilters =
+          filtros &&
+          (filtros.collection !== 'Todas' ||
+            filtros.price.length > 0 ||
+            filtros.color.length > 0 ||
+            filtros.brand.length > 0 ||
+            filtros.products.length > 0);
 
         let response;
         if (hasFilters) {
-          // POST para /produtos/filtro
+          // Rota de filtro
           const filtroJSON = {
             marca: filtros.brand?.[0] || null,
             cor: filtros.color?.[0] || null,
@@ -35,7 +41,7 @@ function ProductsGrid({ categoria, filtros }) {
             body: JSON.stringify(filtroJSON)
           });
         } else {
-          // GET padrão
+          // Rota normal
           const url = new URL('http://localhost:3000/produtos');
           if (categoria) url.searchParams.append('category', categoria);
 
@@ -44,10 +50,7 @@ function ProductsGrid({ categoria, filtros }) {
 
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
-        
-
         const data = await response.json();
-        console.log("data", data)
         setProducts(data);
       } catch (err) {
         setError(err.message);
@@ -57,7 +60,7 @@ function ProductsGrid({ categoria, filtros }) {
     };
 
     fetchProducts();
-  }, [categoria, filtros]); // Atualiza sempre que categoria ou filtros mudarem
+  }, [categoria, filtros]);
 
   // Função auxiliar para converter faixa de preço para número
   const mapPriceToNumber = (priceString) => {

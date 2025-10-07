@@ -44,9 +44,9 @@ class ProductService {
 
     // Garante que pelo menos um filtro foi informado
     const { marca, cor, armazenamento, preco } = filtros;
-    if (!marca && !cor && !armazenamento && !preco) {
-      throw new ValidationError('Informe pelo menos um filtro (marca, cor, preco ou armazenamento).');
-    }
+    // if (!marca && !cor && !armazenamento && !preco) {
+    //   throw new ValidationError('Informe pelo menos um filtro (marca, cor, preco ou armazenamento).');
+    // }
 
     const produtos = await repository.filterProducts(filtros);
 
