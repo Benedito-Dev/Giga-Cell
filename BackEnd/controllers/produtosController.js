@@ -57,11 +57,12 @@ class ProductController {
 
   async filter(req, res) {
     try {
-      const filtros = req.body;
+      const filtros = req.body; // agora pega do corpo da requisição
+
       const produtos = await ProductService.filter(filtros);
       res.status(200).json(produtos);
     } catch (err) {
-    res.status(err.statusCode || 500).json({ error: err.message });
+      res.status(err.statusCode || 500).json({ error: err.message });
     }
   }
 }

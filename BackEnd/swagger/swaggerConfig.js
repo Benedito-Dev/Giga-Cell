@@ -93,27 +93,9 @@ const options = {
         ProdutoFiltro: {
           type: 'object',
           properties: {
-            collection: { type: 'string', example: 'Telefones Celulares Novos' },
-            price: { 
-              type: 'array',
-              items: { type: 'string' },
-              example: ['Até R$ 500', 'R$ 500 - R$ 1000']
-            },
-            color: { 
-              type: 'array',
-              items: { type: 'string' },
-              example: ['Preto', 'Azul']
-            },
-            brand: { 
-              type: 'array',
-              items: { type: 'string' },
-              example: ['Samsung', 'Apple']
-            },
-            products: { 
-              type: 'array',
-              items: { type: 'string' },
-              example: ['Mais vendidos', 'Lançamentos']
-            },
+            marca: { type: 'string', example: 'Apple' },
+            cor: { type: 'string', example: 'Preto' },
+            armazenamento: { type: 'string', example: '128GB' },
           },
         },
       },

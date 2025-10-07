@@ -96,45 +96,33 @@ class ProductRepository {
   }
 
   async filterProducts(filtros) {
-  let query = 'SELECT * FROM produtos WHERE 1=1';
-  const params = [];
-  let idx = 1;
+    let query = 'SELECT * FROM produtos WHERE 1=1';
+    const params = [];
+    let idx = 1;
 
-  // Categoria
-  if (filtros.category) {
-    query += ` AND categoria = $${idx++}`;
-    params.push(filtros.category);
+    // Filtro por marca
+    if (filtros.marca) {
+      query += ` AND marca ILIKE $${idx++}`;
+      params.push(`%${filtros.marca}%`);
+    }
+
+    // Filtro por cor
+    if (filtros.cor) {
+      query += ` AND cor ILIKE $${idx++}`;
+      params.push(`%${filtros.cor}%`);
+    }
+
+    // Filtro por armazenamento
+    if (filtros.armazenamento) {
+      query += ` AND armazenamento = $${idx++}`;
+      params.push(filtros.armazenamento);
+    }
+
+    // Execução da query
+    const result = await db.query(query, params);
+    return result.rows;
   }
 
-  // Faixa de preço
-  if (filtros.price && filtros.price.length > 0) {
-    const priceConditions = filtros.price.map(priceRange => {
-      switch(priceRange) {
-        case 'Até R$ 500': return `preco_unitario <= 500`;
-        case 'R$ 500 - R$ 1000': return `preco_unitario BETWEEN 500 AND 1000`;
-        case 'R$ 1000 - R$ 1500': return `preco_unitario BETWEEN 1000 AND 1500`;
-        case 'Acima de R$ 1500': return `preco_unitario > 1500`;
-        default: return '1=1';
-      }
-    });
-    query += ` AND (${priceConditions.join(' OR ')})`;
-  }
-
-  // Nome (busca parcial)
-  if (filtros.nome) {
-    query += ` AND nome ILIKE $${idx++}`;
-    params.push(`%${filtros.nome}%`);
-  }
-
-  // Estoque mínimo (opcional)
-  if (filtros.min_estoque) {
-    query += ` AND estoque >= $${idx++}`;
-    params.push(filtros.min_estoque);
-  }
-
-  const result = await db.query(query, params);
-  return result.rows; // retorna os produtos como objetos puros
-  }
 }
 
 module.exports = new ProductRepository();

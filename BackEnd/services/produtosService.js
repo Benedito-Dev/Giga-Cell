@@ -37,12 +37,24 @@ class ProductService {
   }
 
   static async filter(filtros) {
-  if (!filtros || typeof filtros !== 'object') {
-    throw new ValidationError('Filtros inválidos.');
-  }
+    // Valida o tipo
+    if (!filtros || typeof filtros !== 'object') {
+      throw new ValidationError('Filtros inválidos.');
+    }
 
-  const produtos = await repository.filterProducts(filtros);
-  return produtos;
+    // Garante que pelo menos um filtro foi informado
+    const { marca, cor, armazenamento } = filtros;
+    if (!marca && !cor && !armazenamento) {
+      throw new ValidationError('Informe pelo menos um filtro (marca, cor ou armazenamento).');
+    }
+
+    const produtos = await repository.filterProducts(filtros);
+
+    if (!produtos || produtos.length === 0) {
+      throw new NotFoundError('Nenhum produto encontrado com os filtros informados.');
+    }
+
+    return produtos;
   }
 }
 

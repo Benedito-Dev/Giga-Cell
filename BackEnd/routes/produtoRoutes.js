@@ -27,53 +27,31 @@ class ProductsRoutes {
      */
     this.router.get('/', controller.getAll);
 
-    /**
+   /**
      * @swagger
      * /produtos/filtro:
      *   post:
-     *     summary: Filtra produtos com base nas especificações
+     *     summary: Filtra produtos com base em marca, cor e armazenamento
      *     tags: [Produtos]
      *     requestBody:
      *       required: true
      *       content:
      *         application/json:
      *           schema:
-     *             type: object
-     *             properties:
-     *               collection:
-     *                 type: string
-     *                 example: 'Telefones Celulares Novos'
-     *               price:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                 example: ['Até R$ 500', 'R$ 500 - R$ 1000']
-     *               color:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                 example: ['Preto', 'Azul']
-     *               brand:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                 example: ['Samsung', 'Apple']
-     *               products:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                 example: ['Mais vendidos', 'Lançamentos']
+     *             $ref: '#/components/schemas/ProdutoFiltro'
      *     responses:
- *       200:
- *         description: Lista de produtos filtrados
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Produto'
- *       500:
- *         description: Erro interno do servidor
+     *       200:
+     *         description: Lista de produtos filtrados
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/Produto'
+     *       400:
+     *         description: Filtros inválidos
+     *       500:
+     *         description: Erro interno do servidor
      */
     this.router.post('/filtro', controller.filter);
 
