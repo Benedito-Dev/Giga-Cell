@@ -3,21 +3,17 @@ import { useState } from 'react';
 const FilterSystem = ({ onChangeFilters }) => {
   const [openFilter, setOpenFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    collection: 'Todas',
     price: [],
     color: [],
     brand: [],
-    armazenamento: [],
-    products: []
+    armazenamento: []
   });
 
   const filterOptions = {
-    collection: ['Todas', 'Telefones Celulares Novos', 'Telefones Celulares Usados', 'Tabelas', 'Acessórios'],
     price: ['Até R$ 500', 'R$ 500 - R$ 1000', 'R$ 1000 - R$ 1500', 'Acima de R$ 1500'],
     color: ['Preto', 'Branco', 'Azul', 'Vermelho', 'Dourado'],
     brand: ['Samsung', 'Apple', 'Xiaomi', 'Motorola', 'LG'],
-    armazenamento: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB'],
-    products: ['Mais vendidos', 'Lançamentos', 'Promoções', 'Com desconto']
+    armazenamento: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB']
   };
 
   const toggleFilter = (filterName) => {
@@ -25,20 +21,16 @@ const FilterSystem = ({ onChangeFilters }) => {
   };
 
   const handleSelect = (filterName, value) => {
-    if (filterName === 'collection') {
-      setSelectedFilters((prev) => ({ ...prev, [filterName]: value }));
-    } else {
-      setSelectedFilters((prev) => {
-        const currentSelection = [...prev[filterName]];
-        const index = currentSelection.indexOf(value);
-        if (index === -1) {
-          currentSelection.push(value);
-        } else {
-          currentSelection.splice(index, 1);
-        }
-        return { ...prev, [filterName]: currentSelection };
-      });
-    }
+    setSelectedFilters((prev) => {
+      const currentSelection = [...prev[filterName]];
+      const index = currentSelection.indexOf(value);
+      if (index === -1) {
+        currentSelection.push(value);
+      } else {
+        currentSelection.splice(index, 1);
+      }
+      return { ...prev, [filterName]: currentSelection };
+    });
   };
 
   const applyFilters = () => {
@@ -46,15 +38,24 @@ const FilterSystem = ({ onChangeFilters }) => {
     console.log('Filtros aplicados:', selectedFilters);
   };
 
-  // Função para traduzir os nomes dos filtros (label amigável)
+  const clearFilters = () => {
+    const cleared = {
+      price: [],
+      color: [],
+      brand: [],
+      armazenamento: []
+    };
+    setSelectedFilters(cleared);
+    onChangeFilters(cleared);
+    console.log('Filtros limpos.');
+  };
+
   const getFilterLabel = (filterName) => {
     const labels = {
-      collection: 'Coleção',
       price: 'Preço',
       color: 'Cor',
       brand: 'Marca',
-      armazenamento: 'Armazenamento',
-      products: 'Produtos'
+      armazenamento: 'Armazenamento'
     };
     return labels[filterName] || filterName;
   };
@@ -83,14 +84,10 @@ const FilterSystem = ({ onChangeFilters }) => {
                   className="flex items-center bg-gray-800 hover:bg-gray-700 transition-all rounded-lg px-2 py-1 cursor-pointer"
                 >
                   <input
-                    type={filterName === 'collection' ? 'radio' : 'checkbox'}
+                    type="checkbox"
                     id={`${filterName}-${option}`}
                     name={filterName}
-                    checked={
-                      filterName === 'collection'
-                        ? selectedFilters.collection === option
-                        : selectedFilters[filterName].includes(option)
-                    }
+                    checked={selectedFilters[filterName].includes(option)}
                     onChange={() => handleSelect(filterName, option)}
                     className="mr-2 text-orange-500 focus:ring-orange-400 accent-orange-500"
                   />
@@ -107,13 +104,23 @@ const FilterSystem = ({ onChangeFilters }) => {
         </div>
       ))}
 
-      <button
-        className="w-full bg-orange-600 text-white py-2 rounded-xl font-semibold border-2 border-black
-                   hover:bg-orange-700 hover:scale-105 transition-all duration-200 ease-in-out"
-        onClick={applyFilters}
-      >
-        Aplicar Filtros
-      </button>
+      <div className="flex flex-col sm:flex-row gap-3 mt-4">
+        <button
+          className="flex-1 bg-orange-600 text-white py-2 rounded-xl font-semibold border-2 border-black
+                     hover:bg-orange-700 hover:scale-105 transition-all duration-200 ease-in-out"
+          onClick={applyFilters}
+        >
+          Aplicar Filtros
+        </button>
+
+        <button
+          className="flex-1 bg-gray-700 text-white py-2 rounded-xl font-semibold border-2 border-black
+                     hover:bg-gray-800 hover:scale-105 transition-all duration-200 ease-in-out"
+          onClick={clearFilters}
+        >
+          Limpar Filtros
+        </button>
+      </div>
     </div>
   );
 };

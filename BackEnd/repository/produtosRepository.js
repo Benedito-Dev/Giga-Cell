@@ -100,24 +100,33 @@ class ProductRepository {
     const params = [];
     let idx = 1;
 
-    // Apenas adiciona filtros se forem válidos
+    // --- Marca ---
     if (filtros.marca) {
-      query += ` AND marca ILIKE $${idx++}`;
-      params.push(`%${filtros.marca}%`);
+      const marcas = Array.isArray(filtros.marca) ? filtros.marca : [filtros.marca];
+      const conditions = marcas.map(() => `marca ILIKE $${idx++}`);
+      query += ` AND (${conditions.join(' OR ')})`;
+      marcas.forEach(m => params.push(`%${m}%`));
     }
 
+    // --- Cor ---
     if (filtros.cor) {
-      query += ` AND cor ILIKE $${idx++}`;
-      params.push(`%${filtros.cor}%`);
+      const cores = Array.isArray(filtros.cor) ? filtros.cor : [filtros.cor];
+      const conditions = cores.map(() => `cor ILIKE $${idx++}`);
+      query += ` AND (${conditions.join(' OR ')})`;
+      cores.forEach(c => params.push(`%${c}%`));
     }
 
-    console.log(filtros.armazenamento)
-
+    // --- Armazenamento ---
     if (filtros.armazenamento && filtros.armazenamento !== 'Todas') {
-      query += ` AND armazenamento = $${idx++}`;
-      params.push(filtros.armazenamento);
+      const armazenamentos = Array.isArray(filtros.armazenamento)
+        ? filtros.armazenamento
+        : [filtros.armazenamento];
+      const conditions = armazenamentos.map(() => `armazenamento = $${idx++}`);
+      query += ` AND (${conditions.join(' OR ')})`;
+      armazenamentos.forEach(a => params.push(a));
     }
 
+    // --- Preço ---
     if (filtros.preco) {
       const faixaPrecos = [
         { nome: 'Até R$ 500', min: 0, max: 500 },
@@ -126,25 +135,17 @@ class ProductRepository {
         { nome: 'Acima de R$ 1500', min: 1500, max: null }
       ];
 
-      const precoNumero = Number(filtros.preco);
-      if (!isNaN(precoNumero)) {
-        let condicaoPreco = '';
-        for (const faixa of faixaPrecos) {
-          if ((faixa.max === null && precoNumero >= faixa.min) ||
-              (precoNumero >= faixa.min && precoNumero <= faixa.max)) {
-            if (faixa.max === null) {
-              condicaoPreco = `preco_unitario >= ${faixa.min}`;
-            } else {
-              condicaoPreco = `preco_unitario BETWEEN ${faixa.min} AND ${faixa.max}`;
-            }
-            break;
-          }
+      const precoTexto = filtros.preco;
+      const faixa = faixaPrecos.find(f => f.nome === precoTexto);
+      if (faixa) {
+        if (faixa.max === null) {
+          query += ` AND preco_unitario >= ${faixa.min}`;
+        } else {
+          query += ` AND preco_unitario BETWEEN ${faixa.min} AND ${faixa.max}`;
         }
-        if (condicaoPreco) query += ` AND (${condicaoPreco})`;
       }
     }
 
-    // Se nenhum filtro for aplicado, a query continuará como 'SELECT * FROM produtos WHERE 1=1'
     console.log('Query final:', query);
     console.log('Params:', params);
 

@@ -29,10 +29,10 @@ function ProductsGrid({ categoria, filtros }) {
         if (hasFilters) {
           // Rota de filtro
           const filtroJSON = {
-            marca: filtros.brand?.[0] || null,
-            cor: filtros.color?.[0] || null,
-            armazenamento: filtros.armazenamento?.[0] || null,
-            preco: filtros.price?.[0] ? mapPriceToNumber(filtros.price[0]) : null,
+            marca: filtros.brand?.length ? filtros.brand : null,
+            cor: filtros.color?.length ? filtros.color : null,
+            armazenamento: filtros.armazenamento?.length ? filtros.armazenamento : null,
+            preco: filtros.price?.[0] || null, // preço ainda é único
           };
 
           response = await fetch('http://localhost:3000/produtos/filtro', {
