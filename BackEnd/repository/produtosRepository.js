@@ -111,6 +111,8 @@ class ProductRepository {
       params.push(`%${filtros.cor}%`);
     }
 
+    console.log(filtros.armazenamento)
+
     if (filtros.armazenamento && filtros.armazenamento !== 'Todas') {
       query += ` AND armazenamento = $${idx++}`;
       params.push(filtros.armazenamento);

@@ -3,18 +3,20 @@ import { useState } from 'react';
 const FilterSystem = ({ onChangeFilters }) => {
   const [openFilter, setOpenFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    collection: 'Todas', 
+    collection: 'Todas',
     price: [],
     color: [],
     brand: [],
+    armazenamento: [],
     products: []
   });
 
   const filterOptions = {
-    collection: ['Todas', 'Telefones Celulares Novos', 'Telefones Celulares usados', 'Tabelas', 'Acessórios'],
+    collection: ['Todas', 'Telefones Celulares Novos', 'Telefones Celulares Usados', 'Tabelas', 'Acessórios'],
     price: ['Até R$ 500', 'R$ 500 - R$ 1000', 'R$ 1000 - R$ 1500', 'Acima de R$ 1500'],
     color: ['Preto', 'Branco', 'Azul', 'Vermelho', 'Dourado'],
     brand: ['Samsung', 'Apple', 'Xiaomi', 'Motorola', 'LG'],
+    armazenamento: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB'],
     products: ['Mais vendidos', 'Lançamentos', 'Promoções', 'Com desconto']
   };
 
@@ -24,9 +26,9 @@ const FilterSystem = ({ onChangeFilters }) => {
 
   const handleSelect = (filterName, value) => {
     if (filterName === 'collection') {
-      setSelectedFilters(prev => ({ ...prev, [filterName]: value }));
+      setSelectedFilters((prev) => ({ ...prev, [filterName]: value }));
     } else {
-      setSelectedFilters(prev => {
+      setSelectedFilters((prev) => {
         const currentSelection = [...prev[filterName]];
         const index = currentSelection.indexOf(value);
         if (index === -1) {
@@ -40,8 +42,21 @@ const FilterSystem = ({ onChangeFilters }) => {
   };
 
   const applyFilters = () => {
-    onChangeFilters(selectedFilters); // só aqui chamamos o callback
+    onChangeFilters(selectedFilters);
     console.log('Filtros aplicados:', selectedFilters);
+  };
+
+  // Função para traduzir os nomes dos filtros (label amigável)
+  const getFilterLabel = (filterName) => {
+    const labels = {
+      collection: 'Coleção',
+      price: 'Preço',
+      color: 'Cor',
+      brand: 'Marca',
+      armazenamento: 'Armazenamento',
+      products: 'Produtos'
+    };
+    return labels[filterName] || filterName;
   };
 
   return (
@@ -54,17 +69,7 @@ const FilterSystem = ({ onChangeFilters }) => {
             className="flex justify-between items-center w-full text-gray-200 hover:text-orange-400 transition-all duration-200"
             onClick={() => toggleFilter(filterName)}
           >
-            <span className="font-medium capitalize">
-              {filterName === 'collection'
-                ? 'Coleção'
-                : filterName === 'price'
-                ? 'Preço'
-                : filterName === 'color'
-                ? 'Cor'
-                : filterName === 'brand'
-                ? 'Marca'
-                : 'Produtos'}
-            </span>
+            <span className="font-medium capitalize">{getFilterLabel(filterName)}</span>
             <span className="text-orange-400 text-lg">
               {openFilter === filterName ? '−' : '+'}
             </span>
@@ -72,7 +77,7 @@ const FilterSystem = ({ onChangeFilters }) => {
 
           {openFilter === filterName && (
             <div className="mt-2 space-y-2 pl-2">
-              {options.map(option => (
+              {options.map((option) => (
                 <div
                   key={option}
                   className="flex items-center bg-gray-800 hover:bg-gray-700 transition-all rounded-lg px-2 py-1 cursor-pointer"

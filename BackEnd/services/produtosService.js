@@ -50,8 +50,10 @@ class ProductService {
 
     const produtos = await repository.filterProducts(filtros);
 
+    // Em vez de lançar erro:
     if (!produtos || produtos.length === 0) {
-      throw new NotFoundError('Nenhum produto encontrado com os filtros informados.');
+      // Apenas retorna array vazio
+      return [];
     }
 
     return produtos;

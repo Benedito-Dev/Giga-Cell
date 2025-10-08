@@ -9,9 +9,8 @@ function ProductsGrid({ categoria, filtros }) {
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
 
-  console.log(filtros)
-
   useEffect(() => {
+    console.log('useEffect rodou com filtros:', filtros);
     const fetchProducts = async () => {
       try {
         setLoading(true);
@@ -23,6 +22,7 @@ function ProductsGrid({ categoria, filtros }) {
             filtros.price.length > 0 ||
             filtros.color.length > 0 ||
             filtros.brand.length > 0 ||
+            filtros.armazenamento.length > 0 ||
             filtros.products.length > 0);
 
         let response;
@@ -31,20 +31,19 @@ function ProductsGrid({ categoria, filtros }) {
           const filtroJSON = {
             marca: filtros.brand?.[0] || null,
             cor: filtros.color?.[0] || null,
-            armazenamento: filtros.collection !== 'Todas' ? filtros.collection : null,
-            preco: filtros.price?.[0] ? mapPriceToNumber(filtros.price[0]) : null
+            armazenamento: filtros.armazenamento?.[0] || null,
+            preco: filtros.price?.[0] ? mapPriceToNumber(filtros.price[0]) : null,
           };
 
           response = await fetch('http://localhost:3000/produtos/filtro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(filtroJSON)
+            body: JSON.stringify(filtroJSON),
           });
         } else {
           // Rota normal
           const url = new URL('http://localhost:3000/produtos');
           if (categoria) url.searchParams.append('category', categoria);
-
           response = await fetch(url);
         }
 
@@ -68,12 +67,12 @@ function ProductsGrid({ categoria, filtros }) {
       'Até R$ 500': 500,
       'R$ 500 - R$ 1000': 750,
       'R$ 1000 - R$ 1500': 1250,
-      'Acima de R$ 1500': 1500
+      'Acima de R$ 1500': 1500,
     };
     return priceMap[priceString] || null;
   };
 
-  // ... restante do seu código de renderização continua igual
+  // Estados de carregamento e erro
   if (loading)
     return (
       <div className="flex justify-center items-center h-[50vh] bg-gray-900">
@@ -90,29 +89,57 @@ function ProductsGrid({ categoria, filtros }) {
       </div>
     );
 
-  if (products.length === 0)
+  // Mensagem personalizada caso nenhum produto tenha sido encontrado
+  if (products.length === 0) {
+    const filtrosAtivos =
+      filtros &&
+      (filtros.collection !== 'Todas' ||
+        filtros.price.length > 0 ||
+        filtros.color.length > 0 ||
+        filtros.brand.length > 0 ||
+        filtros.products.length > 0);
+
     return (
       <div className="flex justify-center items-center h-[50vh] bg-gray-900">
-        <div className="text-2xl font-semibold text-gray-300">
-          Nenhum produto disponível no momento
+        <div className="text-2xl font-semibold text-gray-300 text-center px-4">
+          {filtrosAtivos ? (
+            <>
+              😞 Nenhum produto se encaixa nos filtros selecionados.
+            </>
+          ) : (
+            <>Nenhum produto disponível no momento.</>
+          )}
         </div>
       </div>
     );
+  }
 
+  // Renderização dos produtos
   return (
     <div className="bg-gray-900 min-h-screen w-full p-6 md:p-12 text-gray-100">
       <div className="max-w-7xl mx-auto">
         {/* Grid responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="bg-gray-600 border-2 border-orange-500 py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-all duration-[160ms] ease-in-out hover:scale-105 hover:bg-gray-700 hover:shadow-orange-500/40 cursor-pointer relative">
-              {/* ... resto do render dos produtos */}
-              <img src={product.imagemUrl} alt={product.nome} className="w-40 h-40 object-contain mb-6" />
-              <h2 className="text-xl font-bold text-orange-400 text-center mb-2">{product.nome}</h2>
-              <p className="text-orange-500 font-bold text-2xl text-center">
+            <div
+              key={product.id}
+              className="bg-gray-600 border-2 border-orange-500 py-6 px-8 rounded-xl shadow-lg flex flex-col h-full transition-all duration-[160ms] ease-in-out hover:scale-105 hover:bg-gray-700 hover:shadow-orange-500/40 cursor-pointer relative"
+            >
+              <img
+                src={product.imagemUrl}
+                alt={product.nome}
+                className="w-40 h-40 object-contain mb-6 mx-auto"
+              />
+              <h2 className="text-xl font-bold text-orange-400 text-center mb-2">
+                {product.nome}
+              </h2>
+              <p className="text-orange-500 font-bold text-2xl text-center mb-4">
                 R$ {product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
-              <button onClick={() => addToCart(product)} className="bg-orange-500 hover:bg-orange-600 flex items-center justify-center gap-2 text-black font-semibold py-2 px-4 rounded-full border-2 border-black w-full transition-all duration-200 hover:scale-105">
+              <button
+                onClick={() => addToCart(product)}
+                className="bg-orange-500 hover:bg-orange-600 flex items-center justify-center gap-2 text-black font-semibold py-2 px-4 rounded-full border-2 border-black w-full transition-all duration-200 hover:scale-105"
+              >
                 Adicionar
               </button>
             </div>
