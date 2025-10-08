@@ -1,6 +1,6 @@
 // ProductsGrid.js
 import { useEffect, useState } from 'react';
-import { useCart } from '../../hooks/UseCart';
+import { useCart } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 
 function ProductsGrid({ categoria, filtros }) {

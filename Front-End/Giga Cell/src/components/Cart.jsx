@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCart } from '../hooks/UseCart'; // Corrigi o nome do arquivo para case-sensitive
+import { useCart } from '../context/CartContext'; // Corrigi o nome do arquivo para case-sensitive
 import { Link } from 'react-router-dom';
 
 const FloatingCart = () => {
