@@ -9,6 +9,7 @@ const Pedidos = () => {
   const [filterStatus, setFilterStatus] = useState('todos');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const paymentMap = {
     cartao_credito: 'Cartão de Crédito',
@@ -20,6 +21,7 @@ const Pedidos = () => {
 
   useEffect(() => {
     const fetchPedidos = async () => {
+      setLoading(true); // Inicia loading
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('Não autenticado');
@@ -31,11 +33,7 @@ const Pedidos = () => {
           }
         });
         const userData = await userResponse.json();
-
-        if (!userData || !userData.id_usuario) {
-          console.error('Erro ao obter usuário logado');
-          return;
-        }
+        if (!userData || !userData.id_usuario) return;
 
         const usuario_id = userData.id_usuario;
 
@@ -60,15 +58,16 @@ const Pedidos = () => {
               name: item.nome,
               price: item.preco_unitario,
               quantity: item.quantidade,
-              image: item.image_url || '' // se não houver imagem, deixar vazio
+              image: item.image_url || ''
             }))
           };
         });
-        
-        console.log(pedidosData)
+
         setOrders(pedidosFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
+      } finally {
+        setLoading(false); // Finaliza loading
       }
     };
 
@@ -83,24 +82,30 @@ const Pedidos = () => {
     return matchesStatus && matchesSearch;
   });
 
-  const toggleOrderExpand = (orderId) => {
-    setExpandedOrder(expandedOrder === orderId ? null : orderId);
-  };
+  const toggleOrderExpand = (orderId) => setExpandedOrder(expandedOrder === orderId ? null : orderId);
 
   const getStatusIcon = (status) => {
     switch(status) {
-      case 'entregue':
-        return <i className='bx bx-check-circle text-green-500'></i>;
-      case 'enviado':
-        return <i className='bx bx-paper-plane text-blue-500'></i>;
-      case 'pendente':
-        return <i className='bx bx-time-five text-yellow-500'></i>;
-      case 'cancelado':
-        return <i className='bx bx-x-circle text-red-500'></i>;
-      default:
-        return <i className='bx bx-package text-gray-500'></i>;
+      case 'entregue': return <i className='bx bx-check-circle text-green-500'></i>;
+      case 'enviado': return <i className='bx bx-paper-plane text-blue-500'></i>;
+      case 'pendente': return <i className='bx bx-time-five text-yellow-500'></i>;
+      case 'cancelado': return <i className='bx bx-x-circle text-red-500'></i>;
+      default: return <i className='bx bx-package text-gray-500'></i>;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <NavBarr />
+        <SubBarr />
+        <div className="flex justify-center items-center flex-1">
+          {/* Loading circular laranja */}
+          <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

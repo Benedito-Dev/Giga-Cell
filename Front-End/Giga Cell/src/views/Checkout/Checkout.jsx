@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import NavBarr from '../../components/NavBarr';
 import SubBarr from '../../components/SubBarr';
-import { useCart } from '../../hooks/UseCart';
+import { useCart } from '../../context/CartContext';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const Checkout = () => {
-  const { cart, removeFromCart, updateQuantity } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const [customerInfo, setCustomerInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,20 +26,13 @@ const Checkout = () => {
           }
         });
 
-        if (!response.ok) {
-          throw new Error('Não autenticado');
-        }
+        if (!response.ok) throw new Error('Não autenticado');
 
         const data = await response.json();
-        if (data) {
-          setCustomerInfo(data);
-        } else {
-          throw new Error('Dados do usuário não encontrados');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar dados do usuário:', error);
-        setError(error.message);
-        setCustomerInfo(null);
+        setCustomerInfo(data || null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do usuário:', err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -48,7 +41,7 @@ const Checkout = () => {
     fetchUserInfo();
   }, []);
 
-  const total = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
+  const total = cart.reduce((sum, item) => sum + (item.preco * (item.quantity || 1)), 0);
 
   const handlePaymentChange = (paymentMethod) => {
     setCustomerInfo(prevState => ({
@@ -63,7 +56,6 @@ const Checkout = () => {
       return;
     }
 
-    // Mapeia forma de pagamento para padrão do backend
     const formaPagamentoMap = {
       "Cartão de Crédito": "cartao_credito",
       "Boleto": "boleto",
@@ -73,16 +65,18 @@ const Checkout = () => {
     };
     const forma_pagamento = formaPagamentoMap[customerInfo.Payment] || "pendente";
 
-    // Gera UUID para pedido e itens
     const pedidoId = uuidv4();
-    const itensCorrigidos = cart.map(item => ({
-      id: uuidv4(),
-      produto_id: item.id,
-      imageurl: item.imagemUrl,
-      nome: item.nome,
-      preco_unitario: Number(item.preco),
-      quantidade: item.quantity
-    }));
+    const itensCorrigidos = cart.map(item => {
+      console.log('🔍 Produto:', item.nome, 'image_url:', item.imagemUrl); // Debug
+      return {
+        id: uuidv4(),
+        produto_id: item.id,
+        image_url: item.imagemUrl,
+        nome: item.nome,
+        preco_unitario: Number(item.preco),
+        quantidade: item.quantity || 1
+      };
+    });
 
     const pedidoData = {
       id: pedidoId,
@@ -97,9 +91,7 @@ const Checkout = () => {
     try {
       const response = await fetch('http://localhost:3000/pedidos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(pedidoData)
       });
 
@@ -112,70 +104,27 @@ const Checkout = () => {
       console.log("Pedido confirmado:", result);
       setPedidoConfirmado(true);
 
-      // Limpar carrinho
-      localStorage.removeItem("cart");
-      window.location.href = "http://localhost:5173/account/meus-pedidos";
+      clearCart(); // Limpa o carrinho via contexto
 
+      window.location.href = "http://localhost:5173/account/meus-pedidos";
     } catch (err) {
       console.error("Erro ao enviar pedido:", err.message);
       alert("Erro ao confirmar o pedido: " + err.message);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100">
-        <NavBarr />
-        <SubBarr />
-        <div className="container mx-auto py-8 px-4 text-black">
-          <p>Carregando informações do cliente...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-100">
-        <NavBarr />
-        <SubBarr />
-        <div className="container mx-auto py-8 px-4 text-black">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            <p>Erro ao carregar informações: {error}</p>
-            <p>Por favor, faça login novamente.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!customerInfo) {
-    return (
-      <div className="min-h-screen bg-gray-100">
-        <NavBarr />
-        <SubBarr />
-        <div className="container mx-auto py-8 px-4 text-black">
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-            <p>Você precisa estar autenticado para finalizar o pedido.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen bg-gray-100"><NavBarr /><SubBarr /><div className="container mx-auto py-8 px-4 text-black">Carregando informações do cliente...</div></div>;
+  if (error) return <div className="min-h-screen bg-gray-100"><NavBarr /><SubBarr /><div className="container mx-auto py-8 px-4 text-black"><div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Erro ao carregar informações: {error}</div></div></div>;
+  if (!customerInfo) return <div className="min-h-screen bg-gray-100"><NavBarr /><SubBarr /><div className="container mx-auto py-8 px-4 text-black"><div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">Você precisa estar autenticado para finalizar o pedido.</div></div></div>;
 
   return (
     <div className="min-h-screen bg-gray-100">
       <NavBarr />
       <SubBarr />
-
       <div className="container mx-auto py-8 px-4 text-black">
         <h1 className="text-3xl font-bold mb-8">Finalizar Pedido</h1>
 
-        {pedidoConfirmado && (
-          <div className="mb-6 p-4 bg-green-100 text-green-800 border border-green-400 rounded">
-            Pedido confirmado com sucesso!
-          </div>
-        )}
+        {pedidoConfirmado && <div className="mb-6 p-4 bg-green-100 text-green-800 border border-green-400 rounded">Pedido confirmado com sucesso!</div>}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Resumo do Pedido */}
@@ -184,14 +133,10 @@ const Checkout = () => {
 
             <div className="divide-y max-h-[50vh] overflow-y-auto px-5">
               {cart.map(item => (
-                <div key={item.id} className="py-4 flex justify-between">
+                <div key={item.id} className="py-4 flex justify-between items-center">
                   <div className="flex items-center">
-                    <img 
-                      src={item.imagemUrl} 
-                      alt={item.nome} 
-                      className="w-20 h-20 object-cover rounded mr-4"
-                    />
-                    <div className="info">
+                    <img src={item.imagemUrl} alt={item.nome} className="w-20 h-20 object-cover rounded mr-4"/>
+                    <div>
                       <p className="font-medium">{item.nome}</p>
                       <p className="text-gray-600">{item.quantity || 1} × R$ {item.preco}</p>
                     </div>
@@ -218,22 +163,18 @@ const Checkout = () => {
                 <h3 className="font-medium text-gray-700">Nome</h3>
                 <p>{customerInfo.nome || 'Não informado'}</p>
               </div>
-
               <div>
                 <h3 className="font-medium text-gray-700">E-mail</h3>
                 <p>{customerInfo.email || 'Não informado'}</p>
               </div>
-
               <div>
                 <h3 className="font-medium text-gray-700">Endereço de Entrega</h3>
                 <p>{customerInfo.endereco || 'Não informado'}</p>
               </div>
-
               <div>
                 <h3 className="font-medium text-gray-700">Telefone</h3>
                 <p>{customerInfo.telefone || 'Não informado'}</p>
               </div>
-
               <div>
                 <h3 className="font-medium text-gray-700">Método de Pagamento</h3>
                 <select className='bg-slate-100 rounded-md px-2 py-2' value={customerInfo.Payment || ''} onChange={(e) => handlePaymentChange(e.target.value)}>
@@ -246,16 +187,11 @@ const Checkout = () => {
                 </select>
               </div>
 
-              <button 
-                onClick={handleSubmitPedido}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition mt-6"
-              >
+              <button onClick={handleSubmitPedido} className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition mt-6">
                 Confirmar Pedido
               </button>
 
-              <p className="text-sm text-gray-500 mt-4">
-                Ao confirmar, você concorda com nossos Termos de Serviço e Política de Privacidade.
-              </p>
+              <p className="text-sm text-gray-500 mt-4">Ao confirmar, você concorda com nossos Termos de Serviço e Política de Privacidade.</p>
             </div>
           </div>
         </div>

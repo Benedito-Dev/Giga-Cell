@@ -81,7 +81,7 @@ class PedidoService {
             id: item.id,
             pedido_id: pedido.id,
             produto_id: item.produto_id,
-            imageurl: item.imageurl,
+            image_url: item.image_url,
             nome: item.nome,
             quantidade: item.quantidade,
             preco_unitario: item.preco_unitario
