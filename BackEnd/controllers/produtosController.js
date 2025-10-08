@@ -54,6 +54,25 @@ class ProductController {
       res.status(error.statusCode || 500).json({ error: error.message });
     }
   }
+
+  async filter(req, res) {
+    try {
+      const filtros = req.body; // pega do corpo da requisição
+
+      const produtos = await ProductService.filter(filtros);
+
+      // Padroniza os campos para o frontend
+      const formattedProducts = produtos.map(p => ({
+        ...p,
+        preco: p.preco_unitario,    // renomeia para "preco"
+        imagemUrl: p.imagemurl      // renomeia para "imagemUrl"
+      }));
+
+      res.status(200).json(formattedProducts);
+    } catch (err) {
+      res.status(err.statusCode || 500).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = new ProductController();

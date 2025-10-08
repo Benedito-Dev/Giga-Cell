@@ -94,6 +94,62 @@ class ProductRepository {
 
     return result.rows[0] ? new Product(result.rows[0]) : null;
   }
+
+  async filterProducts(filtros) {
+    let query = 'SELECT * FROM produtos WHERE 1=1';
+    const params = [];
+    let idx = 1;
+
+    // Apenas adiciona filtros se forem válidos
+    if (filtros.marca) {
+      query += ` AND marca ILIKE $${idx++}`;
+      params.push(`%${filtros.marca}%`);
+    }
+
+    if (filtros.cor) {
+      query += ` AND cor ILIKE $${idx++}`;
+      params.push(`%${filtros.cor}%`);
+    }
+
+    if (filtros.armazenamento && filtros.armazenamento !== 'Todas') {
+      query += ` AND armazenamento = $${idx++}`;
+      params.push(filtros.armazenamento);
+    }
+
+    if (filtros.preco) {
+      const faixaPrecos = [
+        { nome: 'Até R$ 500', min: 0, max: 500 },
+        { nome: 'R$ 500 - R$ 1000', min: 500, max: 1000 },
+        { nome: 'R$ 1000 - R$ 1500', min: 1000, max: 1500 },
+        { nome: 'Acima de R$ 1500', min: 1500, max: null }
+      ];
+
+      const precoNumero = Number(filtros.preco);
+      if (!isNaN(precoNumero)) {
+        let condicaoPreco = '';
+        for (const faixa of faixaPrecos) {
+          if ((faixa.max === null && precoNumero >= faixa.min) ||
+              (precoNumero >= faixa.min && precoNumero <= faixa.max)) {
+            if (faixa.max === null) {
+              condicaoPreco = `preco_unitario >= ${faixa.min}`;
+            } else {
+              condicaoPreco = `preco_unitario BETWEEN ${faixa.min} AND ${faixa.max}`;
+            }
+            break;
+          }
+        }
+        if (condicaoPreco) query += ` AND (${condicaoPreco})`;
+      }
+    }
+
+    // Se nenhum filtro for aplicado, a query continuará como 'SELECT * FROM produtos WHERE 1=1'
+    console.log('Query final:', query);
+    console.log('Params:', params);
+
+    const result = await db.query(query, params);
+    return result.rows;
+  }
+
 }
 
 module.exports = new ProductRepository();

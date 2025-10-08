@@ -35,6 +35,27 @@ class ProductService {
     if (!removed) throw new NotFoundError('Produto não encontrado para remover.');
     return removed;
   }
+
+  static async filter(filtros) {
+    // Valida o tipo
+    if (!filtros || typeof filtros !== 'object') {
+      throw new ValidationError('Filtros inválidos.');
+    }
+
+    // Garante que pelo menos um filtro foi informado
+    const { marca, cor, armazenamento, preco } = filtros;
+    // if (!marca && !cor && !armazenamento && !preco) {
+    //   throw new ValidationError('Informe pelo menos um filtro (marca, cor, preco ou armazenamento).');
+    // }
+
+    const produtos = await repository.filterProducts(filtros);
+
+    if (!produtos || produtos.length === 0) {
+      throw new NotFoundError('Nenhum produto encontrado com os filtros informados.');
+    }
+
+    return produtos;
+  }
 }
 
 module.exports = ProductService;

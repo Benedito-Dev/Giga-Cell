@@ -3,7 +3,7 @@ import { useState } from 'react';
 const FilterSystem = ({ onChangeFilters }) => {
   const [openFilter, setOpenFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    collection: 'Todas',
+    collection: 'Todas', 
     price: [],
     color: [],
     brand: [],
@@ -23,25 +23,25 @@ const FilterSystem = ({ onChangeFilters }) => {
   };
 
   const handleSelect = (filterName, value) => {
-    let newFilters;
-
     if (filterName === 'collection') {
-      newFilters = { ...selectedFilters, [filterName]: value };
+      setSelectedFilters(prev => ({ ...prev, [filterName]: value }));
     } else {
-      const currentSelection = [...selectedFilters[filterName]];
-      const index = currentSelection.indexOf(value);
-
-      if (index === -1) {
-        currentSelection.push(value);
-      } else {
-        currentSelection.splice(index, 1);
-      }
-
-      newFilters = { ...selectedFilters, [filterName]: currentSelection };
+      setSelectedFilters(prev => {
+        const currentSelection = [...prev[filterName]];
+        const index = currentSelection.indexOf(value);
+        if (index === -1) {
+          currentSelection.push(value);
+        } else {
+          currentSelection.splice(index, 1);
+        }
+        return { ...prev, [filterName]: currentSelection };
+      });
     }
+  };
 
-    setSelectedFilters(newFilters);
-    onChangeFilters(newFilters);
+  const applyFilters = () => {
+    onChangeFilters(selectedFilters); // só aqui chamamos o callback
+    console.log('Filtros aplicados:', selectedFilters);
   };
 
   return (
@@ -105,7 +105,7 @@ const FilterSystem = ({ onChangeFilters }) => {
       <button
         className="w-full bg-orange-600 text-white py-2 rounded-xl font-semibold border-2 border-black
                    hover:bg-orange-700 hover:scale-105 transition-all duration-200 ease-in-out"
-        onClick={() => console.log('Filtros aplicados:', selectedFilters)}
+        onClick={applyFilters}
       >
         Aplicar Filtros
       </button>
