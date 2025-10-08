@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import NavBarr from '../../components/NavBarr';
-import SubBarr from '../../components/SubBarr';
+import NavBarr from '../../../components/NavBarr';
+import SubBarr from '../../../components/SubBarr';
 
 const Pedidos = () => {
   const [orders, setOrders] = useState([]);
@@ -246,7 +246,7 @@ const Pedidos = () => {
                     
                     <div className="mt-6 flex justify-end">
                       <Link
-                        to={`/pedidos/${order.id}`}
+                        to={`/Account/meus-pedidos/${order.id}`}
                         className="text-orange-500 hover:text-orange-600 font-medium flex items-center gap-1"
                       >
                         Ver detalhes completos <i className='bx bx-chevron-right'></i>

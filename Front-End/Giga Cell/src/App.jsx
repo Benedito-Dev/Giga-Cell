@@ -11,7 +11,8 @@ import Acessorios from './views/Acessorios/Acessorios';
 import AddProducts from './views/Products/AddProducts';
 import AccountUser from './views/User/Account';
 import RotaProtegidas from './auth/RotaProtegida';
-import Pedidos from './views/User/Pedidos';
+import Pedidos from './views/User/Pedidos/Pedidos';
+import PedidosDetalhes from './views/User/Pedidos/PedidoDetalhes';
 import Checkout from './views/Checkout/Checkout';
 import { CartProvider } from './context/CartContext';
 
@@ -37,7 +38,7 @@ export default function App() {
             <Route path="/produtos/adicionar" element={<AddProducts />} />
             <Route path="/Account" element={<AccountUser />} />
             <Route path="/Account/meus-pedidos" element={<Pedidos />} />
-            {/* <Route path="/Account/meus-pedidos/:id" element={<Pedidos />} /> */}
+            <Route path="/Account/meus-pedidos/:id" element={<PedidosDetalhes />} />
             <Route path="/Checkout" element={<Checkout />} />
 
 
