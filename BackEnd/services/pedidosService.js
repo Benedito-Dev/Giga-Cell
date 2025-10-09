@@ -1,8 +1,9 @@
 const repository = require('../repository/pedidosRepository');
-const ItensRepository = require('../repository/itensRepository')
-const db = require('../db/db')
+const ItensRepository = require('../repository/itensRepository');
+const db = require('../db/db');
 const { ValidationError, NotFoundError } = require('../utils/errors');
-const { it } = require('node:test');
+const emailSender = require('../utils/emailSender');
+const usuarioRepository = require('../repository/usuarioRepository'); // ✅ adiciona esse import
 
 class PedidoService {
   // Retorna todos os pedidos
@@ -10,28 +11,16 @@ class PedidoService {
     return await repository.findAll();
   }
 
-  // Retorna pedidos de um usuário específico
-  // static async getByUsuario(usuario_id) {
-  //   if (!usuario_id) throw new ValidationError('ID do usuário é obrigatório.');
-  //   return await repository.findByUsuario(usuario_id);
-  // }
-
-  // 🔥 NOVO MÉTODO: Pedidos + Itens do Usuário
+  // Pedidos + Itens do Usuário
   static async getByUsuario(usuario_id) {
     if (!usuario_id) throw new ValidationError('ID do usuário é obrigatório.');
 
-    // 1️⃣ Busca todos os pedidos do usuário
     const pedidos = await repository.findByUsuario(usuario_id);
 
-    // 2️⃣ Para cada pedido, busca os itens
     const pedidosComItens = await Promise.all(
       pedidos.map(async (pedido) => {
         const itens = await ItensRepository.findByPedidoId(pedido.id);
-        console.log(itens)
-        return {
-          ...pedido,
-          itens,
-        };
+        return { ...pedido, itens };
       })
     );
 
@@ -46,11 +35,9 @@ class PedidoService {
     return pedido;
   }
 
-  // Cria um novo pedido
-
-  // 🔥 Novo método de criação de pedido com itens
+  // 🔥 Cria um novo pedido com itens e envia e-mail
   static async create(data) {
-    const client = await db.pool.connect(); // pega o client da pool
+    const client = await db.pool.connect();
     try {
       await client.query('BEGIN');
 
@@ -62,20 +49,16 @@ class PedidoService {
           data: data.data,
           status: data.status,
           total: data.total,
-          forma_pagamento: data.forma_pagamento
+          forma_pagamento: data.forma_pagamento,
         },
-        client // Passa o client para manter a transação
+        client
       );
 
-      if (!pedido) {
-        throw new ValidationError('Erro ao criar pedido.');
-      }
+      if (!pedido) throw new ValidationError('Erro ao criar pedido.');
 
-      // 2️⃣ Cria os itens vinculados ao pedido
+      // 2️⃣ Cria os itens
       const itens = Array.isArray(data.itens) ? data.itens : [];
-
       for (const item of itens) {
-        console.log(item)
         await ItensRepository.create(
           {
             id: item.id,
@@ -84,7 +67,7 @@ class PedidoService {
             image_url: item.image_url,
             nome: item.nome,
             quantidade: item.quantidade,
-            preco_unitario: item.preco_unitario
+            preco_unitario: item.preco_unitario,
           },
           client
         );
@@ -92,12 +75,26 @@ class PedidoService {
 
       await client.query('COMMIT');
 
-      // 3️⃣ Retorna o pedido com os itens completos
+      // 3️⃣ Busca os itens completos
       const itensCriados = await ItensRepository.findByPedidoId(pedido.id);
-      return {
-        ...pedido,
-        itens: itensCriados
-      };
+      const pedidoCompleto = { ...pedido, itens: itensCriados };
+
+      // 4️⃣ Busca o e-mail do usuário
+      try {
+        const usuario = await usuarioRepository.findById(data.usuario_id);
+
+        if (usuario?.email) {
+          await emailSender.enviarEmailConfirmacao(usuario.email, pedidoCompleto);
+          console.log(`📧 E-mail de confirmação enviado para ${usuario.email}`);
+        } else {
+          console.warn(`⚠️ Usuário ${data.usuario_id} não possui e-mail cadastrado.`);
+        }
+      } catch (emailErr) {
+        console.error('❌ Erro ao enviar e-mail de confirmação:', emailErr.message);
+        // ⚠️ não lança erro, para não impedir a criação do pedido
+      }
+
+      return pedidoCompleto;
     } catch (err) {
       await client.query('ROLLBACK');
       console.error('Erro ao criar pedido com itens:', err);

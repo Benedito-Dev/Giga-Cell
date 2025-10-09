@@ -110,7 +110,6 @@ class PedidosRoutes {
      */
     this.router.post('/', controller.create);
 
-
     /**
      * @swagger
      * /pedidos/{id}:
