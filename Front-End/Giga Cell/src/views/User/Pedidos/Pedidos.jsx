@@ -94,6 +94,20 @@ const Pedidos = () => {
     }
   };
 
+  // 🗑️ Função para deletar pedido
+  const handleDeletePedido = async (id) => {
+    if (!window.confirm(`Deseja realmente deletar o pedido #${id}?`)) return;
+
+    try {
+      await fetch(`http://localhost:3000/pedidos/${id}`, {
+        method: 'DELETE'
+      });
+      setOrders(prev => prev.filter(order => order.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar pedido:', error);
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -180,9 +194,18 @@ const Pedidos = () => {
                     <div className="flex flex-col items-end">
                       <span className="font-bold text-gray-900">R$ {order.total.toFixed(2).replace('.', ',')}</span>
                       <span className="text-xs text-gray-500 mt-1">{order.payment}</span>
-                      <i className={`bx bx-chevron-down text-xl text-gray-400 mt-2 transition-transform ${
+                      <div>
+                        <button
+                          onClick={() => handleDeletePedido(order.id)}
+                          className="mr-6 text-red-500 hover:text-red-600 transition-colors"
+                          title="Deletar pedido"
+                        >
+                          <i className='bx bx-trash text-2xl'></i>
+                        </button>
+                        <i className={`bx bx-chevron-down text-xl text-gray-400 mt-2 transition-transform ${
                         expandedOrder === order.id ? 'rotate-180' : ''
                       }`}></i>
+                      </div>
                     </div>
                   </div>
                 </div>
