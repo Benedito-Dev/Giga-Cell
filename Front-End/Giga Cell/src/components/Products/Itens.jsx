@@ -10,47 +10,32 @@ function ProductsGrid({ categoria, filtros }) {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    console.log('useEffect rodou com filtros:', filtros);
+    console.log('useEffect rodou com filtros:', filtros, 'e categoria:', categoria);
+
     const fetchProducts = async () => {
       try {
         setLoading(true);
 
-        // Verifica se existe algum filtro "válido"
-        const hasFilters =
-          filtros &&
-          (filtros.collection !== 'Todas' ||
-            filtros.price.length > 0 ||
-            filtros.color.length > 0 ||
-            filtros.brand.length > 0 ||
-            filtros.armazenamento.length > 0 ||
-            filtros.products.length > 0);
+        const filtroJSON = {
+          categoria: categoria || null,
+          marca: filtros.brand?.length ? filtros.brand : null,
+          cor: filtros.color?.length ? filtros.color : null,
+          armazenamento: filtros.armazenamento?.length ? filtros.armazenamento : null,
+          preco: filtros.price?.[0] || null,
+        };
 
-        let response;
-        if (hasFilters) {
-          // Rota de filtro
-          const filtroJSON = {
-            marca: filtros.brand?.length ? filtros.brand : null,
-            cor: filtros.color?.length ? filtros.color : null,
-            armazenamento: filtros.armazenamento?.length ? filtros.armazenamento : null,
-            preco: filtros.price?.[0] || null, // preço ainda é único
-          };
+        console.log('Enviando para /produtos/filtro:', filtroJSON);
 
-          response = await fetch('http://localhost:3000/produtos/filtro', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(filtroJSON),
-          });
-        } else {
-          // Rota normal
-          const url = new URL('http://localhost:3000/produtos');
-          if (categoria) url.searchParams.append('category', categoria);
-          response = await fetch(url);
-        }
+        const response = await fetch('http://localhost:3000/produtos/filtro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(filtroJSON),
+        });
 
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
         const data = await response.json();
-        setProducts(data);
+        setProducts(data || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -60,17 +45,6 @@ function ProductsGrid({ categoria, filtros }) {
 
     fetchProducts();
   }, [categoria, filtros]);
-
-  // Função auxiliar para converter faixa de preço para número
-  const mapPriceToNumber = (priceString) => {
-    const priceMap = {
-      'Até R$ 500': 500,
-      'R$ 500 - R$ 1000': 750,
-      'R$ 1000 - R$ 1500': 1250,
-      'Acima de R$ 1500': 1500,
-    };
-    return priceMap[priceString] || null;
-  };
 
   // Estados de carregamento e erro
   if (loading)
@@ -89,26 +63,12 @@ function ProductsGrid({ categoria, filtros }) {
       </div>
     );
 
-  // Mensagem personalizada caso nenhum produto tenha sido encontrado
+  // Caso não haja produtos encontrados
   if (products.length === 0) {
-    const filtrosAtivos =
-      filtros &&
-      (filtros.collection !== 'Todas' ||
-        filtros.price.length > 0 ||
-        filtros.color.length > 0 ||
-        filtros.brand.length > 0 ||
-        filtros.products.length > 0);
-
     return (
       <div className="flex justify-center items-center h-[50vh] bg-gray-900">
         <div className="text-2xl font-semibold text-gray-300 text-center px-4">
-          {filtrosAtivos ? (
-            <>
-              😞 Nenhum produto se encaixa nos filtros selecionados.
-            </>
-          ) : (
-            <>Nenhum produto disponível no momento.</>
-          )}
+          😞 Nenhum produto se encaixa nos filtros selecionados.
         </div>
       </div>
     );
@@ -118,7 +78,6 @@ function ProductsGrid({ categoria, filtros }) {
   return (
     <div className="bg-gray-900 min-h-screen w-full p-6 md:p-12 text-gray-100">
       <div className="max-w-7xl mx-auto">
-        {/* Grid responsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {products.map((product) => (
             <div
@@ -134,7 +93,10 @@ function ProductsGrid({ categoria, filtros }) {
                 {product.nome}
               </h2>
               <p className="text-orange-500 font-bold text-2xl text-center mb-4">
-                R$ {product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                R$ {product.preco.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </p>
               <button
                 onClick={() => addToCart(product)}

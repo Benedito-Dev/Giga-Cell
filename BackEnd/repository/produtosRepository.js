@@ -100,6 +100,16 @@ class ProductRepository {
     const params = [];
     let idx = 1;
 
+    // --- Categoria / Coleção ---
+    if (filtros.categoria && filtros.categoria !== 'Todas') {
+      const categorias = Array.isArray(filtros.categoria)
+        ? filtros.categoria
+        : [filtros.categoria];
+      const conditions = categorias.map(() => `categoria ILIKE $${idx++}`);
+      query += ` AND (${conditions.join(' OR ')})`;
+      categorias.forEach(cat => params.push(`%${cat}%`));
+    }
+
     // --- Marca ---
     if (filtros.marca) {
       const marcas = Array.isArray(filtros.marca) ? filtros.marca : [filtros.marca];

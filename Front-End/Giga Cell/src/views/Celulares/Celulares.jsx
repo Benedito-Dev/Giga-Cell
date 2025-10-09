@@ -24,7 +24,7 @@ function Products() {
                 
                 {/* Conteúdo principal com produtos */}
                 <div className="flex-1 lg:ml-4">
-                    <ProductsGrid filtros={filtros} />
+                    <ProductsGrid categoria={'celulares'} filtros={filtros} />
                 </div>
             </div>
         </div>
