@@ -121,7 +121,7 @@ class PedidosRoutes {
      *         name: id
      *         required: true
      *         schema:
-     *           type: integer
+     *           type: string
      *     requestBody:
      *       required: true
      *       content:
@@ -145,7 +145,7 @@ class PedidosRoutes {
      *         name: id
      *         required: true
      *         schema:
-     *           type: integer
+     *           type: string
      *     responses:
      *       200:
      *         description: Pedido removido com sucesso
