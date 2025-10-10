@@ -22,6 +22,18 @@ const options = {
         },
       },
       schemas: {
+        UsuarioCreate: {
+          type: 'object',
+          required: ['nome', 'email', 'senha', 'cpf', 'telefone', 'endereco'],
+          properties: {
+            nome: { type: 'string', example: 'João Silva', description: 'Nome completo do usuário' },
+            email: { type: 'string', format: 'email', example: 'joao.silva@example.com', description: 'E-mail usado para login' },
+            senha: { type: 'string', example: 'senhaSegura123', description: 'Senha em texto plano (será criptografada antes de salvar)' },
+            cpf: { type: 'string', example: '123.456.789-00', description: 'CPF do usuário' },
+            telefone: { type: 'string', example: '(11) 98765-4321', description: 'Telefone para contato' },
+            endereco: { type: 'string', example: 'Rua das Flores, 123 - São Paulo/SP', description: 'Endereço residencial ou comercial' }
+          }
+        },
         Celular: {
           type: 'object',
           required: [

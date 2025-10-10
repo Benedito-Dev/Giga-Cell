@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
-import { useCart } from '../hooks/UseCart';
+import { useCart } from '../context/CartContext';
 
 function CellPhones() {
   const [products, setProducts] = useState([]);

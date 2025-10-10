@@ -4,7 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import { useCart } from '../hooks/UseCart'; // Importando o hook de carrinho
+import { useCart } from '../context/CartContext'; // Importando o hook de carrinho
 import { Link } from 'react-router-dom';
 
 function Acessorios() {

@@ -63,7 +63,7 @@ router.get('/:id', usuarioController.getById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Usuario'
+ *             $ref: '#/components/schemas/UsuarioCreate'
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso

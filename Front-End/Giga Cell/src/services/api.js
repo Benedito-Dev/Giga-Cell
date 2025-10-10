@@ -2,7 +2,7 @@ const API_URL = 'http://localhost:3000'; // Ajuste conforme necessário
 
 export const authService = {
   async register(userData) {
-    const response = await fetch(`${API_URL}/api/auth/register`, {
+    const response = await fetch(`${API_URL}/usuarios`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
