@@ -79,7 +79,12 @@ function AccountUser() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/update', {
+      // Verifica se o usuário está carregado
+      if (!user || !user.id_usuario) {
+        throw new Error('Usuário não identificado');
+      }
+
+      const response = await fetch(`http://localhost:3000/usuarios/${user.id_usuario}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +102,9 @@ function AccountUser() {
       setUser(data);
       setSuccessMessage('Perfil atualizado com sucesso!');
       setEditMode(false);
-      setTimeout(() => setSuccessMessage(''), 3000);
+      setTimeout(() => {
+      window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao atualizar perfil:', error);
       setErrorMessage(error.message);
@@ -221,7 +228,7 @@ function AccountUser() {
                           name="nome"
                           value={formData.nome}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-4 py-2 border text-white bg-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                           required
                         />
                       </div>
@@ -232,7 +239,7 @@ function AccountUser() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-4 py-2 border text-white bg-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                           required
                         />
                       </div>
@@ -246,7 +253,7 @@ function AccountUser() {
                           name="telefone"
                           value={formData.telefone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-4 py-2 border text-white bg-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                       </div>
                       <div>
@@ -256,7 +263,7 @@ function AccountUser() {
                           name="cpf"
                           value={formData.cpf}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-4 py-2 border text-white bg-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                       </div>
                     </div>
@@ -268,7 +275,7 @@ function AccountUser() {
                         name="endereco"
                         value={formData.endereco}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-4 py-2 border text-white bg-gray-600 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
 
