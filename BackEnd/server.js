@@ -43,28 +43,21 @@ class Server {
     // Pasta 'uploads' pública
     this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-    // Documentação Swagger (desabilitado em produção)
-    if (process.env.NODE_ENV !== 'production') {
-      this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-        swaggerOptions: { persistAuthorization: true }
-      }));
-    }
+    // Documentação Swagger
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+      swaggerOptions: { persistAuthorization: true }
+    }));
   }
 
   routes() {
-    // Carregamento seguro das rotas
-    try {
-      this.app.use('/auth', authRoutes);
-      this.app.use('/usuarios', usuarioRoutes);
-      this.app.use('/produtos', produtosRoutes);
-      this.app.use('/celulares', celularesRoutes);
-      this.app.use('/acessorios', acessoriosRoutes);
-      this.app.use('/pedidos', pedidosRoutes);
-      this.app.use('/itens', itensRoutes);
-      this.app.use('/admin', adminRoutes);
-    } catch (error) {
-      console.error('Erro ao carregar rotas:', error.message);
-    }
+    this.app.use('/celulares', celularesRoutes);
+    this.app.use('/acessorios', acessoriosRoutes);
+    this.app.use('/produtos', produtosRoutes);
+    this.app.use('/usuarios', usuarioRoutes);
+    this.app.use('/auth', authRoutes)
+    this.app.use('/pedidos', pedidosRoutes);
+    this.app.use('/itens', itensRoutes)
+    this.app.use('/admin', adminRoutes)
 
     // Rota base
     this.app.get('/', (req, res) => {
