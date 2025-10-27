@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { authService } from '../services/auth';
 
 function NavBarr() {
     const [user, setUser] = useState(null);
@@ -12,18 +13,7 @@ function NavBarr() {
                 const token = localStorage.getItem('token');
                 if (!token) throw new Error('Não autenticado');
 
-                const response = await fetch('http://localhost:3000/auth/me', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Não autenticado');
-                }
-
-                const data = await response.json();
+                const data = await authService.getProfile();
                 setUser(data);
             } catch (error) {
                 setUser(null);
@@ -37,10 +27,7 @@ function NavBarr() {
 
     const handleLogout = async () => {
         try {
-            await fetch('http://localhost:3000/api/auth/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
+            await authService.logout();
             setUser(null);
         } catch (error) {
             console.error('Erro ao fazer logout:', error);

@@ -4,38 +4,27 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
-import { useCart } from '../context/CartContext'; // Importando o hook de carrinho
+import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
+import { produtosService } from '../services/produtos';
 
 function Acessorios() {
-  // Estado para armazenar os produtos
   const [products, setProducts] = useState([]);
-
   const { addToCart } = useCart();
 
-  // Função para buscar os produtos da API
   useEffect(() => {
-    const fetchProducts = async (category) => {
+    const fetchProducts = async () => {
       try {
-        // Cria a URL com o parâmetro de categoria se existir
-        const url = new URL('http://localhost:3000/produtos');
-        if (category) {
-          url.searchParams.append('category', category);
-        }
-    
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Erro ao buscar produtos');
-        
-        const data = await response.json();
-        console.log("Acessorios :", data)
-        setProducts(data);
+        const data = await produtosService.getAll('acessorios');
+        console.log('Dados recebidos Acessorios:', data);
+        setProducts(data || []);
       } catch (error) {
-        console.error('Erro:', error);
-        // Adicione tratamento de erro visível para o usuário
+        console.error('Erro Acessorios:', error);
+        setProducts([]);
       }
     };
 
-    fetchProducts('acessorios');
+    fetchProducts();
   }, []);
 
   // Renderização condicional enquanto os dados são carregados

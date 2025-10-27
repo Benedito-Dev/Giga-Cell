@@ -6,6 +6,7 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { produtosService } from '../services/produtos';
 
 function CellPhones() {
   const [products, setProducts] = useState([]);
@@ -16,18 +17,12 @@ function CellPhones() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const url = new URL('http://localhost:3000/produtos');
-        url.searchParams.append('category', 'celulares'); 
-        
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Erro ao buscar produtos');
-        
-        const data = await response.json();
-        console.log(data)
-        
-        setProducts(data);
+        const data = await produtosService.getAll('celulares');
+        console.log('Dados recebidos CellPhones:', data);
+        setProducts(data || []);
       } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro CellPhones:', error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }

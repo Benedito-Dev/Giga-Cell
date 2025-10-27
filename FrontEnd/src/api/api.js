@@ -28,18 +28,4 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Interceptor para tratar erros
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      // Token inválido - faz logout
-      await AsyncStorage.removeItem('@Auth:token');
-      await AsyncStorage.removeItem('@Auth:user');
-      // Você pode redirecionar para a tela de login aqui
-    }
-    return Promise.reject(error);
-  }
-);
-
 export default api;
