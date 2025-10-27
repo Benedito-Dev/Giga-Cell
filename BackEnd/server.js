@@ -63,7 +63,7 @@ class Server {
 
     // Rota base
     this.app.get('/', (req, res) => {
-      res.send('API backend Tecsim - Celulares e Acessórios!');
+      res.send('API backend Giga Cell - Celulares e Acessórios!');
     });
 
     // Middleware global de erros (último da cadeia)
