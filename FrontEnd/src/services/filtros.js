@@ -4,7 +4,7 @@ export const filtrosService = {
   // POST - Buscar produtos com filtros
   async buscarComFiltros(filtroData) {
     try {
-      const response = await fetch(`${API_URL}/produtos/filtro`, {
+      const response = await fetch(`${API_URL}/api/filtro`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 

@@ -4,7 +4,7 @@ export const produtosService = {
   // GET - Buscar todos os produtos ou por categoria
   async getAll(category = null) {
     try {
-      const url = new URL(`${API_URL}/produtos`);
+      const url = new URL(`${API_URL}/api/produtos`);
       if (category) {
         url.searchParams.append('category', category);
       }
