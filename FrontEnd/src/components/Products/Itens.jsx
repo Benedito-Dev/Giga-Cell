@@ -1,7 +1,7 @@
-// ProductsGrid.js
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
+import { filtrosService } from '../../services/filtros';
 
 function ProductsGrid({ categoria, filtros }) {
   const [products, setProducts] = useState([]);
@@ -10,8 +10,6 @@ function ProductsGrid({ categoria, filtros }) {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    console.log('useEffect rodou com filtros:', filtros, 'e categoria:', categoria);
-
     const fetchProducts = async () => {
       try {
         setLoading(true);
@@ -24,18 +22,8 @@ function ProductsGrid({ categoria, filtros }) {
           preco: filtros.price?.[0] || null,
         };
 
-        console.log('Enviando para /produtos/filtro:', filtroJSON);
-
-        const response = await fetch('http://localhost:3000/produtos/filtro', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filtroJSON),
-        });
-
-        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-
-        const data = await response.json();
-        setProducts(data || []);
+        const data = await filtrosService.buscarComFiltros(filtroJSON);
+        setProducts(data);
       } catch (err) {
         setError(err.message);
       } finally {
