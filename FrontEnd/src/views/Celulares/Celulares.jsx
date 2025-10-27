@@ -16,14 +16,14 @@ function Products() {
             <SubBarr />
             <FloatingCart />
             
-            <div className="flex flex-col lg:flex-row flex-1 w-full bg-gray-900">
-                {/* Filtros no canto superior esquerdo */}
-                <div className="lg:sticky lg:top-20 lg:self-start lg:ml-4 lg:mt-4 w-[20vw]">
+            <div className="flex flex-col lg:flex-row flex-1 w-full bg-gray-900 gap-4 p-4">
+                {/* Filtros */}
+                <div className="lg:sticky lg:top-4 lg:self-start w-full lg:w-80 lg:min-w-[320px] flex-shrink-0">
                     <FilterSystem onChangeFilters={setFiltros} />
                 </div>
                 
                 {/* Conteúdo principal com produtos */}
-                <div className="flex-1 lg:ml-4">
+                <div className="flex-1 min-w-0">
                     <ProductsGrid categoria={'celulares'} filtros={filtros} />
                 </div>
             </div>

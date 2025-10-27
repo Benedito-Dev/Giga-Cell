@@ -13,12 +13,12 @@ const FloatingCart = () => {
     <>
       {/* Botão flutuante */}
       <button 
-        className="fixed bottom-6 right-6 bg-indigo-600 text-white text-2xl p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-200 z-50 flex items-center justify-center"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-indigo-600 text-white text-xl sm:text-2xl p-3 sm:p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors duration-200 z-50 flex items-center justify-center"
         onClick={() => setIsOpen(!isOpen)}
       >
         <i className='bx bxs-cart'></i>
         {cart.length > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center">
             {cart.length}
           </span>
         )}
@@ -34,7 +34,7 @@ const FloatingCart = () => {
 
       {/* Painel do carrinho */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 md:w-80 lg:w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

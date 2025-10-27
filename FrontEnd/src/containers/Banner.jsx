@@ -1,45 +1,63 @@
-// import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
+import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
+import 'swiper/css/pagination';
 import Banner1 from '../images/Banners/4.png';
 import Banner2 from '../images/Banners/7.png';
 import Banner3 from '../images/Banners/9.png';
 
 function Banner() {
     return (
-        <div className="banner bg-gray-200 h-[80vh] w-full flex justify-center items-center flex-col">
+        <div className="banner bg-gray-200 h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh] xl:h-[80vh] w-full flex justify-center items-center">
             <Swiper
-                modules={[Navigation, Autoplay]} // Adiciona os módulos de navegação e autoplay
-                navigation // Habilita as setas de navegação
-                autoplay={{ delay: 8000 }} // Configura o autoplay para passar os slides a cada 3 segundos
-                loop // Habilita o loop infinito
-                className="w-full h-full"
+                modules={[Navigation, Autoplay, Pagination]}
+                navigation={{
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                }}
+                pagination={{ 
+                    clickable: true,
+                    dynamicBullets: true 
+                }}
+                autoplay={{ delay: 8000 }}
+                loop
+                className="w-full h-full relative"
             >
-                {/* Slide 1 */}
                 <SwiperSlide>
-                    <div className="flex justify-center items-center h-full">
-                        <img className='scale-95 rounded-3xl' src={Banner1} alt="Banner 4" />
+                    <div className="flex justify-center items-center h-full p-2 sm:p-4">
+                        <img 
+                            className='w-full h-full object-contain sm:object-cover max-w-none sm:max-w-[95%] rounded-lg sm:rounded-3xl lg:rounded-3xl' 
+                            src={Banner1} 
+                            alt="Banner promocional 1" 
+                        />
                     </div>
                 </SwiperSlide>
 
-                {/* Slide 2 */}
                 <SwiperSlide>
-                    <div className="flex justify-center items-center h-full">
-                    <img className='scale-95 rounded-3xl' src={Banner2} alt="Banner 4" />
+                    <div className="flex justify-center items-center h-full p-2 sm:p-4">
+                        <img 
+                            className='w-full h-full object-contain sm:object-cover max-w-none sm:max-w-[95%] rounded-lg sm:rounded-3xl lg:rounded-3xl' 
+                            src={Banner2} 
+                            alt="Banner promocional 2" 
+                        />
                     </div>
                 </SwiperSlide>
 
-                {/* Slide 3 */}
                 <SwiperSlide>
-                    <div className="flex justify-center items-center h-full">
-                    <img className='scale-95 rounded-3xl' src={Banner3} alt="Banner 4" />
+                    <div className="flex justify-center items-center h-full p-2 sm:p-4">
+                        <img 
+                            className='w-full h-full object-contain sm:object-cover max-w-none sm:max-w-[95%] rounded-lg sm:rounded-3xl lg:rounded-3xl' 
+                            src={Banner3} 
+                            alt="Banner promocional 3" 
+                        />
                     </div>
                 </SwiperSlide>
 
-                {/* Adicione mais slides conforme necessário */}
+                {/* Botões de navegação customizados */}
+                <div className="swiper-button-prev !hidden sm:!flex !text-white !text-2xl !left-4 !w-12 !h-12 !bg-black !bg-opacity-50 !rounded-full after:!text-lg !items-center !justify-center"></div>
+                <div className="swiper-button-next !hidden sm:!flex !text-white !text-2xl !right-4 !w-12 !h-12 !bg-black !bg-opacity-50 !rounded-full after:!text-lg !items-center !justify-center"></div>
             </Swiper>
         </div>
     );
