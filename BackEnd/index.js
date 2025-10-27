@@ -1,23 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+const Server = require('./server');
 
-// CORS liberal para permitir acesso de qualquer origem
-app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Cria instância do servidor
+const server = new Server();
 
-app.use(express.json());
+// Para desenvolvimento local
+if (process.env.NODE_ENV !== 'production') {
+  server.start();
+}
 
-app.get('/', (req, res) => {
-  res.json({ message: 'API funcionando', status: 'OK' });
-});
-
-app.post('/produtos/filtro', (req, res) => {
-  res.json({ message: 'Filtro funcionando', data: [] });
-});
-
-module.exports = app;
+// Exporta o app do Express para Vercel
+module.exports = server.app;

@@ -33,9 +33,7 @@ class Server {
   configureMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors({
-      origin: process.env.NODE_ENV === 'production' 
-        ? ['https://seu-frontend.vercel.app'] // Substitua pela URL do seu frontend
-        : ['http://localhost:5173', 'http://localhost:3000'],
+      origin: true,
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization']
