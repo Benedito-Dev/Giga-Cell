@@ -1,4 +1,4 @@
-const API_URL = 'http://192.168.1.111:3000';
+const API_URL = 'https://giga-cell.vercel.app';
 
 export const filtrosService = {
   // POST - Buscar produtos com filtros
