@@ -81,7 +81,7 @@ function ProductsGrid({ categoria, filtros }) {
                 {product.nome}
               </h2>
               <p className="text-orange-500 font-bold text-2xl text-center mb-4">
-                R$ {product.preco.toLocaleString('pt-BR', {
+                R$ {parseFloat(product.preco).toLocaleString('pt-BR', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
