@@ -6,7 +6,7 @@ const app = express();
 
 // CORS middleware
 app.use(cors({
-  origin: ['https://giga-cell-front.vercel.app', 'http://localhost:5173'],
+  origin: ['https://giga-cell-3djp.vercel.app', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
