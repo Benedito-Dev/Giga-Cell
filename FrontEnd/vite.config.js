@@ -10,17 +10,29 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://giga-cell.vercel.app',
+        target: 'https://giga-cell-api.vercel.app',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        secure: true
+      }
+    }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom']
+        }
       }
     }
   },
   css: {
     postcss: {
       plugins: [
-        tailwindcss(), // Adiciona o Tailwind CSS
-        autoprefixer(), // Adiciona o Autoprefixer
+        tailwindcss(),
+        autoprefixer(),
       ],
     },
   },

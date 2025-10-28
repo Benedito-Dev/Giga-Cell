@@ -8,3 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.log
+server.js
+index.js
+swagger/
+.git
