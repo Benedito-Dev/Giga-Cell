@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authService } from '../services/api'; // Importe o serviço
+import { login, register } from '../services/auth';
 import Logo from '../images/logo.png';
 import imgGiga from '../images/imgG.png';
 
@@ -86,7 +86,7 @@ function Login() {
                     senha: formData.senha
                 };
                 
-                await authService.register(userData);
+                await register(userData);
                 
                 setSuccessMessage('Cadastro realizado com sucesso!');
                 setTimeout(() => {
@@ -117,7 +117,7 @@ function Login() {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                const response = await authService.login(formData.loginEmail, formData.loginSenha);
+                const response = await login(formData.loginEmail, formData.loginSenha);
 
                 // A API retorna { usuario, token }
                 const { usuario, token } = response;

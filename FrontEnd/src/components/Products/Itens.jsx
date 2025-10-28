@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
-import { filtrosService } from '../../services/filtros';
+import { buscarComFiltros } from '../../services/filtros';
 
 function ProductsGrid({ categoria, filtros }) {
   const [products, setProducts] = useState([]);
@@ -22,7 +22,7 @@ function ProductsGrid({ categoria, filtros }) {
           preco: filtros.price?.[0] || null,
         };
 
-        const data = await filtrosService.buscarComFiltros(filtroJSON);
+        const data = await buscarComFiltros(filtroJSON);
         setProducts(data);
       } catch (err) {
         setError(err.message);

@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { produtosService } from '../services/produtos';
+import { getProdutos } from '../services/produtos';
 
 function CellPhones() {
   const [products, setProducts] = useState([]);
@@ -17,7 +17,7 @@ function CellPhones() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await produtosService.getAll('celulares');
+        const data = await getProdutos('celulares');
         console.log('Dados recebidos CellPhones:', data);
         setProducts(data || []);
       } catch (error) {

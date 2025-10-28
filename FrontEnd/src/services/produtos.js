@@ -1,103 +1,57 @@
-const API_URL = 'https://giga-cell.vercel.app';
+import api from '../api/api';
 
-export const produtosService = {
-  // GET - Buscar todos os produtos ou por categoria
-  async getAll(category = null) {
-    try {
-      const url = new URL(`${API_URL}/api/produtos`);
-      if (category) {
-        url.searchParams.append('category', category);
-      }
-      
-      console.log('Fazendo requisição para:', url.toString());
-      const response = await fetch(url);
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
-      
-      const data = await response.json();
-      console.log('Dados recebidos do backend:', data);
-      return data;
-    } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
-      throw error;
-    }
-  },
+// 🟢 [GET] Lista todos os produtos ou por categoria
+export const getProdutos = async (category = null) => {
+  try {
+    const params = category ? { category } : {};
+    const response = await api.get('/produtos', { params });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar produtos:', error.message);
+    throw error;
+  }
+};
 
-  // GET - Buscar produto por ID
-  async getById(id) {
-    try {
-      const response = await fetch(`${API_URL}/produtos/${id}`);
-      if (!response.ok) throw new Error('Produto não encontrado');
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao buscar produto:', error);
-      throw error;
-    }
-  },
+// 🟢 [GET] Busca produto por ID
+export const getProdutoById = async (id) => {
+  try {
+    const response = await api.get(`/produtos/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar produto ID ${id}:`, error.message);
+    throw error;
+  }
+};
 
-  // POST - Criar novo produto
-  async create(produtoData) {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/produtos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(produtoData)
-      });
-      
-      if (!response.ok) throw new Error('Erro ao criar produto');
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao criar produto:', error);
-      throw error;
-    }
-  },
+// 🟡 [POST] Cria um novo produto
+export const createProduto = async (produtoData) => {
+  try {
+    const response = await api.post('/produtos', produtoData);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao criar produto:', error.message);
+    throw error;
+  }
+};
 
-  // PUT - Atualizar produto
-  async update(id, produtoData) {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/produtos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(produtoData)
-      });
-      
-      if (!response.ok) throw new Error('Erro ao atualizar produto');
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao atualizar produto:', error);
-      throw error;
-    }
-  },
+// 🟠 [PUT] Atualiza um produto existente
+export const updateProduto = async (id, produtoData) => {
+  try {
+    const response = await api.put(`/produtos/${id}`, produtoData);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao atualizar produto ID ${id}:`, error.message);
+    throw error;
+  }
+};
 
-  // DELETE - Deletar produto
-  async delete(id) {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/produtos/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) throw new Error('Erro ao deletar produto');
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao deletar produto:', error);
-      throw error;
-    }
+// 🔴 [DELETE] Remove um produto
+export const deleteProduto = async (id) => {
+  try {
+    const response = await api.delete(`/produtos/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao deletar produto ID ${id}:`, error.message);
+    throw error;
   }
 };

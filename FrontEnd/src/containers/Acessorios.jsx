@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import { produtosService } from '../services/produtos';
+import { getProdutos } from '../services/produtos';
 
 function Acessorios() {
   const [products, setProducts] = useState([]);
@@ -15,7 +15,7 @@ function Acessorios() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await produtosService.getAll('acessorios');
+        const data = await getProdutos('acessorios');
         console.log('Dados recebidos Acessorios:', data);
         setProducts(data || []);
       } catch (error) {

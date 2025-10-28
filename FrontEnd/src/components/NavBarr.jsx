@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { authService } from '../services/auth';
+import { getProfile, logout } from '../services/auth';
 
 function NavBarr() {
     const [user, setUser] = useState(null);
@@ -13,7 +13,7 @@ function NavBarr() {
                 const token = localStorage.getItem('token');
                 if (!token) throw new Error('Não autenticado');
 
-                const data = await authService.getProfile();
+                const data = await getProfile();
                 setUser(data);
             } catch (error) {
                 setUser(null);
@@ -27,7 +27,7 @@ function NavBarr() {
 
     const handleLogout = async () => {
         try {
-            await authService.logout();
+            await logout();
             setUser(null);
         } catch (error) {
             console.error('Erro ao fazer logout:', error);
